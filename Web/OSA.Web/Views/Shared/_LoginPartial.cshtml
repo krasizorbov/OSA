@@ -7,90 +7,75 @@
     <ul class="navbar-nav">
         @if (this.SignInManager.IsSignedIn(this.User))
         {
-            <li class="nav-item">
-                <div class="main-dropdown">
-                    <button class="main-dropbtn">Company</button>
-                    <div class="main-dropdown-content">
-                        <a href="#">Register a Company</a>
-                        <a href="#">Register a Supplier</a>
-                        <a href="#">Show List of all Companies</a>
-                        <a href="#">Show List of all Suppliers</a>
-                    </div>
+            <li class="nav-item dropdown">
+                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Company
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Register a Company</a>
+                    <a class="dropdown-item" href="#">Register a Supplier</a>
+                    <a class="dropdown-item" href="#">Show List of all Companies</a>
+                    <a class="dropdown-item" href="#">Show List of all Suppliers</a>
                 </div>
             </li>
 
-            <li class="nav-item">
-                <div class="main-dropdown">
-                    <button class="main-dropbtn">
-                        Invoice
-
-                    </button>
-                    <div class="main-dropdown-content">
-                        <a href="#">Register a Supplier's Invoice</a>
-                        <a href="#">Show Invoices by Supplier</a>
-                        <a href="#">Show all Invoices</a>
-                    </div>
+            <li class="nav-item dropdown">
+                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Invoice
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Register a Supplier Invoice</a>
+                    <a class="dropdown-item" href="#">Show Invoices by Supplier</a>
+                    <a class="dropdown-item" href="#">Show all Invoices</a>
                 </div>
             </li>
 
-            <li class="nav-item">
-                <div class="main-dropdown">
-                    <button class="main-dropbtn">
-                        Stock
-
-                    </button>
-                    <div class="main-dropdown-content">
-                        <a href="#">Register a Stock</a>
-                        <a href="#">Register a Monthly Sell</a>
-                        <a href="#">Register a Monthly Purchase</a>
-                        <a href="#">Show Stocks by Supplier</a>
-                        <a href="#">Show all Stocks</a>
-                        <a href="#">Show Monthly Sells</a>
-                        <a href="#">Show Monthly Purchases</a>
-                    </div>
+            <li class="nav-item dropdown">
+                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Stock
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Register a Stock</a>
+                    <a class="dropdown-item" href="#">Register a Monthly Sell</a>
+                    <a class="dropdown-item" href="#">Register a Monthly Purchase</a>
+                    <a class="dropdown-item" href="#">Show Stocks by Supplier</a>
+                    <a class="dropdown-item" href="#">Show all Stocks</a>
+                    <a class="dropdown-item" href="#">Show Monthly Sells</a>
+                    <a class="dropdown-item" href="#">Show Monthly Purchases</a>
                 </div>
             </li>
 
-            <li class="nav-item">
-                <div class="main-dropdown">
-                    <button class="main-dropbtn">
-                        Book Value
-
-                    </button>
-                    <div class="main-dropdown-content">
-                        <a href="#">Register a Book Value for a Stock</a>
-                        <a href="#">Calculate Monthly Avalable Stock</a>
-                        <a href="#">Show all Book Values</a>
-                        <a href="#">Show all Available Stock</a>
-                    </div>
+            <li class="nav-item dropdown">
+                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Book Value
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Register a Book Value for a Stock</a>
+                    <a class="dropdown-item" href="#">Calculate Monthly Avalable Stock</a>
+                    <a class="dropdown-item" href="#">Show all Book Values</a>
+                    <a class="dropdown-item" href="#">Show all Available Stock</a>
                 </div>
             </li>
 
-            <li class="nav-item">
-                <div class="main-dropdown">
-                    <button class="main-dropbtn">
-                        Expense Book
-
-                    </button>
-                    <div class="main-dropdown-content">
-                        <a href="#">Register a Production Invoice</a>
-                        <a href="#">Register a Receipt</a>
-                        <a href="#">Show all Production Invoices</a>
-                        <a href="#">Show all Receipts</a>
-                    </div>
+            <li class="nav-item dropdown">
+                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Expense Book
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Register a Production Invoice</a>
+                    <a class="dropdown-item" href="#">Register a Receipt</a>
+                    <a class="dropdown-item" href="#">Show all Production Invoices</a>
+                    <a class="dropdown-item" href="#">Show all Receipts</a>
                 </div>
             </li>
 
-            <li class="nav-item">
-                <div class="main-dropdown">
-                    <button class="main-dropbtn">
-                        Cash Book
-
-                    </button>
-                    <div class="main-dropdown-content">
-                        <a href="#">Calculate Monthly Cash Book</a>
-                        <a href="#">Display Monthly Cash Book</a>
-                    </div>
+            <li class="nav-item dropdown">
+                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Cash Book
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Calculate Monthly Cash Book</a>
+                    <a class="dropdown-item" href="#">Display Monthly Cash Book</a>
                 </div>
             </li>
 

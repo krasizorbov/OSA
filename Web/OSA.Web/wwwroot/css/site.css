@@ -4,109 +4,29 @@ for details on configuring this project to bundle and minify static web assets. 
 a.navbar-brand {
     white-space: normal;
     text-align: center;
+    vertical-align: middle !important;
     word-break: break-all;
-    font-weight: bold;
-    text-align: center;
-    padding-left: 5px;
-    padding-right: 5px;
 }
-.navbar {
-    font-family: sans-serif;
-    text-align: left;
-    padding-left: 5px;
-    padding-right: 5px;
-    flex-wrap: nowrap;
+.nav-item dropdown li a {
+    position: relative !important;
+    padding-top: 100px !important;
+    height: 10px;
 }
 
-/* Navbar container */
-.main-navbar {
-    overflow: hidden;
-    background-color: white;
-    font-family: sans-serif;
-    text-align: center;
-}
-
-/* Links inside the navbar */
-.main-navbar a {
-    float: left;
-    font-size: 10px;
-    color: black;
-    text-align: left;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-/* The dropdown container */
-.main-dropdown {
-    float: left;
-    overflow: hidden;
-}
-
-/* Dropdown button */
-    .main-dropdown .main-dropbtn {
-        font-size: 16px;
-        /*font-weight: bold;*/
-        border: none;
-        outline: none;
-        color: black;
-        padding: 14px 16px;
-        background-color: inherit;
-        font-family: inherit; /* Important for vertical align on mobile phones */
-        margin: 0; /* Important for vertical align on mobile phones */
-    }
-
-/* Add a background color to navbar links on hover */
-.main-navbar a:hover, .main-dropdown:hover .main-dropbtn {
-    background-color: #f9f9f9;
-}
-
-/* Dropdown content (hidden by default) */
-.main-dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-/* Links inside the dropdown */
-    .main-dropdown-content a {
-        float: none;
-        font-size: 12px;
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-        text-align: left;
-    }
-
-/* Add a grey background color to dropdown links on hover */
-.main-dropdown-content a:hover {
-    background-color: #ddd;
-}
-
-/* Show the dropdown menu on hover */
-.main-dropdown:hover .main-dropdown-content {
-    display: block;
-} 
-    /* Sticky footer styles
+/* Sticky footer styles
 -------------------------------------------------- */
-    html {
-        font-size: 14px;
-    }
-
+html {
+    font-size: 14px;
+}
 @media (min-width: 768px) {
     html {
         font-size: 16px;
     }
-    
 }
 
 .border-top {
     border-top: 1px solid #e5e5e5;
 }
-
 .border-bottom {
     border-bottom: 1px solid #e5e5e5;
 }
@@ -131,7 +51,6 @@ body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
 }
-
 .footer {
     position: absolute;
     bottom: 0;
