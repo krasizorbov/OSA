@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using OSA.Services.Data;
     using OSA.Web.ViewModels.Companies.Input_Models;
@@ -18,11 +19,13 @@
             this.companyService = companyService;
         }
 
+        [Authorize]
         public IActionResult Add()
         {
             return this.View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add(CreateCompanyInputModel companyInputModel)
         {

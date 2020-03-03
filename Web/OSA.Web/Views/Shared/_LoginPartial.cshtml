@@ -4,104 +4,104 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-    <ul class="navbar-nav">
-        @if (this.SignInManager.IsSignedIn(this.User))
-        {
-            <li class="nav-item dropdown">
-                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Company
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" asp-area="" asp-controller="Company" asp-action="Add">Register a Company</a>
-                    <a class="dropdown-item" asp-area="" asp-controller="Supplier" asp-action="Add">Register a Supplier</a>
-                    <a class="dropdown-item" href="#">Show List of all Companies</a>
-                    <a class="dropdown-item" href="#">Show List of all Suppliers</a>
-                </div>
-            </li>
+<ul class="navbar-nav">
+    @if (this.SignInManager.IsSignedIn(this.User))
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Company
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" asp-area="" asp-controller="Company" asp-action="Add">Register a Company</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Supplier" asp-action="Add">Register a Supplier</a>
+                <a class="dropdown-item" href="#">Show List of all Companies</a>
+                <a class="dropdown-item" href="#">Show List of all Suppliers</a>
+            </div>
+        </li>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Invoice
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Register a Supplier Invoice</a>
-                    <a class="dropdown-item" href="#">Show Invoices by Supplier</a>
-                    <a class="dropdown-item" href="#">Show all Invoices</a>
-                </div>
-            </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Invoice
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Register a Supplier Invoice</a>
+                <a class="dropdown-item" href="#">Show Invoices by Supplier</a>
+                <a class="dropdown-item" href="#">Show all Invoices</a>
+            </div>
+        </li>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Stock
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Register a Stock</a>
-                    <a class="dropdown-item" href="#">Register a Monthly Sell</a>
-                    <a class="dropdown-item" href="#">Register a Monthly Purchase</a>
-                    <a class="dropdown-item" href="#">Show Stocks by Supplier</a>
-                    <a class="dropdown-item" href="#">Show all Stocks</a>
-                    <a class="dropdown-item" href="#">Show Monthly Sells</a>
-                    <a class="dropdown-item" href="#">Show Monthly Purchases</a>
-                </div>
-            </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Stock
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Register a Stock</a>
+                <a class="dropdown-item" href="#">Register a Monthly Sell</a>
+                <a class="dropdown-item" href="#">Register a Monthly Purchase</a>
+                <a class="dropdown-item" href="#">Show Stocks by Supplier</a>
+                <a class="dropdown-item" href="#">Show all Stocks</a>
+                <a class="dropdown-item" href="#">Show Monthly Sells</a>
+                <a class="dropdown-item" href="#">Show Monthly Purchases</a>
+            </div>
+        </li>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Book Value
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Register a Book Value for a Stock</a>
-                    <a class="dropdown-item" href="#">Calculate Monthly Avalable Stock</a>
-                    <a class="dropdown-item" href="#">Show all Book Values</a>
-                    <a class="dropdown-item" href="#">Show all Available Stock</a>
-                </div>
-            </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Book Value
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Register a Book Value for a Stock</a>
+                <a class="dropdown-item" href="#">Calculate Monthly Avalable Stock</a>
+                <a class="dropdown-item" href="#">Show all Book Values</a>
+                <a class="dropdown-item" href="#">Show all Available Stock</a>
+            </div>
+        </li>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Expense Book
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Register a Production Invoice</a>
-                    <a class="dropdown-item" href="#">Register a Receipt</a>
-                    <a class="dropdown-item" href="#">Show all Production Invoices</a>
-                    <a class="dropdown-item" href="#">Show all Receipts</a>
-                </div>
-            </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Expense Book
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Register a Production Invoice</a>
+                <a class="dropdown-item" href="#">Register a Receipt</a>
+                <a class="dropdown-item" href="#">Show all Production Invoices</a>
+                <a class="dropdown-item" href="#">Show all Receipts</a>
+            </div>
+        </li>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Cash Book
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Calculate Monthly Cash Book</a>
-                    <a class="dropdown-item" href="#">Display Monthly Cash Book</a>
-                </div>
-            </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Cash Book
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Calculate Monthly Cash Book</a>
+                <a class="dropdown-item" href="#">Display Monthly Cash Book</a>
+            </div>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(this.User.Identity.Name)!</a>
-            </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(this.User.Identity.Name)!</a>
+        </li>
 
-            if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
-            {
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
-                </li>
-            }
-            <li class="nav-item">
-                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
-                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                </form>
-            </li>
-        }
-        else
+        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                <a class="nav-link text-white" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
             </li>
         }
-    </ul>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
+                <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+</ul>

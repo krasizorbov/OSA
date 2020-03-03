@@ -3,14 +3,29 @@ for details on configuring this project to bundle and minify static web assets. 
 
 a.navbar-brand {
     white-space: normal;
-    text-align: center;
-    vertical-align: middle !important;
     word-break: break-all;
+    color: white;
 }
-.nav-item dropdown li a {
-    position: relative !important;
-    padding-top: 100px !important;
-    height: 10px;
+.navbar ul a {
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 12px;
+}
+.navbar ul li a {
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 11px;
+}
+.navbar-nav ul {
+    vertical-align: middle;
+    color: white;
+    padding-top: 11px;
+}
+.dropdown-menu {
+    text-align: left;
+}
+.navbar .fa{
+    margin: 3px;
 }
 
 /* Sticky footer styles
@@ -26,6 +41,7 @@ html {
 
 .border-top {
     border-top: 1px solid #e5e5e5;
+    
 }
 .border-bottom {
     border-bottom: 1px solid #e5e5e5;
@@ -45,6 +61,7 @@ button.accept-policy {
 html {
     position: relative;
     min-height: 100%;
+    color: white;
 }
 
 body {
@@ -59,4 +76,14 @@ body {
     /* Set the fixed height of the footer here */
     height: 60px;
     line-height: 60px; /* Vertically center the text there */
+}
+/* Background Image
+-------------------------------------------------- */
+#container-background {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    width: 1150px;
+    height: 545px;
+    overflow: hidden
 }
