@@ -1,8 +1,5 @@
 ﻿namespace OSA.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -29,6 +26,11 @@
         [HttpPost]
         public async Task<IActionResult> Add(CreateCompanyInputModel companyInputModel)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             await this.companyService.AddAsync(companyInputModel.Name, companyInputModel.Bulstat);
             return this.Redirect("/");
         }
