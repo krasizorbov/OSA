@@ -27,5 +27,7 @@
         public const int InvoiceNumberMaxLength = 15;
 
         public const int ReceiptNumberMaxLength = 15;
+
+        public const string ValidBulstat = "A Valid Bulstat Contains Only Numbers!";
     }
 }

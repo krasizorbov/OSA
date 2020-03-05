@@ -14,7 +14,7 @@
         [Required]
         [MinLength(GlobalConstants.BulstatMinLength)]
         [MaxLength(GlobalConstants.BulstatMaxLength)]
-        [RegularExpression("[0-9]*", ErrorMessage = "A Valid Bulstat Contains Only Numbers!")]
+        [RegularExpression("[0-9]*", ErrorMessage = GlobalConstants.ValidBulstat)]
         [Display(Name = "Bulstat")]
         public string Bulstat { get; set; }
     }
