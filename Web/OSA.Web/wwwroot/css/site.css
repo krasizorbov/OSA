@@ -87,3 +87,23 @@ body {
     height: 545px;
     overflow: hidden
 }
+/* BackgroundRegister Image
+-------------------------------------------------- */
+#container-backgroundRegister {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    width: 940px;
+    height: 600px;
+    overflow: hidden
+}
+/* BackgroundLogin Image
+-------------------------------------------------- */
+#container-backgroundRegister {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    width: 940px;
+    height: 600px;
+    overflow: hidden
+}
