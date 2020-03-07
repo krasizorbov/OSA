@@ -14,12 +14,13 @@
             this.companyRepository = companyRepository;
         }
 
-        public async Task AddAsync(string name, string bulstat)
+        public async Task AddAsync(string name, string bulstat, string userId)
         {
             var company = new Company
             {
                 Name = name,
                 Bulstat = bulstat,
+                UserId = userId,
             };
 
             await this.companyRepository.AddAsync(company);

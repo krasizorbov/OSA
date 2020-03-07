@@ -32,9 +32,6 @@
             await this.invoiceRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<string>> GetAllSupplierNames()
-        {
-            return await this.
-        }
+       
     }
 }

@@ -4,6 +4,6 @@
 
     public interface ICompanyService
     {
-        Task AddAsync(string name, string bulstat);
+        Task AddAsync(string name, string bulstat, string userId);
     }
 }
