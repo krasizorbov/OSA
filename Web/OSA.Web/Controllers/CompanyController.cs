@@ -1,8 +1,10 @@
 ﻿namespace OSA.Web.Controllers
 {
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using OSA.Services.Data;
     using OSA.Web.ViewModels.Companies.Input_Models;
@@ -10,12 +12,12 @@
     public class CompanyController : BaseController
     {
         private readonly ICompanyService companyService;
-        private readonly IUserService userService;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public CompanyController(ICompanyService companyService, IUserService userService)
+        public CompanyController(ICompanyService companyService, IHttpContextAccessor httpContextAccessor)
         {
             this.companyService = companyService;
-            this.userService = userService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         [Authorize]
@@ -28,7 +30,7 @@
         [HttpPost]
         public async Task<IActionResult> Add(CreateCompanyInputModel companyInputModel)
         {
-            var userId = this.userService.GetCurrentUserId();
+            var userId = this.httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (!this.ModelState.IsValid)
             {
                 return this.View();
