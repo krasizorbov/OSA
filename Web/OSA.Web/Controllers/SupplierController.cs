@@ -9,12 +9,12 @@
 
     public class SupplierController : BaseController
     {
-        private readonly ISuppliersService supplierService;
+        private readonly ISuppliersService suppliersService;
         private readonly ICompaniesService companiesService;
 
-        public SupplierController(ISuppliersService supplierService, ICompaniesService companiesService)
+        public SupplierController(ISuppliersService suppliersService, ICompaniesService companiesService)
         {
-            this.supplierService = supplierService;
+            this.suppliersService = suppliersService;
             this.companiesService = companiesService;
         }
 
@@ -38,7 +38,7 @@
                 return this.View();
             }
 
-            await this.supplierService.AddAsync(supplierInputModel.Name, supplierInputModel.Bulstat, supplierInputModel.CompanyId);
+            await this.suppliersService.AddAsync(supplierInputModel.Name, supplierInputModel.Bulstat, supplierInputModel.CompanyId);
             return this.Redirect("/");
         }
     }

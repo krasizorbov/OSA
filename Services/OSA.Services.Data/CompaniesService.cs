@@ -1,9 +1,9 @@
 ﻿namespace OSA.Services.Data
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Mvc.Rendering;
     using OSA.Data;
     using OSA.Data.Common.Repositories;

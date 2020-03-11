@@ -11,21 +11,33 @@
                 <input asp-for="InvoiceNumber" class="form-control">
                 <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
             </div>
+            <div class="datepicker">
+                    <label asp-for="Date"></label>
+                    <input asp-for="Date" class="form-control">
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+
             <div class="form-group">
-                <label asp-for="Date"></label>
-                <input asp-for="Date" class="form-control">
-                <span asp-validation-for="Date" class="text-danger"></span>
+                <label asp-for="CompanyId"></label>
+                <select id="dropdowntipo" asp-for="CompanyId" class="form-control">
+                    <option value="0">Company</option>
+                    @foreach (var name in Model.CompanyNames)
+                    {
+                        <option value="@name.Value">@name.Text</option>
+                    }
+                </select>
+                <span asp-validation-for="CompanyId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SupplierId"></label>
-                <!----<select asp-for="SupplierId" class="form-control" asp-items="Model.GetAllSuppliers"></select>-->
-                <input asp-for="SupplierId" class="form-control">
+                <select id="dropdowntipo" asp-for="SupplierId" class="form-control">
+                    <option value="0">Supplier</option>
+                    @foreach (var name in Model.SupplierNames)
+                    {
+                        <option value="@name.Value">@name.Text</option>
+                    }
+                </select>
                 <span asp-validation-for="SupplierId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyId"></label>
-                <input asp-for="CompanyId" class="form-control">
-                <span asp-validation-for="CompanyId" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -34,4 +46,9 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+        $('input[id$=tbDate]').datepicker({dateFormat: 'dd/mm/yyyy'});
+        });
+    </script>
 }

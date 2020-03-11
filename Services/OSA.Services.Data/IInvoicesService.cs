@@ -7,5 +7,7 @@
     public interface IInvoicesService
     {
         Task AddAsync(string invoiceNumber, DateTime date, int supplierId, int companyId);
+
+
     }
 }

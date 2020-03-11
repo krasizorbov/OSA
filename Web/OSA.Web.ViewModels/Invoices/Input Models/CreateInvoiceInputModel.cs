@@ -3,10 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Text;
 
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using OSA.Common;
-    using OSA.Data.Models;
 
     public class CreateInvoiceInputModel
     {
@@ -17,17 +16,20 @@
         public string InvoiceNumber { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Invoice Issue Date")]
+        [Display(Name = "Invoice Issue Date DD/MM/YYYY")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Date { get; set; }
 
         [Required]
         [Display(Name = "Supplier")]
         public int SupplierId { get; set; }
 
-        public IEnumerable<Supplier> GetAllSuppliers { get; set; }
+        public IEnumerable<SelectListItem> SupplierNames { get; set; }
 
         [Required]
         [Display(Name = "Company")]
         public int CompanyId { get; set; }
+
+        public IEnumerable<SelectListItem> CompanyNames { get; set; }
     }
 }
