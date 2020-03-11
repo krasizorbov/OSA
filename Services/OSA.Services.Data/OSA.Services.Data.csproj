@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\OSA.Data.Common\OSA.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\OSA.Data.Models\OSA.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\OSA.Data\OSA.Data.csproj" />
     <ProjectReference Include="..\OSA.Services.Mapping\OSA.Services.Mapping.csproj" />
   </ItemGroup>
 

@@ -7,19 +7,20 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using OSA.Common;
+    using OSA.Data;
     using OSA.Data.Models;
 
     public class UserService : IUserService
     {
         private readonly IHttpContextAccessor contextAccessor;
         private readonly UserManager<ApplicationUser> userManager;
-        //private readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext context;
 
-        public UserService(IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager)
+        public UserService(ApplicationDbContext context, IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager)
         {
             this.contextAccessor = contextAccessor;
             this.userManager = userManager;
-            //this.context = context;
+            this.context = context;
         }
 
         public string GetCurrentUserId()
@@ -41,7 +42,7 @@
 
         //public async Task<ApplicationUser> GetUserByIdAsync(string userId)
         //{
-        //    if (!await this.context..AnyAsync(x => x.Id == userId))
+        //    if (!await this.context.AnyAsync(x => x.Id == userId))
         //    {
         //        throw new ArgumentException(GlobalConstants.InvalidUserIdErrorMessage);
         //    }
