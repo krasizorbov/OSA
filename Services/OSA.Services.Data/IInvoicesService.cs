@@ -2,11 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
     using System.Threading.Tasks;
 
-    public interface ISupplierService
+    public interface IInvoicesService
     {
-        Task AddAsync(string name, string bulstat);
+        Task AddAsync(string invoiceNumber, DateTime date, int supplierId, int companyId);
     }
 }

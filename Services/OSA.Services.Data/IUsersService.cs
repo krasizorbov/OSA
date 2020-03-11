@@ -7,7 +7,7 @@
 
     using OSA.Data.Models;
 
-    public interface IUserService
+    public interface IUsersService
     {
         string GetCurrentUserId();
 

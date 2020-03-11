@@ -9,11 +9,11 @@
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models; 
 
-    public class InvoiceService : IInvoiceService
+    public class InvoicesService : IInvoicesService
     {
         private readonly IDeletableEntityRepository<Invoice> invoiceRepository;
 
-        public InvoiceService(IDeletableEntityRepository<Invoice> invoiceRepository)
+        public InvoicesService(IDeletableEntityRepository<Invoice> invoiceRepository)
         {
             this.invoiceRepository = invoiceRepository;
         }

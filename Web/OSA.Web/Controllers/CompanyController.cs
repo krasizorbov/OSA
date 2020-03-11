@@ -9,10 +9,10 @@
 
     public class CompanyController : BaseController
     {
-        private readonly ICompanyService companyService;
-        private readonly IUserService userService;
+        private readonly ICompaniesService companyService;
+        private readonly IUsersService userService;
 
-        public CompanyController(ICompanyService companyService, IUserService userService)
+        public CompanyController(ICompaniesService companyService, IUsersService userService)
         {
             this.companyService = companyService;
             this.userService = userService;

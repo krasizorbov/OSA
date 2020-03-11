@@ -10,13 +10,13 @@
     using OSA.Data;
     using OSA.Data.Models;
 
-    public class UserService : IUserService
+    public class UsersService : IUsersService
     {
         private readonly IHttpContextAccessor contextAccessor;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ApplicationDbContext context;
 
-        public UserService(ApplicationDbContext context, IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager)
+        public UsersService(ApplicationDbContext context, IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> userManager)
         {
             this.contextAccessor = contextAccessor;
             this.userManager = userManager;

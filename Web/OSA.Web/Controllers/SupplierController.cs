@@ -9,17 +9,24 @@
 
     public class SupplierController : BaseController
     {
-        private readonly ISupplierService supplierService;
+        private readonly ISuppliersService supplierService;
+        private readonly ICompaniesService companiesService;
 
-        public SupplierController(ISupplierService supplierService)
+        public SupplierController(ISuppliersService supplierService, ICompaniesService companiesService)
         {
             this.supplierService = supplierService;
+            this.companiesService = companiesService;
         }
 
         [Authorize]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            return this.View();
+            var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+            var model = new CreateSupplierInputModel
+            {
+                CompanyNames = companyNames,
+            };
+            return this.View(model);
         }
 
         [Authorize]
@@ -31,7 +38,7 @@
                 return this.View();
             }
 
-            await this.supplierService.AddAsync(supplierInputModel.Name, supplierInputModel.Bulstat);
+            await this.supplierService.AddAsync(supplierInputModel.Name, supplierInputModel.Bulstat, supplierInputModel.CompanyId);
             return this.Redirect("/");
         }
     }
