@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using OSA.Common;
 
@@ -15,18 +16,18 @@
         [RegularExpression("0*[0-9]*", ErrorMessage = GlobalConstants.ValidInvoiceNumber)]
         public string InvoiceNumber { get; set; }
 
-        [DataType(DataType.Date)]
+        //[DataType(DataType.Date)]
         [Display(Name = "Invoice Issue Date DD/MM/YYYY")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime Date { get; set; }
+        //[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public string Date { get; set; }
 
-        [Required]
+        [BindRequired]
         [Display(Name = "Supplier")]
         public int SupplierId { get; set; }
 
         public IEnumerable<SelectListItem> SupplierNames { get; set; }
 
-        [Required]
+        [BindRequired]
         [Display(Name = "Company")]
         public int CompanyId { get; set; }
 

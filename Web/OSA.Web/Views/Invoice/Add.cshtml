@@ -11,16 +11,20 @@
                 <input asp-for="InvoiceNumber" class="form-control">
                 <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
             </div>
-            <div class="datepicker">
-                    <label asp-for="Date"></label>
-                    <input asp-for="Date" class="form-control">
-                    <span asp-validation-for="Date" class="text-danger"></span>
-                </div>
-
+            @*<div class="datepicker">
+                <label asp-for="Date"></label>
+                <input asp-for="Date" class="form-control">
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>*@
             <div class="form-group">
-                <label asp-for="CompanyId"></label>
+                <label asp-for="Date" class="control-label"></label>
+                <input type="text" id="picker" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyNames"></label>
                 <select id="dropdowntipo" asp-for="CompanyId" class="form-control">
-                    <option value="0">Company</option>
+                    <option value="0" hidden disabled selected>Select Company</option>
                     @foreach (var name in Model.CompanyNames)
                     {
                         <option value="@name.Value">@name.Text</option>
@@ -29,9 +33,9 @@
                 <span asp-validation-for="CompanyId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SupplierId"></label>
+                <label asp-for="SupplierNames"></label>
                 <select id="dropdowntipo" asp-for="SupplierId" class="form-control">
-                    <option value="0">Supplier</option>
+                    <option value="0" hidden disabled selected>Select Supplier</option>
                     @foreach (var name in Model.SupplierNames)
                     {
                         <option value="@name.Value">@name.Text</option>
@@ -46,9 +50,12 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        $(document).ready(function () {
-        $('input[id$=tbDate]').datepicker({dateFormat: 'dd/mm/yyyy'});
+    <script type="text/javascript">
+        $(".picker").datetimepicker({
+            format: "dd/MM/yyyy",
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left"
         });
     </script>
 }

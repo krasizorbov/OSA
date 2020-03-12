@@ -18,7 +18,7 @@
             this.suppliersService = suppliersService;
         }
 
-        public async Task AddAsync(string invoiceNumber, DateTime date, int supplierId, int companyId)
+        public async Task AddAsync(string invoiceNumber, string date, int supplierId, int companyId)
         {
             var invoice = new Invoice
             {
