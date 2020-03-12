@@ -6,7 +6,7 @@
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class StockInputModelOne
+    public class CreateStockInputModelOne
     {
         [BindRequired]
         [Display(Name = "Company")]

@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using OSA.Common;
 
-    public class StockInputModelTwo
+    public class CreateStockInputModelTwo
     {
         private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
 
