@@ -1,11 +1,12 @@
 ﻿@model OSA.Web.ViewModels.Invoices.Input_Models.CreateInvoiceInputModelTwo
 @{
-    this.ViewData["Title"] = "Add Invoice Part Two";
+    this.ViewData["Title"] = "Add Invoice";
 }
 
 <div class="row">
     <div class="col-md-4">
         <form method="post">
+            <h3>Step 2:</h3>
             <div class="form-group">
                 <label asp-for="InvoiceNumber"></label>
                 <input asp-for="InvoiceNumber" class="form-control">
@@ -16,6 +17,7 @@
                 <input asp-for="Date" id="picker" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="SupplierId"></label>
                 <select id="dropdowntipo" asp-for="SupplierId" class="form-control">

@@ -1,5 +1,6 @@
 ﻿namespace OSA.Web.ViewModels.Invoices.Input_Models
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -28,11 +29,5 @@
         public int SupplierId { get; set; }
 
         public IEnumerable<SelectListItem> SupplierNames { get; set; }
-
-        [BindRequired]
-        [Display(Name = "Company")]
-        public int CompanyId { get; set; }
-
-        public IEnumerable<SelectListItem> CompanyNames { get; set; }
     }
 }

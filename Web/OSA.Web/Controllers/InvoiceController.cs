@@ -21,13 +21,37 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Add(int companyId)
+        public async Task<IActionResult> AddPartOne()
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
-            var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(companyId);
-            var model = new CreateInvoiceInputModelTwo
+
+            var model = new CreateInvoiceInputModelOne
             {
                 CompanyNames = companyNames,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddPartOne(CreateInvoiceInputModelOne invoiceInputModelOne)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            var companyId = invoiceInputModelOne.CompanyId;
+            return this.RedirectToAction("AddPartTwo", "Invoice", new { id = companyId });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> AddPartTwo(int id)
+        {
+            var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(id);
+
+            var model = new CreateInvoiceInputModelTwo
+            {
                 SupplierNames = supplierNames,
             };
             return this.View(model);
@@ -35,14 +59,15 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreateInvoiceInputModelTwo invoiceInputModel)
+        public async Task<IActionResult> AddPartTwo(CreateInvoiceInputModelTwo invoiceInputModelTwo, int id)
         {
+            var companyId = id;
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            await this.invoicesService.AddAsync(invoiceInputModel.InvoiceNumber, invoiceInputModel.Date, invoiceInputModel.CompanyId, invoiceInputModel.SupplierId);
+            await this.invoicesService.AddAsync(invoiceInputModelTwo.InvoiceNumber, invoiceInputModelTwo.Date, invoiceInputModelTwo.SupplierId, companyId);
             return this.Redirect("/");
         }
     }
