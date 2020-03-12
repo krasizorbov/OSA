@@ -6,8 +6,10 @@
 
     public class CreateCompanyInputModel
     {
+        private const string BulstatFormat = "[0-9]*";
+
         [Required]
-        [Display(Name = "Company Name")]
+        [Display(Name = "Company")]
         [MaxLength(GlobalConstants.CompanyNameMaxLength)]
         public string Name { get; set; }
 
@@ -15,7 +17,7 @@
         [Display(Name = "Bulstat")]
         [MinLength(GlobalConstants.BulstatMinLength)]
         [MaxLength(GlobalConstants.BulstatMaxLength)]
-        [RegularExpression("[0-9]*", ErrorMessage = GlobalConstants.ValidBulstat)]
+        [RegularExpression(BulstatFormat, ErrorMessage = GlobalConstants.InvalidBulstat)]
         public string Bulstat { get; set; }
     }
 }

@@ -10,15 +10,18 @@
 
     public class CreateInvoiceInputModel
     {
+        private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
+        private const string InvoiceNumberFormat = "0*[0-9]*";
+
         [Required]
         [Display(Name = "Invoice Number")]
         [MaxLength(GlobalConstants.InvoiceNumberMaxLength)]
-        [RegularExpression("0*[0-9]*", ErrorMessage = GlobalConstants.ValidInvoiceNumber)]
+        [RegularExpression(InvoiceNumberFormat, ErrorMessage = GlobalConstants.ValidInvoiceNumber)]
         public string InvoiceNumber { get; set; }
 
-        //[DataType(DataType.Date)]
-        [Display(Name = "Invoice Issue Date DD/MM/YYYY")]
-        //[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [Required]
+        [Display(Name = "Invoice Issue Date - (dd/mm/yyyy)")]
+        [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
 
         [BindRequired]

@@ -28,8 +28,10 @@
 
         public const int ReceiptNumberMaxLength = 15;
 
-        public const string ValidBulstat = "A Valid Bulstat Contains Only Numbers!";
+        public const string InvalidBulstat = "A Valid Bulstat Contains Only Numbers!";
 
         public const string ValidInvoiceNumber = "A Valid Invoice Number Contains Only Numbers!";
+
+        public const string InvalidDateTimeFormat = "This is not a valid date!";
     }
 }

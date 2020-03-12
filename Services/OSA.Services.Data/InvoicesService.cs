@@ -23,7 +23,7 @@
             var invoice = new Invoice
             {
                 InvoiceNumber = invoiceNumber,
-                Date = DateTime.ParseExact(date.ToString(), "d/M/yyyy HH:mm:ss", CultureInfo.InvariantCulture),
+                Date = DateTime.ParseExact(date.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 SupplierId = supplierId,
                 CompanyId = companyId,
             };
