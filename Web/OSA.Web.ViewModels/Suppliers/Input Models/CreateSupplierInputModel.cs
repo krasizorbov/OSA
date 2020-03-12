@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using OSA.Common;
 
@@ -20,7 +20,7 @@
         [Display(Name = "Bulstat")]
         public string Bulstat { get; set; }
 
-        [Required]
+        [BindRequired]
         [Display(Name = "Company")]
         public int CompanyId { get; set; }
 
