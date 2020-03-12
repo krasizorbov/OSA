@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-md-4">
         <form method="post">
-            <h3>Step 1:</h3>
+            <h3>Step 2:</h3>
             <div class="form-group">
                 <label asp-for="Name"></label>
                 <input asp-for="Name" class="form-control">
@@ -16,6 +16,27 @@
                 <label asp-for="Quantity"></label>
                 <input asp-for="Quantity" class="form-control">
                 <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price"></label>
+                <input asp-for="Price" class="form-control">
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" id="picker" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InvoiceId"></label>
+                <select id="dropdowntipo" asp-for="InvoiceId" class="form-control">
+                    <option value="0" hidden disabled selected>Select Invoice Number</option>
+                    @foreach (var name in Model.Invoices)
+                    {
+                        <option value="@name.Value">@name.Text</option>
+                    }
+                </select>
+                <span asp-validation-for="InvoiceId" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

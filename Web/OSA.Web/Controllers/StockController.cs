@@ -5,19 +5,19 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using OSA.Services.Data;
-    using OSA.Web.ViewModels.Invoices.Input_Models;
+    using OSA.Web.ViewModels.Stocks.Input_Models;
 
-    public class InvoiceController : BaseController
+    public class StockController : BaseController
     {
-        private readonly IInvoicesService invoicesService;
+        private readonly IStocksService stocksService;
         private readonly ICompaniesService companiesService;
-        private readonly ISuppliersService suppliersService;
+        private readonly IInvoicesService invoicesService;
 
-        public InvoiceController(IInvoicesService invoicesService, ICompaniesService companiesService, ISuppliersService suppliersService)
+        public StockController(IStocksService stocksService, ICompaniesService companiesService, IInvoicesService invoicesService)
         {
+            this.stocksService = stocksService;
             this.invoicesService = invoicesService;
             this.companiesService = companiesService;
-            this.suppliersService = suppliersService;
         }
 
         [Authorize]
@@ -25,7 +25,7 @@
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
-            var model = new CreateInvoiceInputModelOne
+            var model = new CreateStockInputModelOne
             {
                 CompanyNames = companyNames,
             };
@@ -34,32 +34,32 @@
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddPartOne(CreateInvoiceInputModelOne invoiceInputModelOne)
+        public IActionResult AddPartOne(CreateStockInputModelOne stockInputModelOne)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            var companyId = invoiceInputModelOne.CompanyId;
-            return this.RedirectToAction("AddPartTwo", "Invoice", new { id = companyId });
+            var companyId = stockInputModelOne.CompanyId;
+            return this.RedirectToAction("AddPartTwo", "Stock", new { id = companyId });
         }
 
         [Authorize]
         public async Task<IActionResult> AddPartTwo(int id)
         {
-            var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(id);
+            var invoices = await this.invoicesService.GetAllInvoicesByCompanyIdAsync(id);
 
-            var model = new CreateInvoiceInputModelTwo
+            var model = new CreateStockInputModelTwo
             {
-                SupplierNames = supplierNames,
+                Invoices = invoices,
             };
             return this.View(model);
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddPartTwo(CreateInvoiceInputModelTwo invoiceInputModelTwo, int id)
+        public async Task<IActionResult> AddPartTwo(CreateStockInputModelTwo stockInputModelTwo, int id)
         {
             var companyId = id;
             if (!this.ModelState.IsValid)
@@ -67,10 +67,12 @@
                 return this.View();
             }
 
-            await this.invoicesService.AddAsync(
-                invoiceInputModelTwo.InvoiceNumber,
-                invoiceInputModelTwo.Date,
-                invoiceInputModelTwo.SupplierId,
+            await this.stocksService.AddAsync(
+                stockInputModelTwo.Name,
+                stockInputModelTwo.Quantity,
+                stockInputModelTwo.Price,
+                stockInputModelTwo.Date,
+                stockInputModelTwo.InvoiceId,
                 companyId);
             return this.Redirect("/");
         }

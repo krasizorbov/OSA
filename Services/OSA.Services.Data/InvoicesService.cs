@@ -1,9 +1,12 @@
 ﻿namespace OSA.Services.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
@@ -11,11 +14,13 @@
     {
         private readonly IDeletableEntityRepository<Invoice> invoiceRepository;
         private readonly ISuppliersService suppliersService;
+        private readonly ApplicationDbContext context;
 
-        public InvoicesService(IDeletableEntityRepository<Invoice> invoiceRepository, ISuppliersService suppliersService)
+        public InvoicesService(IDeletableEntityRepository<Invoice> invoiceRepository, ISuppliersService suppliersService, ApplicationDbContext context)
         {
             this.invoiceRepository = invoiceRepository;
             this.suppliersService = suppliersService;
+            this.context = context;
         }
 
         public async Task AddAsync(string invoiceNumber, string date, int supplierId, int companyId)
@@ -30,6 +35,17 @@
 
             await this.invoiceRepository.AddAsync(invoice);
             await this.invoiceRepository.SaveChangesAsync();
+        }
+
+        public async Task<List<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId)
+        {
+            var invoices = Task.Run(() => this.context.Invoices
+                .Where(x => x.CompanyId == companyId)
+                .Select(i => new SelectListItem() { Value = i.Id.ToString(), Text = i.InvoiceNumber })
+                .ToList());
+            var result = await invoices;
+
+            return result;
         }
     }
 }

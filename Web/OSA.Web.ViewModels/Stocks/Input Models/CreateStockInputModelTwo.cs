@@ -29,12 +29,12 @@
         [Required]
         [Display(Name = "Invoice Issue Date - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         [BindRequired]
-        [Display(Name = "Supplier")]
-        public int SupplierId { get; set; }
+        [Display(Name = "Invoice")]
+        public int InvoiceId { get; set; }
 
-        public IEnumerable<SelectListItem> SupplierNames { get; set; }
+        public IEnumerable<SelectListItem> Invoices { get; set; }
     }
 }
