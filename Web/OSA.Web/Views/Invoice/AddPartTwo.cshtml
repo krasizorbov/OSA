@@ -17,17 +17,6 @@
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CompanyId"></label>
-                <select id="dropdowntipo" asp-for="CompanyId" class="form-control">
-                    <option value="0" hidden disabled selected>Select Company</option>
-                    @foreach (var name in Model.CompanyNames)
-                    {
-                        <option value="@name.Value">@name.Text</option>
-                    }
-                </select>
-                <span asp-validation-for="CompanyId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="SupplierId"></label>
                 <select id="dropdowntipo" asp-for="SupplierId" class="form-control">
                     <option value="0" hidden disabled selected>Select Supplier</option>

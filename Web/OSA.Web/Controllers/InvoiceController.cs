@@ -25,7 +25,7 @@
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
             var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(companyId);
-            var model = new CreateInvoiceInputModel
+            var model = new CreateInvoiceInputModelTwo
             {
                 CompanyNames = companyNames,
                 SupplierNames = supplierNames,
@@ -35,7 +35,7 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreateInvoiceInputModel invoiceInputModel)
+        public async Task<IActionResult> Add(CreateInvoiceInputModelTwo invoiceInputModel)
         {
             if (!this.ModelState.IsValid)
             {

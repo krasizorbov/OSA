@@ -1,6 +1,5 @@
 ﻿namespace OSA.Web.ViewModels.Invoices.Input_Models
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +7,7 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using OSA.Common;
 
-    public class CreateInvoiceInputModel
+    public class CreateInvoiceInputModelTwo
     {
         private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
         private const string InvoiceNumberFormat = "0*[0-9]*";
