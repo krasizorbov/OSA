@@ -1,0 +1,35 @@
+﻿@model OSA.Web.ViewModels.Stocks.Input_Models.CreateStockInputModelTwo
+@{
+    this.ViewData["Title"] = "Add Stock";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <h3>Step 1:</h3>
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity"></label>
+                <input asp-for="Quantity" class="form-control">
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(".picker").datetimepicker({
+            format: "dd/MM/yyyy",
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left"
+        });
+    </script>
+}

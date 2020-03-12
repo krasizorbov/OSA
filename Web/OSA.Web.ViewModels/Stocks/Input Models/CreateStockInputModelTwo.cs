@@ -14,12 +14,15 @@
         private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
 
         [Required]
+        [Display(Name = "Stock")]
         [MaxLength(GlobalConstants.StockNameMaxLength)]
         public string Name { get; set; }
 
+        [Required]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal Quantity { get; set; }
 
+        [Required]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal Price { get; set; }
 
