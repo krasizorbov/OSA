@@ -28,6 +28,6 @@
         [Required]
         [Display(Name = "Date - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
     }
 }
