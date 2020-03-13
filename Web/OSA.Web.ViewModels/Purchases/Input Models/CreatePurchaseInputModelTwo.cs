@@ -19,9 +19,13 @@
 
         public IEnumerable<SelectListItem> StockNames { get; set; }
 
+        [Required]
+        [Display(Name = "Total Quantity")]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal TotalQuantity { get; set; }
 
+        [Required]
+        [Display(Name = "Total Price")]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal TotalPrice { get; set; }
 

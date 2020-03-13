@@ -16,7 +16,7 @@
             this.purchaseRepository = purchaseRepository;
         }
 
-        public async Task AddAsync(string stockName, decimal totalQuantity, decimal totalPrice, string date)
+        public async Task AddAsync(string stockName, decimal totalQuantity, decimal totalPrice, string date, int companyId)
         {
             var purchase = new Purchase
             {
@@ -24,6 +24,7 @@
                 TotalQuantity = totalQuantity,
                 TotalPrice = totalPrice,
                 Date = DateTime.ParseExact(date.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                CompanyId = companyId,
             };
 
             await this.purchaseRepository.AddAsync(purchase);

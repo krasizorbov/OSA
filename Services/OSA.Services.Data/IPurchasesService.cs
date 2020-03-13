@@ -4,6 +4,6 @@
 
     public interface IPurchasesService
     {
-        Task AddAsync(string stockName, decimal totalQuantity, decimal totalPrice, string date);
+        Task AddAsync(string stockName, decimal totalQuantity, decimal totalPrice, string date, int companyId);
     }
 }
