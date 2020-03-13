@@ -1,8 +1,5 @@
 ﻿namespace OSA.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -14,19 +11,21 @@
     {
         private readonly ISellsService sellsService;
         private readonly ICompaniesService companiesService;
+        private readonly IStocksService stocksService;
 
-        public SellController(ISellsService sellsService, ICompaniesService companiesService)
+        public SellController(ISellsService sellsService, ICompaniesService companiesService, IStocksService stocksService)
         {
             this.sellsService = sellsService;
             this.companiesService = companiesService;
+            this.stocksService = stocksService;
         }
 
         [Authorize]
-        public async Task<IActionResult> Add()
+        public async Task<IActionResult> AddPartOne()
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
-            var model = new CreateSellInputModel
+            var model = new CreateSellInputModelOne
             {
                 CompanyNames = companyNames,
             };
@@ -35,8 +34,34 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreateSellInputModel sellInputModel)
+        public IActionResult AddPartOne(CreateSellInputModelOne sellInputModelOne)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            var companyId = sellInputModelOne.CompanyId;
+            return this.RedirectToAction("AddPartTwo", "Sell", new { id = companyId });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> AddPartTwo(int id)
+        {
+            var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
+
+            var model = new CreateSellInputModelTwo
+            {
+                StockNames = stockNames,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddPartTwo(CreateSellInputModelTwo sellInputModel, int id)
+        {
+            var companyId = id;
             if (!this.ModelState.IsValid)
             {
                 return this.View();
@@ -47,7 +72,7 @@
                 sellInputModel.TotalPrice,
                 sellInputModel.ProfitPercent,
                 sellInputModel.Date,
-                sellInputModel.CompanyId);
+                companyId);
             return this.Redirect("/");
         }
     }

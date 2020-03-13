@@ -8,13 +8,16 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using OSA.Common;
 
-    public class CreateSellInputModel
+    public class CreateSellInputModelTwo
     {
         private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
 
-        [Required]
+        [BindRequired]
+        [Display(Name = "Stock")]
         [MaxLength(GlobalConstants.StockNameMaxLength)]
         public string StockName { get; set; }
+
+        public IEnumerable<SelectListItem> StockNames { get; set; }
 
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal TotalPrice { get; set; }
@@ -26,11 +29,5 @@
         [Display(Name = "Sell Date - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
-
-        [BindRequired]
-        [Display(Name = "Company")]
-        public int CompanyId { get; set; }
-
-        public IEnumerable<SelectListItem> CompanyNames { get; set; }
     }
 }
