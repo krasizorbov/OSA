@@ -26,7 +26,7 @@
         public decimal TotalPrice { get; set; }
 
         [Required]
-        [Display(Name = "Sell Date - (dd/mm/yyyy)")]
+        [Display(Name = "Date - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public DateTime Date { get; set; }
     }
