@@ -13,6 +13,7 @@
         private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
 
         [BindRequired]
+        [Required(ErrorMessage = "Please select a Stock")]
         [Display(Name = "Stock")]
         [MaxLength(GlobalConstants.StockNameMaxLength)]
         public string StockName { get; set; }
