@@ -3,17 +3,19 @@
     using System;
     using System.Globalization;
     using System.Threading.Tasks;
-
+    using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class SellsService : ISellsService
     {
         private readonly IDeletableEntityRepository<Sell> sellRepository;
+        private readonly ApplicationDbContext context;
 
-        public SellsService(IDeletableEntityRepository<Sell> sellRepository)
+        public SellsService(IDeletableEntityRepository<Sell> sellRepository, ApplicationDbContext context)
         {
             this.sellRepository = sellRepository;
+            this.context = context;
         }
 
         public async Task AddAsync(string stockName, decimal totalPrice, int profitPercent, string date, int companyId)

@@ -64,6 +64,7 @@
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IInvoicesService, InvoicesService>();
             services.AddTransient<IStocksService, StocksService>();
+            services.AddTransient<ISellsService, SellsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
