@@ -9,6 +9,6 @@
     {
         Task AddAsync(string name, string bulstat, string userId);
 
-        Task<List<SelectListItem>> GetAllCompaniesByUserIdAsync();
+        Task<IEnumerable<SelectListItem>> GetAllCompaniesByUserIdAsync();
     }
 }
