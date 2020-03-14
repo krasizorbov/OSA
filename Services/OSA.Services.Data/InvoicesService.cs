@@ -5,7 +5,9 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
@@ -37,15 +39,13 @@
             await this.invoiceRepository.SaveChangesAsync();
         }
 
-        public async Task<List<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId)
         {
-            var invoices = Task.Run(() => this.context.Invoices
+            var invoices = await this.context.Invoices
                 .Where(x => x.CompanyId == companyId)
                 .Select(i => new SelectListItem() { Value = i.Id.ToString(), Text = i.InvoiceNumber })
-                .ToList());
-            var result = await invoices;
-
-            return result;
+                .ToListAsync();
+            return invoices;
         }
     }
 }
