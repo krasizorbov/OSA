@@ -1,15 +1,16 @@
 ﻿namespace OSA.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IPurchasesService
     {
-        Task AddAsync(string stockName, string date, int companyId);
+        Task AddAsync(string stockName, string startDate, string endDate, string date, int companyId);
 
-        Task<IEnumerable<string>> GetStockNamesForCurrentMonthByCompanyIdAsync(int companyId);
+        Task<IEnumerable<string>> GetStockNamesForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<IEnumerable<string>> GetStockNamesForPrevoiusMonthByCompanyIdAsync(int companyId);
+        Task<IEnumerable<string>> GetStockNamesForPrevoiusMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<decimal> QuantitySold(int companyId);
 

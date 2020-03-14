@@ -21,6 +21,16 @@
         public IEnumerable<SelectListItem> StockNames { get; set; }
 
         [Required]
+        [Display(Name = "Start Date - (dd/mm/yyyy)")]
+        [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
+        public string StartDate { get; set; }
+
+        [Required]
+        [Display(Name = "End Date - (dd/mm/yyyy)")]
+        [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
+        public string EndDate { get; set; }
+
+        [Required]
         [Display(Name = "Total Quantity")]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal TotalQuantity { get; set; }

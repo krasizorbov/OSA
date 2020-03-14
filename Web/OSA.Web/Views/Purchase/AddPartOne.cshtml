@@ -18,29 +18,11 @@
                 </select>
                 <span asp-validation-for="CompanyId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" id="picker" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" id="picker" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
+            
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 </div>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script type="text/javascript">
-        $(".picker").datetimepicker({
-            format: "dd/MM/yyyy",
-            autoclose: true,
-            todayBtn: true,
-            pickerPosition: "bottom-left"
-        });
-    </script>
 }

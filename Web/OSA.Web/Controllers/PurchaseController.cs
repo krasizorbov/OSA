@@ -1,8 +1,5 @@
 ﻿namespace OSA.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -15,12 +12,14 @@
         private readonly IPurchasesService purchasesService;
         private readonly ICompaniesService companiesService;
         private readonly IStocksService stocksService;
+        private readonly IPurchasesService purchaseService;
 
-        public PurchaseController(IPurchasesService purchasesService, ICompaniesService companiesService, IStocksService stocksService)
+        public PurchaseController(IPurchasesService purchasesService, ICompaniesService companiesService, IStocksService stocksService, IPurchasesService purchaseService)
         {
             this.purchasesService = purchasesService;
             this.companiesService = companiesService;
             this.stocksService = stocksService;
+            this.purchaseService = purchaseService;
         }
 
         [Authorize]
@@ -37,7 +36,7 @@
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddPartOne(CreatePurchaseInputModelOne purchaseInputModelOne)
+        public IActionResult AddPartOne(CreatePurchaseInputModelOne purchaseInputModelOne, int id)
         {
             if (!this.ModelState.IsValid)
             {
@@ -45,6 +44,7 @@
             }
 
             var companyId = purchaseInputModelOne.CompanyId;
+
             return this.RedirectToAction("AddPartTwo", "Purchase", new { id = companyId });
         }
 
@@ -62,19 +62,21 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddPartTwo(CreatePurchaseInputModelTwo purchaseInputModel, int id)
+        public async Task<IActionResult> AddPartTwo(CreatePurchaseInputModelTwo purchaseInputModelTwo, string startDate, string endDate, int id, string stockName)
         {
             var companyId = id;
+            this.purchaseService.GetDates(startDate, endDate, companyId);
+            this.purchaseService.GetStockName(stockName);
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
             await this.purchasesService.AddAsync(
-                purchaseInputModel.StockName,
-                purchaseInputModel.TotalQuantity,
-                purchaseInputModel.TotalPrice,
-                purchaseInputModel.Date,
+                purchaseInputModelTwo.StockName,
+                purchaseInputModelTwo.StartDate,
+                purchaseInputModelTwo.EndDate,
+                purchaseInputModelTwo.Date,
                 companyId);
             return this.Redirect("/");
         }

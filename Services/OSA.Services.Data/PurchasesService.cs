@@ -24,6 +24,11 @@
         private string stockName;
         private DateTime startDate;
         private DateTime endDate;
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+
         private int id;
 
         public PurchasesService(IDeletableEntityRepository<Purchase> purchaseRepository, ApplicationDbContext context)
@@ -32,10 +37,14 @@
             this.context = context;
         }
 
-        public async Task AddAsync(string stockName, string date, int companyId)
+        public async Task AddAsync(string stockName, string startDate, string endDate, string date, int companyId)
         {
-            this.stockNamesForCurrentMonth = await this.GetStockNamesForCurrentMonthByCompanyIdAsync(this.id);
-            this.stockNamesForPreviousMonth = await this.GetStockNamesForPrevoiusMonthByCompanyIdAsync(this.id);
+            CultureInfo myCultureInfo = new CultureInfo("bg-BG");
+            var sstartDate = DateTime.ParseExact(startDate, "dd/MM/yyyy", myCultureInfo);
+            var eendDate = DateTime.ParseExact(endDate, "dd/MM/yyyy", myCultureInfo);
+
+            this.stockNamesForCurrentMonth = await this.GetStockNamesForCurrentMonthByCompanyIdAsync(sstartDate, eendDate, this.id);
+            this.stockNamesForPreviousMonth = await this.GetStockNamesForPrevoiusMonthByCompanyIdAsync(sstartDate, eendDate, this.id);
             List<string> stockNamesCM = this.stockNamesForCurrentMonth.ToList();
             List<string> stockNamesPM = this.stockNamesForPreviousMonth.ToList();
             stockNamesCM.AddRange(stockNamesPM);
@@ -86,20 +95,20 @@
             this.stockName = name;
         }
 
-        public async Task<IEnumerable<string>> GetStockNamesForCurrentMonthByCompanyIdAsync(int id)
+        public async Task<IEnumerable<string>> GetStockNamesForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
             this.stockNamesForCurrentMonth = await this.context.Stocks
-            .Where(x => x.Date >= this.startDate && x.Date <= this.endDate && x.CompanyId == id)
+            .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
             .Select(x => x.Name)
             .Distinct()
             .ToListAsync();
             return this.stockNamesForCurrentMonth;
         }
 
-        public async Task<IEnumerable<string>> GetStockNamesForPrevoiusMonthByCompanyIdAsync(int id)
+        public async Task<IEnumerable<string>> GetStockNamesForPrevoiusMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
             this.stockNamesForPreviousMonth = await this.context.Stocks
-            .Where(x => x.Date >= this.startDate.AddMonths(-1) && x.Date <= this.endDate.AddMonths(-1) && x.CompanyId == id)
+            .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.CompanyId == id)
             .Select(x => x.Name)
             .Distinct()
             .ToListAsync();
