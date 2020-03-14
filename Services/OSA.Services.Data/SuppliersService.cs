@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
@@ -30,20 +31,17 @@
                 Bulstat = bulstat,
                 CompanyId = companyId,
             };
-
             await this.supplierRepository.AddAsync(supplier);
             await this.supplierRepository.SaveChangesAsync();
         }
 
-        public async Task<List<SelectListItem>> GetAllSuppliersByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<SelectListItem>> GetAllSuppliersByCompanyIdAsync(int companyId)
         {
-            var supplierNames = Task.Run(() => this.context.Suppliers
+            var supplierNames = await this.context.Suppliers
                 .Where(x => x.CompanyId == companyId)
                 .Select(i => new SelectListItem() { Value = i.Id.ToString(), Text = i.Name })
-                .ToList());
-            var result = await supplierNames;
-
-            return result;
+                .ToListAsync();
+            return supplierNames;
         }
     }
 }
