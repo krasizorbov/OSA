@@ -1,13 +1,13 @@
 ﻿namespace OSA.Services.Data
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
@@ -39,15 +39,13 @@
             await this.stockRepository.SaveChangesAsync();
         }
 
-        public async Task<List<SelectListItem>> GetStockNamesByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<SelectListItem>> GetStockNamesByCompanyIdAsync(int companyId)
         {
-            var stocksNames = Task.Run(() => this.context.Stocks
+            var stockNames = await this.context.Stocks
                 .Where(x => x.CompanyId == companyId)
                 .Select(i => new SelectListItem() { Value = i.Id.ToString(), Text = i.Name })
-                .ToList());
-            var result = await stocksNames;
-
-            return result;
+                .ToListAsync();
+            return stockNames;
         }
     }
 }

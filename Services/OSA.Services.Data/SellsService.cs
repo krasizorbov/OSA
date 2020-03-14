@@ -3,6 +3,7 @@
     using System;
     using System.Globalization;
     using System.Threading.Tasks;
+
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
@@ -28,7 +29,6 @@
                 Date = DateTime.ParseExact(date.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
-
             await this.sellRepository.AddAsync(sell);
             await this.sellRepository.SaveChangesAsync();
         }

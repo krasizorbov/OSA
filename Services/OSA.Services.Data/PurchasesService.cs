@@ -26,7 +26,6 @@
                 Date = DateTime.ParseExact(date.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
-
             await this.purchaseRepository.AddAsync(purchase);
             await this.purchaseRepository.SaveChangesAsync();
         }
