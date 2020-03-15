@@ -11,23 +11,19 @@
     {
         private readonly IPurchasesService purchasesService;
         private readonly ICompaniesService companiesService;
-        private readonly IStocksService stocksService;
-        private readonly IPurchasesService purchaseService;
 
-        public PurchaseController(IPurchasesService purchasesService, ICompaniesService companiesService, IStocksService stocksService, IPurchasesService purchaseService)
+        public PurchaseController(IPurchasesService purchasesService, ICompaniesService companiesService)
         {
             this.purchasesService = purchasesService;
             this.companiesService = companiesService;
-            this.stocksService = stocksService;
-            this.purchaseService = purchaseService;
         }
 
         [Authorize]
-        public async Task<IActionResult> AddPartOne()
+        public async Task<IActionResult> Add()
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
-            var model = new CreatePurchaseInputModelOne
+            var model = new CreatePurchaseInputModel
             {
                 CompanyNames = companyNames,
             };
@@ -36,47 +32,20 @@
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddPartOne(CreatePurchaseInputModelOne purchaseInputModelOne, int id)
+        public async Task<IActionResult> Add(CreatePurchaseInputModel purchaseInputModel, string startDate, string endDate, int id, string stockName)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
+            var companyId = purchaseInputModel.CompanyId;
 
-            var companyId = purchaseInputModelOne.CompanyId;
-
-            return this.RedirectToAction("AddPartTwo", "Purchase", new { id = companyId });
-        }
-
-        [Authorize]
-        public async Task<IActionResult> AddPartTwo(int id)
-        {
-            var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
-
-            var model = new CreatePurchaseInputModelTwo
-            {
-                StockNames = stockNames,
-            };
-            return this.View(model);
-        }
-
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> AddPartTwo(CreatePurchaseInputModelTwo purchaseInputModelTwo, string startDate, string endDate, int id, string stockName)
-        {
-            var companyId = id;
-            this.purchaseService.GetDates(startDate, endDate, companyId);
-            this.purchaseService.GetStockName(stockName);
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
             await this.purchasesService.AddAsync(
-                purchaseInputModelTwo.StockName,
-                purchaseInputModelTwo.StartDate,
-                purchaseInputModelTwo.EndDate,
-                purchaseInputModelTwo.Date,
+                purchaseInputModel.StockName,
+                purchaseInputModel.StartDate,
+                purchaseInputModel.EndDate,
+                purchaseInputModel.Date,
                 companyId);
             return this.Redirect("/");
         }

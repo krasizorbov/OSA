@@ -1,6 +1,5 @@
 ﻿namespace OSA.Web.ViewModels.Purchases.Input_Models
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -8,17 +7,17 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using OSA.Common;
 
-    public class CreatePurchaseInputModelTwo
+    public class CreatePurchaseInputModel
     {
         private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
 
         [BindRequired]
-        [Required(ErrorMessage = "Please select a Stock")]
-        [Display(Name = "Stock")]
-        [MaxLength(GlobalConstants.StockNameMaxLength)]
-        public string StockName { get; set; }
+        [Display(Name = "Company")]
+        public int CompanyId { get; set; }
 
-        public IEnumerable<SelectListItem> StockNames { get; set; }
+        public IEnumerable<SelectListItem> CompanyNames { get; set; }
+
+        public string StockName { get; set; }
 
         [Required]
         [Display(Name = "Start Date - (dd/mm/yyyy)")]

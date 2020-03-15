@@ -21,15 +21,6 @@
         private decimal quantitySold = 0;
         private decimal totalQuantity = 0;
         private decimal totalPrice = 0;
-        private string stockName;
-        private DateTime startDate;
-        private DateTime endDate;
-
-        public DateTime StartDate { get; set; }
-
-        public DateTime EndDate { get; set; }
-
-        private int id;
 
         public PurchasesService(IDeletableEntityRepository<Purchase> purchaseRepository, ApplicationDbContext context)
         {
@@ -39,12 +30,11 @@
 
         public async Task AddAsync(string stockName, string startDate, string endDate, string date, int companyId)
         {
-            CultureInfo myCultureInfo = new CultureInfo("bg-BG");
-            var sstartDate = DateTime.ParseExact(startDate, "dd/MM/yyyy", myCultureInfo);
-            var eendDate = DateTime.ParseExact(endDate, "dd/MM/yyyy", myCultureInfo);
+            var sstartDate = DateTime.ParseExact(startDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var eendDate = DateTime.ParseExact(endDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-            this.stockNamesForCurrentMonth = await this.GetStockNamesForCurrentMonthByCompanyIdAsync(sstartDate, eendDate, this.id);
-            this.stockNamesForPreviousMonth = await this.GetStockNamesForPrevoiusMonthByCompanyIdAsync(sstartDate, eendDate, this.id);
+            this.stockNamesForCurrentMonth = await this.GetStockNamesForCurrentMonthByCompanyIdAsync(sstartDate, eendDate, companyId);
+            this.stockNamesForPreviousMonth = await this.GetStockNamesForPrevoiusMonthByCompanyIdAsync(sstartDate, eendDate, companyId);
             List<string> stockNamesCM = this.stockNamesForCurrentMonth.ToList();
             List<string> stockNamesPM = this.stockNamesForPreviousMonth.ToList();
             stockNamesCM.AddRange(stockNamesPM);
@@ -52,8 +42,8 @@
 
             foreach (var name in stockNames)
             {
-                this.quantitySold = await this.QuantitySold(this.id);
-                this.quantityPurchased = await this.QuantityPurchased(this.id);
+                this.quantitySold = await this.QuantitySold(name, sstartDate, eendDate, companyId);
+                this.quantityPurchased = await this.QuantityPurchased(name, sstartDate, eendDate, companyId);
                 decimal quantityAvailable = 0;
                 if (this.quantityPurchased < this.quantitySold)
                 {
@@ -65,13 +55,13 @@
                     quantityAvailable = this.quantityPurchased - this.quantitySold;
                 }
 
-                this.totalQuantity = this.TotalQuantity(this.id);
+                this.totalQuantity = this.TotalQuantity(name, sstartDate, eendDate, companyId);
                 this.totalQuantity += quantityAvailable;
-                this.totalPrice = this.TotalPrice(this.id);
+                this.totalPrice = this.TotalPrice(name, sstartDate, eendDate, companyId);
 
                 var purchase = new Purchase
                 {
-                    StockName = stockName,
+                    StockName = name,
                     TotalQuantity = this.totalQuantity,
                     TotalPrice = this.totalPrice,
                     Date = DateTime.ParseExact(date.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture),
@@ -81,18 +71,6 @@
                 await this.purchaseRepository.AddAsync(purchase);
                 await this.purchaseRepository.SaveChangesAsync();
             }
-        }
-
-        public void GetDates(string startDate, string endDate, int id)
-        {
-            this.startDate = DateTime.ParseExact(startDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            this.endDate = DateTime.ParseExact(endDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            this.id = id;
-        }
-
-        public void GetStockName(string name)
-        {
-            this.stockName = name;
         }
 
         public async Task<IEnumerable<string>> GetStockNamesForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
@@ -115,36 +93,36 @@
             return this.stockNamesForPreviousMonth;
         }
 
-        public async Task<decimal> QuantityPurchased(int id)
+        public async Task<decimal> QuantityPurchased(string stockName, DateTime startDate, DateTime endDate, int id)
         {
             this.quantityPurchased = await this.context.Purchases
-            .Where(x => x.Date >= this.startDate.AddMonths(-1) && x.Date <= this.endDate.AddMonths(-1) && x.StockName == this.stockName && x.CompanyId == id)
+            .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.StockName == stockName && x.CompanyId == id)
             .Select(x => x.TotalQuantity)
             .FirstOrDefaultAsync();
             return this.quantityPurchased;
         }
 
-        public async Task<decimal> QuantitySold(int id)
+        public async Task<decimal> QuantitySold(string stockName, DateTime startDate, DateTime endDate, int id)
         {
             this.quantitySold = await this.context.Sells
-            .Where(x => x.Date >= this.startDate.AddMonths(-1) && x.Date <= this.endDate.AddMonths(-1) && x.StockName == this.stockName && x.CompanyId == id)
+            .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.StockName == stockName && x.CompanyId == id)
             .Select(x => x.TotalQuantity)
             .FirstOrDefaultAsync();
             return this.quantitySold;
         }
 
-        public decimal TotalPrice(int id)
+        public decimal TotalPrice(string stockName, DateTime startDate, DateTime endDate, int id)
         {
             this.totalPrice = this.context.Stocks
-            .Where(x => x.Date >= this.startDate && x.Date <= this.endDate && x.Name == this.stockName && x.CompanyId == id).Sum(p => p.Price);
+            .Where(x => x.Date >= startDate && x.Date <= endDate && x.Name == stockName && x.CompanyId == id).Sum(p => p.Price); // Total Price
 
             return this.totalPrice;
         }
 
-        public decimal TotalQuantity(int id)
+        public decimal TotalQuantity(string stockName, DateTime startDate, DateTime endDate, int id)
         {
             this.totalQuantity = this.context.Stocks
-            .Where(x => x.Date >= this.startDate && x.Date <= this.endDate && x.Name == this.stockName && x.CompanyId == id).Sum(q => q.Quantity);
+            .Where(x => x.Date >= startDate && x.Date <= endDate && x.Name == stockName && x.CompanyId == id).Sum(q => q.Quantity);
 
             return this.totalQuantity;
         }
