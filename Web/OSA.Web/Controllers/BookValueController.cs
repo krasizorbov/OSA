@@ -5,16 +5,16 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using OSA.Services.Data;
-    using OSA.Web.ViewModels.Purchases.Input_Models;
+    using OSA.Web.ViewModels.BookValues.Input_Models;
 
-    public class PurchaseController : BaseController
+    public class BookValueController : BaseController
     {
-        private readonly IPurchasesService purchasesService;
+        private readonly IBooksValueService bookValueService;
         private readonly ICompaniesService companiesService;
 
-        public PurchaseController(IPurchasesService purchasesService, ICompaniesService companiesService)
+        public BookValueController(IBooksValueService bookValueService, ICompaniesService companiesService)
         {
-            this.purchasesService = purchasesService;
+            this.bookValueService = bookValueService;
             this.companiesService = companiesService;
         }
 
@@ -23,7 +23,7 @@
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
-            var model = new CreatePurchaseInputModel
+            var model = new CreateBookValueInputModel
             {
                 CompanyNames = companyNames,
             };
@@ -32,20 +32,19 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreatePurchaseInputModel purchaseInputModel, string startDate, string endDate, int id, string stockName)
+        public async Task<IActionResult> Add(CreateBookValueInputModel bookValueInputModel, string startDate, string endDate, int id)
         {
-            var companyId = purchaseInputModel.CompanyId;
+            var companyId = bookValueInputModel.CompanyId;
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            await this.purchasesService.AddAsync(
-                purchaseInputModel.StockName,
-                purchaseInputModel.StartDate,
-                purchaseInputModel.EndDate,
-                purchaseInputModel.Date,
+            await this.bookValueService.AddAsync(
+                bookValueInputModel.StartDate,
+                bookValueInputModel.EndDate,
+                bookValueInputModel.Date,
                 companyId);
             return this.Redirect("/");
         }

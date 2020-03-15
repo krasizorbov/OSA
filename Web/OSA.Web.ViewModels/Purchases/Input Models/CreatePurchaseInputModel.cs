@@ -30,16 +30,6 @@
         public string EndDate { get; set; }
 
         [Required]
-        [Display(Name = "Total Quantity")]
-        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
-        public decimal TotalQuantity { get; set; }
-
-        [Required]
-        [Display(Name = "Total Price")]
-        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
-        public decimal TotalPrice { get; set; }
-
-        [Required]
         [Display(Name = "Date - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
