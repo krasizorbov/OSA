@@ -120,7 +120,8 @@
         public decimal TotalPrice(string stockName, DateTime startDate, DateTime endDate, int id)
         {
             this.totalPrice = this.context.Stocks
-            .Where(x => x.Date >= startDate && x.Date <= endDate && x.Name == stockName && x.CompanyId == id).Sum(p => p.Price); // Total Price
+            .Where(x => x.Date >= startDate && x.Date <= endDate && x.Name == stockName && x.CompanyId == id)
+            .Sum(p => p.Price); // Total Price
 
             return this.totalPrice;
         }
@@ -128,7 +129,8 @@
         public decimal TotalQuantity(string stockName, DateTime startDate, DateTime endDate, int id)
         {
             this.totalQuantity = this.context.Stocks
-            .Where(x => x.Date >= startDate && x.Date <= endDate && x.Name == stockName && x.CompanyId == id).Sum(q => q.Quantity);
+            .Where(x => x.Date >= startDate && x.Date <= endDate && x.Name == stockName && x.CompanyId == id)
+            .Sum(q => q.Quantity);
 
             return this.totalQuantity;
         }

@@ -30,14 +30,22 @@
 
         public async Task<List<Sell>> GetMonthlySellsAsync(DateTime startDate, DateTime endDate, int id)
         {
-            var monthlySell = await this.context.Sells.Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id).Select(x => x).ToListAsync();
+            var monthlySell = await this.context.Sells
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Select(x => x)
+                .ToListAsync();
 
             return monthlySell;
         }
 
-        public Task<decimal> GetStockMonthlyAveragePriceAsync(string stockName, DateTime startDate, DateTime endDate, int id)
+        public async Task<decimal> GetStockMonthlyAveragePriceAsync(string stockName, DateTime startDate, DateTime endDate, int id)
         {
-            throw new NotImplementedException();
+            var purchasedStockAveragePrice = await this.context.Purchases
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id)
+                .Select(x => x.AveragePrice)
+                .FirstOrDefaultAsync();
+
+            return purchasedStockAveragePrice;
         }
     }
 }
