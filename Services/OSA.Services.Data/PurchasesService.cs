@@ -36,16 +36,21 @@
 
             this.stockNamesForCurrentMonth = await this.GetStockNamesForCurrentMonthByCompanyIdAsync(start_Date, end_Date, companyId);
             this.stockNamesForPreviousMonth = await this.GetStockNamesForPrevoiusMonthByCompanyIdAsync(start_Date, end_Date, companyId);
+
             List<string> stockNamesCM = this.stockNamesForCurrentMonth.ToList();
             List<string> stockNamesPM = this.stockNamesForPreviousMonth.ToList();
+
             stockNamesCM.AddRange(stockNamesPM);
+
             var stockNames = stockNamesCM.Distinct().ToList();
 
             foreach (var name in stockNames)
             {
                 this.quantitySold = await this.QuantitySold(name, start_Date, end_Date, companyId);
                 this.quantityPurchased = await this.QuantityPurchased(name, start_Date, end_Date, companyId);
+
                 decimal quantityAvailable = 0;
+
                 if (this.quantityPurchased < this.quantitySold)
                 {
                     Console.WriteLine("The quantity sold is bigger than the quantity purchased");
