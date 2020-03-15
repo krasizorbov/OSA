@@ -8,7 +8,7 @@
 
     public interface IBooksValueService
     {
-        Task AddAsync(decimal price, string stockName, string startDate, string endDate, string date, int companyId);
+        Task AddAsync(string startDate, string endDate, string date, int companyId);
 
         Task<List<Sell>> GetMonthlySellsAsync(DateTime startDate, DateTime endDate, int companyId);
 
