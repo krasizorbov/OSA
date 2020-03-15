@@ -4,7 +4,7 @@
 
     using OSA.Data.Models;
 
-    public interface IBooksValue
+    public interface IBooksValueService
     {
         Task AddAsync(decimal price, string stockName, string date, int companyId);
 

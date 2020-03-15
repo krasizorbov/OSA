@@ -13,6 +13,7 @@
 
     public class PurchasesService : IPurchasesService
     {
+        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<Purchase> purchaseRepository;
         private readonly ApplicationDbContext context;
         private IEnumerable<string> stockNamesForCurrentMonth;
@@ -30,11 +31,11 @@
 
         public async Task AddAsync(string stockName, string startDate, string endDate, string date, int companyId)
         {
-            var sstartDate = DateTime.ParseExact(startDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            var eendDate = DateTime.ParseExact(endDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var start_Date = DateTime.ParseExact(startDate, DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture);
 
-            this.stockNamesForCurrentMonth = await this.GetStockNamesForCurrentMonthByCompanyIdAsync(sstartDate, eendDate, companyId);
-            this.stockNamesForPreviousMonth = await this.GetStockNamesForPrevoiusMonthByCompanyIdAsync(sstartDate, eendDate, companyId);
+            this.stockNamesForCurrentMonth = await this.GetStockNamesForCurrentMonthByCompanyIdAsync(start_Date, end_Date, companyId);
+            this.stockNamesForPreviousMonth = await this.GetStockNamesForPrevoiusMonthByCompanyIdAsync(start_Date, end_Date, companyId);
             List<string> stockNamesCM = this.stockNamesForCurrentMonth.ToList();
             List<string> stockNamesPM = this.stockNamesForPreviousMonth.ToList();
             stockNamesCM.AddRange(stockNamesPM);
@@ -42,8 +43,8 @@
 
             foreach (var name in stockNames)
             {
-                this.quantitySold = await this.QuantitySold(name, sstartDate, eendDate, companyId);
-                this.quantityPurchased = await this.QuantityPurchased(name, sstartDate, eendDate, companyId);
+                this.quantitySold = await this.QuantitySold(name, start_Date, end_Date, companyId);
+                this.quantityPurchased = await this.QuantityPurchased(name, start_Date, end_Date, companyId);
                 decimal quantityAvailable = 0;
                 if (this.quantityPurchased < this.quantitySold)
                 {
@@ -55,16 +56,16 @@
                     quantityAvailable = this.quantityPurchased - this.quantitySold;
                 }
 
-                this.totalQuantity = this.TotalQuantity(name, sstartDate, eendDate, companyId);
+                this.totalQuantity = this.TotalQuantity(name, start_Date, end_Date, companyId);
                 this.totalQuantity += quantityAvailable;
-                this.totalPrice = this.TotalPrice(name, sstartDate, eendDate, companyId);
+                this.totalPrice = this.TotalPrice(name, start_Date, end_Date, companyId);
 
                 var purchase = new Purchase
                 {
                     StockName = name,
                     TotalQuantity = this.totalQuantity,
                     TotalPrice = this.totalPrice,
-                    Date = DateTime.ParseExact(date.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    Date = DateTime.ParseExact(date.ToString(), DateFormat, CultureInfo.InvariantCulture),
                     CompanyId = companyId,
                 };
 
