@@ -46,8 +46,8 @@
 
             foreach (var name in stockNames)
             {
-                this.quantitySold = await this.QuantitySold(name, start_Date, end_Date, companyId);
-                this.quantityPurchased = await this.QuantityPurchased(name, start_Date, end_Date, companyId);
+                this.quantitySold = await this.QuantitySoldAsync(name, start_Date, end_Date, companyId);
+                this.quantityPurchased = await this.QuantityPurchasedAsync(name, start_Date, end_Date, companyId);
 
                 decimal quantityAvailable = 0;
 
@@ -99,7 +99,7 @@
             return this.stockNamesForPreviousMonth;
         }
 
-        public async Task<decimal> QuantityPurchased(string stockName, DateTime startDate, DateTime endDate, int id)
+        public async Task<decimal> QuantityPurchasedAsync(string stockName, DateTime startDate, DateTime endDate, int id)
         {
             this.quantityPurchased = await this.context.Purchases
             .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.StockName == stockName && x.CompanyId == id)
@@ -108,7 +108,7 @@
             return this.quantityPurchased;
         }
 
-        public async Task<decimal> QuantitySold(string stockName, DateTime startDate, DateTime endDate, int id)
+        public async Task<decimal> QuantitySoldAsync(string stockName, DateTime startDate, DateTime endDate, int id)
         {
             this.quantitySold = await this.context.Sells
             .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.StockName == stockName && x.CompanyId == id)

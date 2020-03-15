@@ -12,9 +12,9 @@
 
         Task<IEnumerable<string>> GetStockNamesForPrevoiusMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<decimal> QuantitySold(string stockName, DateTime startDate, DateTime endDate, int companyId);
+        Task<decimal> QuantitySoldAsync(string stockName, DateTime startDate, DateTime endDate, int companyId);
 
-        Task<decimal> QuantityPurchased(string stockName, DateTime startDate, DateTime endDate, int companyId);
+        Task<decimal> QuantityPurchasedAsync(string stockName, DateTime startDate, DateTime endDate, int companyId);
 
         decimal TotalQuantity(string stockName, DateTime startDate, DateTime endDate, int companyId);
 
