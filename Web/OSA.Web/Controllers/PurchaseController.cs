@@ -32,7 +32,7 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreatePurchaseInputModel purchaseInputModel, string startDate, string endDate, int id, string stockName)
+        public async Task<IActionResult> Add(CreatePurchaseInputModel purchaseInputModel, string startDate, string endDate, int id)
         {
             var companyId = purchaseInputModel.CompanyId;
 
@@ -42,7 +42,6 @@
             }
 
             await this.purchasesService.AddAsync(
-                purchaseInputModel.StockName,
                 purchaseInputModel.StartDate,
                 purchaseInputModel.EndDate,
                 purchaseInputModel.Date,

@@ -17,8 +17,6 @@
 
         public IEnumerable<SelectListItem> CompanyNames { get; set; }
 
-        public string StockName { get; set; }
-
         [Required]
         [Display(Name = "Start Date - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
