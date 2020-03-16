@@ -70,7 +70,7 @@
                     StockName = name,
                     TotalQuantity = this.totalQuantity,
                     TotalPrice = this.totalPrice,
-                    Date = DateTime.ParseExact(date.ToString(), DateFormat, CultureInfo.InvariantCulture),
+                    Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
                     CompanyId = companyId,
                 };
 
