@@ -11,13 +11,13 @@
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
-    public class BooksValueService : IBooksValueService
+    public class BookValuesService : IBookValuesService
     {
         private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<BookValue> bookValueRepository;
         private readonly ApplicationDbContext context;
 
-        public BooksValueService(IDeletableEntityRepository<BookValue> bookValueRepository, ApplicationDbContext context)
+        public BookValuesService(IDeletableEntityRepository<BookValue> bookValueRepository, ApplicationDbContext context)
         {
             this.bookValueRepository = bookValueRepository;
             this.context = context;

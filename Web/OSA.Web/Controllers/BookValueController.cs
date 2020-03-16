@@ -9,10 +9,10 @@
 
     public class BookValueController : BaseController
     {
-        private readonly IBooksValueService bookValueService;
+        private readonly IBookValuesService bookValueService;
         private readonly ICompaniesService companiesService;
 
-        public BookValueController(IBooksValueService bookValueService, ICompaniesService companiesService)
+        public BookValueController(IBookValuesService bookValueService, ICompaniesService companiesService)
         {
             this.bookValueService = bookValueService;
             this.companiesService = companiesService;
