@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -29,29 +30,52 @@
             var end_Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture);
         }
 
-        public Task<BookValue> GetCurrentBookValueForStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int companyId)
+        public async Task<decimal> GetCurrentBookValueForStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
-            throw new NotImplementedException();
+            var currentBookValueForStockName = await this.context.BookValues
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id)
+                .Select(x => x.Price)
+                .FirstOrDefaultAsync();
+
+            return currentBookValueForStockName;
         }
 
-        public Task<Purchase> GetCurrentPurchasedStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int companyId)
+        public async Task<Purchase> GetCurrentPurchasedStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
-            throw new NotImplementedException();
+            var currentPurchasedStockName = await this.context.Purchases
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id)
+                .FirstOrDefaultAsync();
+
+            return currentPurchasedStockName;
         }
 
-        public Task<Sell> GetCurrentSoldStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int companyId)
+        public async Task<Sell> GetCurrentSoldStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
-            throw new NotImplementedException();
+            var currentSoldStockName = await this.context.Sells
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id)
+                .FirstOrDefaultAsync();
+
+            return currentSoldStockName;
         }
 
-        public Task<IEnumerable<string>> GetPurchasedStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<IEnumerable<string>> GetPurchasedStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
-            throw new NotImplementedException();
+            var purchasedStockNames = await this.context.Purchases
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Select(x => x.StockName)
+                .ToListAsync();
+
+            return purchasedStockNames;
         }
 
-        public Task<IEnumerable<string>> GetSoldStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<IEnumerable<string>> GetSoldStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
-            throw new NotImplementedException();
+            var soldStockNames = await this.context.Sells
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Select(x => x.StockName)
+                .ToListAsync();
+
+            return soldStockNames;
         }
     }
 }
