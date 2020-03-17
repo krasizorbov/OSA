@@ -70,6 +70,7 @@
             services.AddTransient<IAvailableStocksService, AvailableStocksService>();
             services.AddTransient<IProductionInvoicesService, ProductionInvoicesService>();
             services.AddTransient<IReceiptsService, ReceiptsService>();
+            services.AddTransient<IExpenseBooksService, ExpenseBooksService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
