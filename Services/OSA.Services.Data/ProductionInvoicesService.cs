@@ -24,8 +24,8 @@
         {
             var productionInvoice = new ProductionInvoice
             {
-                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
                 InvoiceNumber = invoiceNumber,
+                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
                 StockCost = materialCost,
                 ExternalCost = externalCost,
                 CompanyId = companyId,
