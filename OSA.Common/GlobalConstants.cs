@@ -32,6 +32,8 @@
 
         public const string ValidInvoiceNumber = "A Valid Invoice Number Contains Only Numbers!";
 
+        public const string ValidReceiptNumber = "A Valid Receipt Number Contains Only Numbers!";
+
         public const string InvalidDateTimeFormat = "This is not a valid date!";
     }
 }
