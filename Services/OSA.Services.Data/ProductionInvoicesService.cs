@@ -4,7 +4,6 @@
     using System.Globalization;
     using System.Threading.Tasks;
 
-    using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
@@ -12,12 +11,10 @@
     {
         private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<ProductionInvoice> productionInvoicesRepository;
-        private readonly ApplicationDbContext context;
 
-        public ProductionInvoicesService(IDeletableEntityRepository<ProductionInvoice> productionInvoicesRepository, ApplicationDbContext context)
+        public ProductionInvoicesService(IDeletableEntityRepository<ProductionInvoice> productionInvoicesRepository)
         {
             this.productionInvoicesRepository = productionInvoicesRepository;
-            this.context = context;
         }
 
         public async Task AddAsync(string invoiceNumber, string date, decimal materialCost, decimal externalCost, int companyId)
