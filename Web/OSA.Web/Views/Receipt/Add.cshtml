@@ -1,0 +1,51 @@
+﻿@model OSA.Web.ViewModels.Receipts.Input_Models.CreateReceiptInputModel
+@{
+    this.ViewData["Title"] = "Add Receipt";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <h3>Create A Receipt</h3>
+            <div class="form-group">
+                <label asp-for="CompanyId"></label>
+                <select id="dropdowntipo" asp-for="CompanyId" class="form-control">
+                    <option value="0" hidden disabled selected>Select Company</option>
+                    @foreach (var name in Model.CompanyNames)
+                    {
+                        <option value="@name.Value">@name.Text</option>
+                    }
+                </select>
+                <span asp-validation-for="CompanyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReceiptNumber"></label>
+                <input asp-for="ReceiptNumber" class="form-control">
+                <span asp-validation-for="ReceiptNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" id="picker" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salary"></label>
+                <input asp-for="Salary" class="form-control">
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(".picker").datetimepicker({
+            format: "dd/MM/yyyy",
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left"
+        });
+    </script>
+}

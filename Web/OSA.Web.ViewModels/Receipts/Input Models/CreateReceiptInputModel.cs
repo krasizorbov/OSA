@@ -1,4 +1,4 @@
-﻿namespace OSA.Web.ViewModels.Receipts.Input_Model
+﻿namespace OSA.Web.ViewModels.Receipts.Input_Models
 {
     using System;
     using System.Collections.Generic;
