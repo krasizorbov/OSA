@@ -45,7 +45,7 @@
                 var currentSoldStock = await this.GetCurrentSoldStockNameAsync(start_Date, end_Date, name, companyId);
                 var currentBookValue = await this.GetCurrentBookValueForStockNameAsync(start_Date, end_Date, name, companyId);
 
-                if (purchasedStockNames.Contains(name) && soldStockNames.Contains(name)) // Best scenario equal material amount on both sides
+                if (purchasedStockNames.Contains(name) && soldStockNames.Contains(name)) // Best scenario equal stock amount on both sides
                 {
                     var availableStock = new AvailableStock
                     {
@@ -59,7 +59,7 @@
                     };
                     await this.availableStockRepository.AddAsync(availableStock);
                 }
-                else if (!purchasedStockNames.Contains(name) && soldStockNames.Contains(name)) // No satch material in Purchases
+                else if (!purchasedStockNames.Contains(name) && soldStockNames.Contains(name)) // No satch stock in Purchases
                 {
                     var availableStock = new AvailableStock
                     {
@@ -73,7 +73,7 @@
                     };
                     await this.availableStockRepository.AddAsync(availableStock);
                 }
-                else if (purchasedStockNames.Contains(name) && !soldStockNames.Contains(name)) // No satch material in Sells
+                else if (purchasedStockNames.Contains(name) && !soldStockNames.Contains(name)) // No satch stock in Sells
                 {
                     var availableStock = new AvailableStock
                     {
