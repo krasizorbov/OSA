@@ -68,6 +68,7 @@
             services.AddTransient<IPurchasesService, PurchasesService>();
             services.AddTransient<IBookValuesService, BookValuesService>();
             services.AddTransient<IAvailableStocksService, AvailableStocksService>();
+            services.AddTransient<IProductionInvoicesService, ProductionInvoicesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
