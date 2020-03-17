@@ -18,15 +18,17 @@
         public string Name { get; set; }
 
         [Required]
+        [Display(Name = "Total Quantity")]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal Quantity { get; set; }
 
         [Required]
+        [Display(Name = "Total Price")]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal Price { get; set; }
 
         [Required]
-        [Display(Name = "Invoice Issue Date - (dd/mm/yyyy)")]
+        [Display(Name = "The last day of the month - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
 
