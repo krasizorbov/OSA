@@ -5,16 +5,16 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using OSA.Services.Data;
-    using OSA.Web.ViewModels.BookValues.Input_Models;
+    using OSA.Web.ViewModels.AvailableStocks.Input_Models;
 
-    public class BookValueController : BaseController
+    public class AvailableStockController : Controller
     {
-        private readonly IBookValuesService bookValuesService;
+        private readonly IAvailableStocksService availableStocksService;
         private readonly ICompaniesService companiesService;
 
-        public BookValueController(IBookValuesService bookValuesService, ICompaniesService companiesService)
+        public AvailableStockController(IAvailableStocksService availableStocksService, ICompaniesService companiesService)
         {
-            this.bookValuesService = bookValuesService;
+            this.availableStocksService = availableStocksService;
             this.companiesService = companiesService;
         }
 
@@ -23,7 +23,7 @@
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
-            var model = new CreateBookValueInputModel
+            var model = new CreateAvailableStockInputModel
             {
                 CompanyNames = companyNames,
             };
@@ -32,19 +32,19 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreateBookValueInputModel bookValueInputModel, string startDate, string endDate, int id)
+        public async Task<IActionResult> Add(CreateAvailableStockInputModel availableStockInputModel, string startDate, string endDate, int id)
         {
-            var companyId = bookValueInputModel.CompanyId;
+            var companyId = availableStockInputModel.CompanyId;
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            await this.bookValuesService.AddAsync(
-                bookValueInputModel.StartDate,
-                bookValueInputModel.EndDate,
-                bookValueInputModel.Date,
+            await this.availableStocksService.AddAsync(
+                availableStockInputModel.StartDate,
+                availableStockInputModel.EndDate,
+                availableStockInputModel.Date,
                 companyId);
             return this.Redirect("/");
         }
