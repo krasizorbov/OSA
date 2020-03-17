@@ -10,7 +10,7 @@
     {
         [Required]
         [MaxLength(GlobalConstants.ReceiptNumberMaxLength)]
-        public int ReceiptNumber { get; set; }
+        public string ReceiptNumber { get; set; }
 
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal Salary { get; set; }
