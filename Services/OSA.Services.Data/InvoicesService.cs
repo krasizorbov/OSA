@@ -14,14 +14,13 @@
 
     public class InvoicesService : IInvoicesService
     {
+        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<Invoice> invoiceRepository;
-        private readonly ISuppliersService suppliersService;
         private readonly ApplicationDbContext context;
 
-        public InvoicesService(IDeletableEntityRepository<Invoice> invoiceRepository, ISuppliersService suppliersService, ApplicationDbContext context)
+        public InvoicesService(IDeletableEntityRepository<Invoice> invoiceRepository, ApplicationDbContext context)
         {
             this.invoiceRepository = invoiceRepository;
-            this.suppliersService = suppliersService;
             this.context = context;
         }
 
@@ -30,7 +29,7 @@
             var invoice = new Invoice
             {
                 InvoiceNumber = invoiceNumber,
-                Date = DateTime.ParseExact(date.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
                 SupplierId = supplierId,
                 CompanyId = companyId,
             };

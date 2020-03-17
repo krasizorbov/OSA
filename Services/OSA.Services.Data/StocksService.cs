@@ -14,6 +14,7 @@
 
     public class StocksService : IStocksService
     {
+        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<Stock> stockRepository;
         private readonly ApplicationDbContext context;
 
@@ -30,7 +31,7 @@
                 Name = name,
                 Quantity = quantity,
                 Price = price,
-                Date = DateTime.ParseExact(date.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
                 InvoiceId = invoiceId,
                 CompanyId = companyId,
             };

@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
+    using System.Globalization;
+    using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.EntityFrameworkCore;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
@@ -21,29 +23,68 @@
             this.context = context;
         }
 
-        public Task AddAsync(string startDate, string endDate, string date, int companyId)
+        public async Task AddAsync(string startDate, string endDate, string date, int companyId)
         {
-            throw new NotImplementedException();
+            var start_Date = DateTime.ParseExact(startDate, DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture);
+
+            var productionInvoices = await this.GetAllProductionInvoicesByMonthAsync(start_Date, end_Date, companyId);
+            var receipts = await this.GetAllReceiptsByMonthAsync(start_Date, end_Date, companyId);
+            var sells = await this.GetAllSellsByMonthAsync(start_Date, end_Date, companyId);
+            var bookValues = await this.GetAllBookValuesByMonthAsync(start_Date, end_Date, companyId);
+
+            var expenseBook = new ExpenseBook
+            {
+                TotalStockCost = productionInvoices.Sum(x => x.StockCost),
+                TotalExternalCost = productionInvoices.Sum(x => x.ExternalCost),
+                TotalSalaryCost = receipts.Sum(x => x.Salary),
+                TotalBookValue = bookValues.Sum(x => x.Price),
+                Profit = sells.Sum(x => x.TotalPrice),
+                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
+                CompanyId = companyId,
+            };
+            await this.expenseBooksRepository.AddAsync(expenseBook);
+            await this.expenseBooksRepository.SaveChangesAsync();
         }
 
-        public Task<List<BookValue>> GetAllBookValuesByMonthAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<List<BookValue>> GetAllBookValuesByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
-            throw new NotImplementedException();
+            var bookValues = await this.context.BookValues
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Select(x => x)
+                .ToListAsync();
+
+            return bookValues;
         }
 
-        public Task<List<ProductionInvoice>> GetAllProductionInvoicesByMonthAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<List<ProductionInvoice>> GetAllProductionInvoicesByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
-            throw new NotImplementedException();
+            var productionInvoices = await this.context.ProductionInvoices
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Select(x => x)
+                .ToListAsync();
+
+            return productionInvoices;
         }
 
-        public Task<List<Receipt>> GetAllReceiptsByMonthAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<List<Receipt>> GetAllReceiptsByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
-            throw new NotImplementedException();
+            var receipts = await this.context.Receipts
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Select(x => x)
+                .ToListAsync();
+
+            return receipts;
         }
 
-        public Task<List<Sell>> GetAllSellsByMonthAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<List<Sell>> GetAllSellsByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
-            throw new NotImplementedException();
+            var sells = await this.context.Sells
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Select(x => x)
+                .ToListAsync();
+
+            return sells;
         }
     }
 }
