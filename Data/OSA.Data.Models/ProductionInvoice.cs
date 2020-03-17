@@ -10,7 +10,7 @@
     {
         [Required]
         [MaxLength(GlobalConstants.InvoiceNumberMaxLength)]
-        public int InvoiceNumber { get; set; }
+        public string InvoiceNumber { get; set; }
 
         public DateTime Date { get; set; }
 
