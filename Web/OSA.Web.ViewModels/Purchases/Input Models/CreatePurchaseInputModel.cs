@@ -18,17 +18,17 @@
         public IEnumerable<SelectListItem> CompanyNames { get; set; }
 
         [Required]
-        [Display(Name = "Start Date - (dd/mm/yyyy)")]
+        [Display(Name = "Start date of the month - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string StartDate { get; set; }
 
         [Required]
-        [Display(Name = "End Date - (dd/mm/yyyy)")]
+        [Display(Name = "End date of the month - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string EndDate { get; set; }
 
         [Required]
-        [Display(Name = "Date - (dd/mm/yyyy)")]
+        [Display(Name = "End date of the month - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
     }

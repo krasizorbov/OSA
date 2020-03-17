@@ -27,7 +27,7 @@
         public int ProfitPercent { get; set; }
 
         [Required]
-        [Display(Name = "Sell Date - (dd/mm/yyyy)")]
+        [Display(Name = "End date of the month - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
     }
