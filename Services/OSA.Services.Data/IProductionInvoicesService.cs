@@ -4,6 +4,6 @@
 
     public interface IProductionInvoicesService
     {
-        Task AddAsync(string invoiceNumber, string date, decimal materialCost, decimal externalCostint, int companyId);
+        Task AddAsync(string invoiceNumber, string date, decimal materialCost, decimal externalCost, int companyId);
     }
 }
