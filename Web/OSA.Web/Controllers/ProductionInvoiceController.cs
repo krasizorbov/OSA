@@ -7,7 +7,7 @@
     using OSA.Services.Data;
     using OSA.Web.ViewModels.ProductionInvoices.Input_Models;
 
-    public class ProductionInvoiceController : Controller
+    public class ProductionInvoiceController : BaseController
     {
         private readonly IProductionInvoicesService productionInvoicesService;
         private readonly ICompaniesService companiesService;
