@@ -1,5 +1,6 @@
 ﻿namespace OSA.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -12,19 +13,23 @@
 
     public class SuppliersService : ISuppliersService
     {
+        public const string InvalidCompanyIdErrorMessage = "Company with the given ID doesn't exist!";
         private readonly IDeletableEntityRepository<Supplier> supplierRepository;
         private readonly ApplicationDbContext context;
-        private readonly ICompaniesService companiesService;
 
-        public SuppliersService(IDeletableEntityRepository<Supplier> supplierRepository, ApplicationDbContext context, ICompaniesService companiesService)
+        public SuppliersService(IDeletableEntityRepository<Supplier> supplierRepository, ApplicationDbContext context)
         {
             this.supplierRepository = supplierRepository;
             this.context = context;
-            this.companiesService = companiesService;
         }
 
         public async Task AddAsync(string name, string bulstat, int companyId)
         {
+            if (!this.context.Companies.Any(x => x.Id == companyId))
+            {
+                throw new ArgumentException(InvalidCompanyIdErrorMessage);
+            }
+
             var supplier = new Supplier
             {
                 Name = name,
