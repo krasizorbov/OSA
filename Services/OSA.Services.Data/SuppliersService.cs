@@ -48,5 +48,15 @@
                 .ToListAsync();
             return supplierNames;
         }
+
+        public bool SupplierExist(string supplierName, int companyId)
+        {
+            if (this.context.Suppliers.Where(x => x.CompanyId == companyId).Any(x => x.Name == supplierName))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
