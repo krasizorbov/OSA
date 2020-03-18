@@ -10,7 +10,7 @@
 
     public class SupplierController : BaseController
     {
-        private const string SupplierAlreadyExist = " already exists in the database! Please enter a new name.";
+        private const string SupplierAlreadyExist = " already exists! Please enter a new name.";
 
         private readonly ISuppliersService suppliersService;
         private readonly ICompaniesService companiesService;
@@ -49,7 +49,8 @@
                 {
                     CompanyNames = companyNames,
                 };
-                this.SetFlash(FlashMessageType.Error, supplierInputModel.Name + SupplierAlreadyExist);
+                // this.SetFlash(FlashMessageType.Error, supplierInputModel.Name + SupplierAlreadyExist);
+                this.ModelState.AddModelError(nameof(supplierInputModel.Name), supplierInputModel.Name + SupplierAlreadyExist);
                 return this.View(model);
             }
 
