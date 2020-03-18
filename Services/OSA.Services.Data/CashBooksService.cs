@@ -33,11 +33,11 @@
 
             var cashBook = new CashBook
             {
-                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
                 TotalInvoicePricesCost = totalStockCost,
                 TotalSalaryCost = expenseBook.TotalSalaryCost,
                 TotalStockExternalCost = expenseBook.TotalStockExternalCost,
                 TotalProfit = expenseBook.TotalProfit,
+                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
             await this.cashBooksRepository.AddAsync(cashBook);
