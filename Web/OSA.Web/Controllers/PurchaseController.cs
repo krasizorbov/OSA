@@ -14,7 +14,7 @@
     public class PurchaseController : BaseController
     {
         private const string DateFormat = "dd/MM/yyyy";
-        private const string PurchaseErrorMessage = "There is no stock! Please check your invoices.";
+        private const string PurchaseErrorMessage = "There is no available stock! Please check your invoices.";
 
         private readonly IPurchasesService purchasesService;
         private readonly ICompaniesService companiesService;
