@@ -35,6 +35,16 @@
             await this.companyRepository.SaveChangesAsync();
         }
 
+        public bool CompanyExist(string companyName, string userId)
+        {
+            if (this.context.Companies.Where(x => x.UserId == userId).Any(x => x.Name == companyName))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         async Task<IEnumerable<SelectListItem>> ICompaniesService.GetAllCompaniesByUserIdAsync()
         {
             var userId = this.usersService.GetCurrentUserId();
