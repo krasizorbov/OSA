@@ -50,7 +50,9 @@
                     CompanyNames = companyNames,
                 };
                 // this.SetFlash(FlashMessageType.Error, supplierInputModel.Name + SupplierAlreadyExist);
-                this.ModelState.AddModelError(nameof(supplierInputModel.Name), supplierInputModel.Name + SupplierAlreadyExist);
+                this.ModelState.AddModelError(
+                    nameof(supplierInputModel.Name),
+                    supplierInputModel.Name + SupplierAlreadyExist);
                 return this.View(model);
             }
 

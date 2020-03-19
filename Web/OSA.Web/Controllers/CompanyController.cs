@@ -39,11 +39,16 @@
             }
             else if (companyExist)
             {
-                this.ModelState.AddModelError(nameof(companyInputModel.Name), companyInputModel.Name + CompanyAlreadyExist);
+                this.ModelState.AddModelError(
+                    nameof(companyInputModel.Name),
+                    companyInputModel.Name + CompanyAlreadyExist);
                 return this.View();
             }
 
-            await this.companiesService.AddAsync(companyInputModel.Name, companyInputModel.Bulstat, userId);
+            await this.companiesService.AddAsync(
+                companyInputModel.Name,
+                companyInputModel.Bulstat,
+                userId);
             return this.Redirect("/");
         }
     }
