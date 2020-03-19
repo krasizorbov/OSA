@@ -9,12 +9,14 @@
 
     public class CompanyController : BaseController
     {
-        private readonly ICompaniesService companyService;
+        private const string CompanyAlreadyExist = " already exists! Please enter a new name.";
+
+        private readonly ICompaniesService companiesService;
         private readonly IUsersService userService;
 
-        public CompanyController(ICompaniesService companyService, IUsersService userService)
+        public CompanyController(ICompaniesService companiesService, IUsersService userService)
         {
-            this.companyService = companyService;
+            this.companiesService = companiesService;
             this.userService = userService;
         }
 
@@ -29,12 +31,19 @@
         public async Task<IActionResult> Add(CreateCompanyInputModel companyInputModel)
         {
             var userId = this.userService.GetCurrentUserId();
+            var companyExist = this.companiesService.CompanyExist(companyInputModel.Name, userId);
+
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
+            else if (companyExist)
+            {
+                this.ModelState.AddModelError(nameof(companyInputModel.Name), companyInputModel.Name + CompanyAlreadyExist);
+                return this.View();
+            }
 
-            await this.companyService.AddAsync(companyInputModel.Name, companyInputModel.Bulstat, userId);
+            await this.companiesService.AddAsync(companyInputModel.Name, companyInputModel.Bulstat, userId);
             return this.Redirect("/");
         }
     }
