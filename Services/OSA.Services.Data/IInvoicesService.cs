@@ -10,5 +10,7 @@
         Task AddAsync(string invoiceNumber, string date, int supplierId, int companyId);
 
         Task<IEnumerable<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId);
+
+        bool InvoiceExist(string invoiceNumber, int companyId);
     }
 }
