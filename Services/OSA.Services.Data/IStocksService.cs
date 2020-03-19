@@ -10,5 +10,7 @@
         Task AddAsync(string name, decimal quantity, decimal price, string date, int invoiceId, int companyId);
 
         Task<IEnumerable<SelectListItem>> GetStockNamesByCompanyIdAsync(int companyId);
+
+        bool StockExist(string stockName, int companyId);
     }
 }
