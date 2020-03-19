@@ -1,5 +1,6 @@
 ﻿namespace OSA.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -12,6 +13,7 @@
 
     public class CompaniesService : ICompaniesService
     {
+        public const string InvalidUserIdErrorMessage = "User with the given ID doesn't exist!";
         private readonly IDeletableEntityRepository<Company> companyRepository;
         private readonly IUsersService usersService;
         private readonly ApplicationDbContext context;
@@ -25,6 +27,11 @@
 
         public async Task AddAsync(string name, string bulstat, string userId)
         {
+            if (!this.context.Users.Any(x => x.Id == userId))
+            {
+                throw new ArgumentException(InvalidUserIdErrorMessage);
+            }
+
             var company = new Company
             {
                 Name = name,

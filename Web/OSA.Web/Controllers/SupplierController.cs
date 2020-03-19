@@ -49,6 +49,7 @@
                 {
                     CompanyNames = companyNames,
                 };
+
                 // this.SetFlash(FlashMessageType.Error, supplierInputModel.Name + SupplierAlreadyExist);
                 this.ModelState.AddModelError(
                     nameof(supplierInputModel.Name),

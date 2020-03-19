@@ -46,15 +46,5 @@
                 .ToListAsync();
             return invoices;
         }
-
-        public bool InvoiceExist(string invoiceNumber, int companyId)
-        {
-            if (this.context.Invoices.Where(x => x.CompanyId == companyId).Any(x => x.InvoiceNumber == invoiceNumber))
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 }
