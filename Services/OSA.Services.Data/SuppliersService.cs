@@ -40,7 +40,7 @@
             await this.supplierRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetAllSuppliersByCompanyIdAsync(int companyId)
+        public async Task<ICollection<SelectListItem>> GetAllSuppliersByCompanyIdAsync(int companyId)
         {
             var supplierNames = await this.context.Suppliers
                 .Where(x => x.CompanyId == companyId)

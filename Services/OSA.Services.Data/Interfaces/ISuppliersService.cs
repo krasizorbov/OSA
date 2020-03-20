@@ -9,7 +9,7 @@
     {
         Task AddAsync(string name, string bulstat, int companyId);
 
-        Task<IEnumerable<SelectListItem>> GetAllSuppliersByCompanyIdAsync(int companyId);
+        Task<ICollection<SelectListItem>> GetAllSuppliersByCompanyIdAsync(int companyId);
 
         bool SupplierExist(string supplierName, int companyId);
     }
