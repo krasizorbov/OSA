@@ -1,5 +1,7 @@
 ﻿namespace OSA.Web.Controllers
 {
+    using System;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -11,6 +13,8 @@
 
     public class AvailableStockController : BaseController
     {
+        private const string AvailableStockErrorMessage = "There is no purchases or sells for the current month! Please check your invoices and register some stocks.";
+
         private readonly IAvailableStocksService availableStocksService;
         private readonly ICompaniesService companiesService;
 
@@ -43,9 +47,26 @@
         {
             var companyId = availableStockInputModel.CompanyId;
 
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var purchasedStockNamesForCurrentMonth = await this.availableStocksService.GetPurchasedStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
+            var soldStockNamesForCurrentMonth = await this.availableStocksService.GetSoldStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
+
             if (!this.ModelState.IsValid)
             {
                 return this.View();
+            }
+            else if (purchasedStockNamesForCurrentMonth.Count == 0 || soldStockNamesForCurrentMonth.Count == 0)
+            {
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                var model = new CreateAvailableStockInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                this.SetFlash(FlashMessageType.Error, AvailableStockErrorMessage);
+                return this.View(model);
             }
 
             await this.availableStocksService.AddAsync(
