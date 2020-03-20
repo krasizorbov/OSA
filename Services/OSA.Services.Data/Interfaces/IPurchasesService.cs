@@ -12,6 +12,8 @@
 
         Task<List<string>> GetStockNamesForPrevoiusMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
+        Task<List<string>> GetStockNamesAsync(DateTime startDate, DateTime endDate, int companyId);
+
         Task<decimal> QuantitySoldAsync(string stockName, DateTime startDate, DateTime endDate, int companyId);
 
         Task<decimal> QuantityPurchasedAsync(string stockName, DateTime startDate, DateTime endDate, int companyId);

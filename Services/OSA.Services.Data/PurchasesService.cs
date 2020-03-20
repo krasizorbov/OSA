@@ -34,12 +34,7 @@
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
-            this.stockNamesForCurrentMonth = await this.GetStockNamesForCurrentMonthByCompanyIdAsync(start_Date, end_Date, companyId);
-            this.stockNamesForPreviousMonth = await this.GetStockNamesForPrevoiusMonthByCompanyIdAsync(start_Date, end_Date, companyId);
-
-            this.stockNamesForCurrentMonth.AddRange(this.stockNamesForPreviousMonth);
-
-            var stockNames = this.stockNamesForCurrentMonth.Distinct();
+            var stockNames = await this.GetStockNamesAsync(start_Date, end_Date, companyId);
 
             foreach (var name in stockNames)
             {
@@ -74,6 +69,15 @@
                 await this.purchaseRepository.AddAsync(purchase);
                 await this.purchaseRepository.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<string>> GetStockNamesAsync(DateTime startDate, DateTime endDate, int companyId)
+        {
+            this.stockNamesForCurrentMonth = await this.GetStockNamesForCurrentMonthByCompanyIdAsync(startDate, endDate, companyId);
+            this.stockNamesForPreviousMonth = await this.GetStockNamesForPrevoiusMonthByCompanyIdAsync(startDate, endDate, companyId);
+            this.stockNamesForCurrentMonth.AddRange(this.stockNamesForPreviousMonth);
+            var stockNames = this.stockNamesForCurrentMonth.Distinct();
+            return stockNames.ToList();
         }
 
         public async Task<List<string>> GetStockNamesForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
