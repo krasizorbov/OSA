@@ -47,16 +47,18 @@
         public async Task<IActionResult> Add(CreatePurchaseInputModel purchaseInputModel, string startDate, string endDate, int id)
         {
             var companyId = purchaseInputModel.CompanyId;
+
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            List<string> stockNamesCurrentMonth = new List<string>(await this.purchasesService.GetStockNamesForCurrentMonthByCompanyIdAsync(start_Date, end_Date, companyId));
+
+            //List<string> stockNamesCurrentMonth = new List<string>(await this.purchasesService.GetStockNamesForCurrentMonthByCompanyIdAsync(start_Date, end_Date, companyId));
             List<string> stockNamesPreviousMonth = new List<string>(await this.purchasesService.GetStockNamesForPrevoiusMonthByCompanyIdAsync(start_Date, end_Date, companyId));
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
-            else if (stockNamesCurrentMonth.Count == 0 && stockNamesPreviousMonth.Count == 0)
+            else if (stockNamesPreviousMonth.Count == 0)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
                 var model = new CreatePurchaseInputModel

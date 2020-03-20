@@ -13,7 +13,7 @@
 
     public class BookValueController : BaseController
     {
-        private const string BookValueErrorMessage = "There is no available stock! Please check your invoices and register some stocks.";
+        private const string BookValueErrorMessage = "There is no monthly sell! Register a sell if you have any. If not simply procede with registering a book value";
 
         private readonly IBookValuesService bookValuesService;
         private readonly ICompaniesService companiesService;
@@ -58,13 +58,7 @@
             }
             else if (monthlySells.Count == 0)
             {
-                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
-                var model = new CreateBookValueInputModel
-                {
-                    CompanyNames = companyNames,
-                };
-                this.SetFlash(FlashMessageType.Error, BookValueErrorMessage);
-                return this.View(model);
+                this.SetFlash(FlashMessageType.Warning, BookValueErrorMessage);
             }
 
             await this.bookValuesService.AddAsync(

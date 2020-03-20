@@ -8,9 +8,9 @@
     {
         Task AddAsync(string startDate, string endDate, string date, int companyId);
 
-        Task<IEnumerable<string>> GetStockNamesForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<List<string>> GetStockNamesForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<IEnumerable<string>> GetStockNamesForPrevoiusMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<List<string>> GetStockNamesForPrevoiusMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<decimal> QuantitySoldAsync(string stockName, DateTime startDate, DateTime endDate, int companyId);
 

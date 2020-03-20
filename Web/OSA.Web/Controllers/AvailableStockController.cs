@@ -13,7 +13,7 @@
 
     public class AvailableStockController : BaseController
     {
-        private const string AvailableStockErrorMessage = "There is no purchases or sells for the current month! Please check your invoices and register some stocks.";
+        private const string AvailableStockErrorMessage = "There is no purchases for the current month! Please register a purchase!";
 
         private readonly IAvailableStocksService availableStocksService;
         private readonly ICompaniesService companiesService;
@@ -57,7 +57,7 @@
             {
                 return this.View();
             }
-            else if (purchasedStockNamesForCurrentMonth.Count == 0 || soldStockNamesForCurrentMonth.Count == 0)
+            else if (purchasedStockNamesForCurrentMonth.Count == 0)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 

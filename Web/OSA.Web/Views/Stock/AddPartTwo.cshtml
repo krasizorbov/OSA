@@ -10,6 +10,17 @@
             <h3>Step 2:</h3>
             <partial name="_FlashMessageTypePartial" />
             <div class="form-group">
+                <label asp-for="InvoiceId"></label>
+                <select id="dropdowntipo" asp-for="InvoiceId" class="form-control">
+                    <option value="0" hidden disabled selected>Select Invoice Number</option>
+                    @foreach (var name in Model.Invoices)
+                    {
+                        <option value="@name.Value">@name.Text</option>
+                    }
+                </select>
+                <span asp-validation-for="InvoiceId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Name"></label>
                 <input asp-for="Name" class="form-control">
                 <span asp-validation-for="Name" class="text-danger"></span>
@@ -29,17 +40,7 @@
                 <input asp-for="Date" id="picker" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="InvoiceId"></label>
-                <select id="dropdowntipo" asp-for="InvoiceId" class="form-control">
-                    <option value="0" hidden disabled selected>Select Invoice Number</option>
-                    @foreach (var name in Model.Invoices)
-                    {
-                        <option value="@name.Value">@name.Text</option>
-                    }
-                </select>
-                <span asp-validation-for="InvoiceId" class="text-danger"></span>
-            </div>
+
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
