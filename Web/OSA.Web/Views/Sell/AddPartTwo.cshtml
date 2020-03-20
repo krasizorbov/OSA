@@ -15,7 +15,7 @@
                     <option value="0" hidden disabled selected>Select Stock</option>
                     @foreach (var name in Model.StockNames)
                     {
-                        <option>@name.Text</option>
+                        <option>@name</option>
                     }
                 </select>
                 <span asp-validation-for="StockName" class="text-danger"></span>

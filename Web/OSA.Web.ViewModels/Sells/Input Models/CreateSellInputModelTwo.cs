@@ -18,7 +18,7 @@
         [MaxLength(GlobalConstants.StockNameMaxLength)]
         public string StockName { get; set; }
 
-        public IEnumerable<SelectListItem> StockNames { get; set; }
+        public IEnumerable<string> StockNames { get; set; }
 
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal TotalPrice { get; set; }

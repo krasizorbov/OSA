@@ -9,6 +9,8 @@
     {
         Task AddAsync(string name, decimal quantity, decimal price, string date, int invoiceId, int companyId);
 
-        Task<ICollection<SelectListItem>> GetStockNamesByCompanyIdAsync(int companyId);
+        //Task<List<SelectListItem>> GetStockNamesByCompanyIdAsync(int companyId);
+
+        Task<List<string>> GetStockNamesByCompanyIdAsync(int companyId);
     }
 }
