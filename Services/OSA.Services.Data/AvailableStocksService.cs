@@ -7,17 +7,17 @@
     using System.Threading.Tasks;
 
     using Microsoft.EntityFrameworkCore;
+    using OSA.Common;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class AvailableStocksService : IAvailableStocksService
     {
-        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<AvailableStock> availableStockRepository;
         private readonly ApplicationDbContext context;
-        private IEnumerable<string> purchasedStockNamesForCurrentMonth;
-        private IEnumerable<string> soldStockNamesForCurrentMonth;
+        private List<string> purchasedStockNamesForCurrentMonth;
+        private List<string> soldStockNamesForCurrentMonth;
 
         public AvailableStocksService(IDeletableEntityRepository<AvailableStock> availableStockRepository, ApplicationDbContext context)
         {
@@ -27,17 +27,15 @@
 
         public async Task AddAsync(string startDate, string endDate, string date, int companyId)
         {
-            var start_Date = DateTime.ParseExact(startDate, DateFormat, CultureInfo.InvariantCulture);
-            var end_Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
             this.purchasedStockNamesForCurrentMonth = await this.GetPurchasedStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
             this.soldStockNamesForCurrentMonth = await this.GetSoldStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
 
-            List<string> purchasedStockNames = this.purchasedStockNamesForCurrentMonth.ToList();
-            List<string> soldStockNames = this.soldStockNamesForCurrentMonth.ToList();
+            this.purchasedStockNamesForCurrentMonth.AddRange(this.soldStockNamesForCurrentMonth);
 
-            purchasedStockNames.AddRange(soldStockNames);
-            var stockNamesList = purchasedStockNames.Distinct();
+            var stockNamesList = this.purchasedStockNamesForCurrentMonth.Distinct();
 
             foreach (var name in stockNamesList.OrderBy(x => x))
             {
@@ -45,7 +43,7 @@
                 var currentSoldStock = await this.GetCurrentSoldStockNameAsync(start_Date, end_Date, name, companyId);
                 var currentBookValue = await this.GetCurrentBookValueForStockNameAsync(start_Date, end_Date, name, companyId);
 
-                if (purchasedStockNames.Contains(name) && soldStockNames.Contains(name)) // Best scenario equal stock amount on both sides
+                if (this.purchasedStockNamesForCurrentMonth.Contains(name) && this.soldStockNamesForCurrentMonth.Contains(name)) // Best scenario equal stock amount on both sides
                 {
                     var availableStock = new AvailableStock
                     {
@@ -54,12 +52,12 @@
                         TotalPurchasedPrice = currentPurchasedStock.TotalPrice,
                         TotalSoldAmount = currentSoldStock.TotalQuantity,
                         BookValue = currentBookValue,
-                        Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
+                        Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
                     await this.availableStockRepository.AddAsync(availableStock);
                 }
-                else if (!purchasedStockNames.Contains(name) && soldStockNames.Contains(name)) // No satch stock in Purchases
+                else if (!this.purchasedStockNamesForCurrentMonth.Contains(name) && this.soldStockNamesForCurrentMonth.Contains(name)) // No satch stock in Purchases
                 {
                     var availableStock = new AvailableStock
                     {
@@ -68,12 +66,12 @@
                         TotalPurchasedPrice = 0,
                         TotalSoldAmount = currentSoldStock.TotalQuantity,
                         BookValue = currentBookValue,
-                        Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
+                        Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
                     await this.availableStockRepository.AddAsync(availableStock);
                 }
-                else if (purchasedStockNames.Contains(name) && !soldStockNames.Contains(name)) // No satch stock in Sells
+                else if (this.purchasedStockNamesForCurrentMonth.Contains(name) && !this.soldStockNamesForCurrentMonth.Contains(name)) // No satch stock in Sells
                 {
                     var availableStock = new AvailableStock
                     {
@@ -82,7 +80,7 @@
                         TotalPurchasedPrice = currentPurchasedStock.TotalPrice,
                         TotalSoldAmount = 0,
                         BookValue = 0,
-                        Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
+                        Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
                     await this.availableStockRepository.AddAsync(availableStock);
@@ -120,7 +118,7 @@
             return currentSoldStockName;
         }
 
-        public async Task<IEnumerable<string>> GetPurchasedStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
+        public async Task<List<string>> GetPurchasedStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
             var purchasedStockNames = await this.context.Purchases
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
@@ -130,7 +128,7 @@
             return purchasedStockNames;
         }
 
-        public async Task<IEnumerable<string>> GetSoldStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
+        public async Task<List<string>> GetSoldStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
             var soldStockNames = await this.context.Sells
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
