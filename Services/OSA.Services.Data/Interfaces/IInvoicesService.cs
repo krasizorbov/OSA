@@ -9,6 +9,6 @@
     {
         Task AddAsync(string invoiceNumber, string date, int supplierId, int companyId);
 
-        Task<IEnumerable<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId);
+        Task<ICollection<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId);
     }
 }

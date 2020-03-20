@@ -57,6 +57,11 @@
         {
             var invoices = await this.invoicesService.GetAllInvoicesByCompanyIdAsync(id);
 
+            if (invoices.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.InvoiceErrorMessage);
+            }
+
             var model = new CreateStockInputModelTwo
             {
                 Invoices = invoices,

@@ -59,6 +59,11 @@
         {
             var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(id);
 
+            if (supplierNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.SupplierErrorMessage);
+            }
+
             var model = new CreateInvoiceInputModelTwo
             {
                 SupplierNames = supplierNames,

@@ -4,7 +4,9 @@
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using OSA.Common;
     using OSA.Services.Data;
+    using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.BookValues.Input_Models;
 
     public class BookValueController : BaseController
@@ -22,6 +24,11 @@
         public async Task<IActionResult> Add()
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
+            }
 
             var model = new CreateBookValueInputModel
             {

@@ -38,7 +38,7 @@
             await this.invoiceRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId)
+        public async Task<ICollection<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId)
         {
             var invoices = await this.context.Invoices
                 .Where(x => x.CompanyId == companyId)

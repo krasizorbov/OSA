@@ -37,5 +37,11 @@
         public const string InvalidDateTimeFormat = "This is not a valid date!";
 
         public const string CompanyErrorMessage = "Please register a company before proceeding!";
+
+        public const string SupplierErrorMessage = "Please register a supplier before proceeding!";
+
+        public const string InvoiceErrorMessage = "Please register an invoice before proceeding!";
+
+        public const string StockErrorMessage = "Please register a stock before proceeding!";
     }
 }

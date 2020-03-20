@@ -7,6 +7,7 @@
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using OSA.Common;
     using OSA.Services.Data;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Purchases.Input_Models;
@@ -14,7 +15,7 @@
     public class PurchaseController : BaseController
     {
         private const string DateFormat = "dd/MM/yyyy";
-        private const string PurchaseErrorMessage = "There is no available stock! Please check your invoices.";
+        private const string PurchaseErrorMessage = "There is no available stock! Please check your invoices and register some stocks.";
 
         private readonly IPurchasesService purchasesService;
         private readonly ICompaniesService companiesService;
@@ -29,6 +30,11 @@
         public async Task<IActionResult> Add()
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
+            }
 
             var model = new CreatePurchaseInputModel
             {

@@ -40,7 +40,7 @@
             await this.stockRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetStockNamesByCompanyIdAsync(int companyId)
+        public async Task<ICollection<SelectListItem>> GetStockNamesByCompanyIdAsync(int companyId)
         {
             var stockNames = await this.context.Stocks
                 .Where(x => x.CompanyId == companyId)

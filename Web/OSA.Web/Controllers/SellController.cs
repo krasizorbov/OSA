@@ -4,7 +4,9 @@
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using OSA.Common;
     using OSA.Services.Data;
+    using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Sells.Input_Models;
 
     public class SellController : BaseController
@@ -24,6 +26,11 @@
         public async Task<IActionResult> AddPartOne()
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
+            }
 
             var model = new CreateSellInputModelOne
             {
@@ -49,6 +56,11 @@
         public async Task<IActionResult> AddPartTwo(int id)
         {
             var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
+
+            if (stockNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.StockErrorMessage);
+            }
 
             var model = new CreateSellInputModelTwo
             {
