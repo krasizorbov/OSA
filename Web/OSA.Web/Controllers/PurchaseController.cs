@@ -14,7 +14,6 @@
 
     public class PurchaseController : BaseController
     {
-        private const string DateFormat = "dd/MM/yyyy";
         private const string PurchaseErrorMessage = "There is no available stock! Please check your invoices and register some stocks.";
 
         private readonly IPurchasesService purchasesService;
@@ -48,8 +47,8 @@
         public async Task<IActionResult> Add(CreatePurchaseInputModel purchaseInputModel, string startDate, string endDate, int id)
         {
             var companyId = purchaseInputModel.CompanyId;
-            var start_Date = DateTime.ParseExact(startDate, DateFormat, CultureInfo.InvariantCulture);
-            var end_Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             List<string> stockNamesCurrentMonth = new List<string>(await this.purchasesService.GetStockNamesForCurrentMonthByCompanyIdAsync(start_Date, end_Date, companyId));
             List<string> stockNamesPreviousMonth = new List<string>(await this.purchasesService.GetStockNamesForPrevoiusMonthByCompanyIdAsync(start_Date, end_Date, companyId));
 

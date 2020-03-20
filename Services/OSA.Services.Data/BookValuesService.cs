@@ -7,13 +7,13 @@
     using System.Threading.Tasks;
 
     using Microsoft.EntityFrameworkCore;
+    using OSA.Common;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class BookValuesService : IBookValuesService
     {
-        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<BookValue> bookValueRepository;
         private readonly ApplicationDbContext context;
 
@@ -25,37 +25,33 @@
 
         public async Task AddAsync(string startDate, string endDate, string date, int companyId)
         {
-            var start_Date = DateTime.ParseExact(startDate, DateFormat, CultureInfo.InvariantCulture);
-            var end_Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
             var monthlySells = await this.GetMonthlySellsAsync(start_Date, end_Date, companyId);
             decimal bookvalue = 0;
 
+            // Consider making a Dictionary<int, string> from "purchasedStockAveragePrice" for easy validation in the Controller later
             foreach (var sell in monthlySells.OrderBy(x => x.StockName))
             {
                 var purchasedStockAveragePrice = await this.GetStockMonthlyAveragePriceAsync(sell.StockName, start_Date, end_Date, companyId);
 
-                if (monthlySells.Count == 0)
-                {
-                    Console.WriteLine($"There is no sells for the month");
-                }
-
                 if (purchasedStockAveragePrice == 0)
                 {
                     bookvalue = 0;
-                    Console.WriteLine("No satch material has been purchased this month!");
+                    //Console.WriteLine("No satch material has been purchased this month!");
                 }
                 else
                 {
                     bookvalue = sell.TotalQuantity * purchasedStockAveragePrice;
-                    Console.WriteLine($"Material name : {sell.StockName} with Book Value {bookvalue:F2} lv.");
+                    //Console.WriteLine($"Material name : {sell.StockName} with Book Value {bookvalue:F2} lv.");
                 }
 
                 var bookValue = new BookValue
                 {
                     Price = bookvalue,
                     StockName = sell.StockName,
-                    Date = DateTime.ParseExact(date.ToString(), DateFormat, CultureInfo.InvariantCulture),
+                    Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                     CompanyId = companyId,
                 };
 

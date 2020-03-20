@@ -43,5 +43,7 @@
         public const string InvoiceErrorMessage = "Please register an invoice before proceeding!";
 
         public const string StockErrorMessage = "Please register a stock before proceeding!";
+
+        public const string DateFormat = "dd/MM/yyyy";
     }
 }
