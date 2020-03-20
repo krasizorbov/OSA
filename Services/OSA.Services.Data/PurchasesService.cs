@@ -45,7 +45,7 @@
 
                 if (this.quantityPurchased < this.quantitySold)
                 {
-                    Console.WriteLine("The quantity sold is bigger than the quantity purchased");
+                    // Console.WriteLine("The quantity sold is bigger than the quantity purchased");
                     continue;
                 }
                 else
