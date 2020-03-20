@@ -11,6 +11,7 @@
     public class SupplierController : BaseController
     {
         private const string SupplierAlreadyExist = " already exists! Please enter a new name.";
+        private const string CompanyErrorMessage = "Please register a company before proceeding!";
 
         private readonly ISuppliersService suppliersService;
         private readonly ICompaniesService companiesService;
@@ -25,6 +26,12 @@
         public async Task<IActionResult> Add()
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, CompanyErrorMessage);
+            }
+
             var model = new CreateSupplierInputModel
             {
                 CompanyNames = companyNames,

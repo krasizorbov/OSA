@@ -5,11 +5,13 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using OSA.Services.Data;
+    using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Invoices.Input_Models;
 
     public class InvoiceController : BaseController
     {
         private const string InvoiceAlreadyExist = " already exists! Please enter a new invoice number.";
+        private const string CompanyErrorMessage = "Please register a company before proceeding!";
 
         private readonly IInvoicesService invoicesService;
         private readonly ICompaniesService companiesService;
@@ -26,6 +28,11 @@
         public async Task<IActionResult> AddPartOne()
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, CompanyErrorMessage);
+            }
 
             var model = new CreateInvoiceInputModelOne
             {

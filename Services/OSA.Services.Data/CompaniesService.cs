@@ -52,7 +52,7 @@
             return false;
         }
 
-        async Task<IEnumerable<SelectListItem>> ICompaniesService.GetAllCompaniesByUserIdAsync()
+        async Task<ICollection<SelectListItem>> ICompaniesService.GetAllCompaniesByUserIdAsync()
         {
             var userId = this.usersService.GetCurrentUserId();
 
