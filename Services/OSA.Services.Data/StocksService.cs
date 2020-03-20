@@ -46,18 +46,10 @@
                .Where(x => x.CompanyId == companyId)
                .Select(x => x.Name)
                .Distinct()
+               .OrderBy(x => x)
                .ToListAsync();
 
             return stockNames;
         }
-
-        //public async Task<List<SelectListItem>> GetStockNamesByCompanyIdAsync(int companyId)
-        //{
-        //    var stockNames = await this.context.Stocks
-        //        .Where(x => x.CompanyId == companyId)
-        //        .Select(i => new SelectListItem() { Value = i.Id.ToString(), Text = i.Name })
-        //        .ToListAsync();
-        //    return stockNames;
-        //}
     }
 }
