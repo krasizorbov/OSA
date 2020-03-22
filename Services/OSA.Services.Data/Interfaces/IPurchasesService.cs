@@ -22,6 +22,6 @@
 
         decimal TotalPrice(string stockName, DateTime startDate, DateTime endDate, int companyId);
 
-        Task<List<string>> PurchaseExist(DateTime startDate, DateTime endDate, int companyId);
+        Task<List<string>> PurchaseExistAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }

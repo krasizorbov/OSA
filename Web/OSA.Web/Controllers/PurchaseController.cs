@@ -51,7 +51,7 @@
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
             var stockNames = await this.purchasesService.GetStockNamesAsync(start_Date, end_Date, companyId);
-            var purchaseExist = await this.purchasesService.PurchaseExist(start_Date, end_Date, companyId);
+            var purchaseExist = await this.purchasesService.PurchaseExistAsync(start_Date, end_Date, companyId);
 
             if (!this.ModelState.IsValid)
             {
