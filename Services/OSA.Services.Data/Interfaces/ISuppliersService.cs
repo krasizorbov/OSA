@@ -11,6 +11,6 @@
 
         Task<ICollection<SelectListItem>> GetAllSuppliersByCompanyIdAsync(int companyId);
 
-        bool SupplierExist(string supplierName, int companyId);
+        Task<string> SupplierExistAsync(string supplierName, int companyId);
     }
 }

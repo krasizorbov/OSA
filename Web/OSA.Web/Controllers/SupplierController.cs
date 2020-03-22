@@ -43,13 +43,13 @@
         [HttpPost]
         public async Task<IActionResult> Add(CreateSupplierInputModel supplierInputModel)
         {
-            var supplierExist = this.suppliersService.SupplierExist(supplierInputModel.Name, supplierInputModel.CompanyId);
+            var supplierExist = await this.suppliersService.SupplierExistAsync(supplierInputModel.Name, supplierInputModel.CompanyId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
-            else if (supplierExist)
+            else if (supplierExist != null)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 

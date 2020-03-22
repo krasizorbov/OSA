@@ -49,14 +49,14 @@
             return supplierNames;
         }
 
-        public bool SupplierExist(string supplierName, int companyId)
+        public async Task<string> SupplierExistAsync(string supplierName, int companyId)
         {
-            if (this.context.Suppliers.Where(x => x.CompanyId == companyId).Any(x => x.Name == supplierName))
-            {
-                return true;
-            }
+            var name = await this.context.Suppliers
+                .Where(x => x.CompanyId == companyId && x.Name == supplierName)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync();
 
-            return false;
+            return name;
         }
     }
 }
