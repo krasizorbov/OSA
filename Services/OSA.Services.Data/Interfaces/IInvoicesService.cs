@@ -10,5 +10,7 @@
         Task AddAsync(string invoiceNumber, string date, int supplierId, int companyId);
 
         Task<ICollection<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId);
+
+        Task<string> InvoiceExistAsync(string invoiceNumber, int companyId);
     }
 }

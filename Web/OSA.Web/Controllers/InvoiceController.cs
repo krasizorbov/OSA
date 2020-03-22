@@ -76,10 +76,26 @@
         public async Task<IActionResult> AddPartTwo(CreateInvoiceInputModelTwo invoiceInputModelTwo, int id)
         {
             var companyId = id;
+            var invoiceExist = await this.invoicesService.InvoiceExistAsync(invoiceInputModelTwo.InvoiceNumber, companyId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
+            }
+
+            if (invoiceExist != null)
+            {
+                var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(id);
+
+                this.ModelState.AddModelError(
+                    nameof(invoiceInputModelTwo.InvoiceNumber),
+                    invoiceInputModelTwo.InvoiceNumber + InvoiceAlreadyExist);
+
+                var model = new CreateInvoiceInputModelTwo
+                {
+                    SupplierNames = supplierNames,
+                };
+                return this.View(model);
             }
 
             await this.invoicesService.AddAsync(

@@ -46,5 +46,15 @@
                 .ToListAsync();
             return invoices;
         }
+
+        public async Task<string> InvoiceExistAsync(string invoiceNumber, int companyId)
+        {
+            var number = await this.context.Invoices
+                .Where(x => x.CompanyId == companyId && x.InvoiceNumber == invoiceNumber)
+                .Select(x => x.InvoiceNumber)
+                .FirstOrDefaultAsync();
+
+            return number;
+        }
     }
 }
