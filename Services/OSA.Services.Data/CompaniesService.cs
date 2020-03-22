@@ -42,14 +42,14 @@
             await this.companyRepository.SaveChangesAsync();
         }
 
-        public bool CompanyExist(string companyName, string userId)
+        public async Task<string> CompanyExistAsync(string companyName, string userId)
         {
-            if (this.context.Companies.Where(x => x.UserId == userId).Any(x => x.Name == companyName))
-            {
-                return true;
-            }
+            var name = await this.context.Companies
+                .Where(x => x.UserId == userId && x.Name == companyName)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync();
 
-            return false;
+            return name;
         }
 
         async Task<ICollection<SelectListItem>> ICompaniesService.GetAllCompaniesByUserIdAsync()

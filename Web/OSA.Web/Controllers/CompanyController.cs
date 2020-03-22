@@ -31,13 +31,13 @@
         public async Task<IActionResult> Add(CreateCompanyInputModel companyInputModel)
         {
             var userId = this.userService.GetCurrentUserId();
-            var companyExist = this.companiesService.CompanyExist(companyInputModel.Name, userId);
+            var companyExist = await this.companiesService.CompanyExistAsync(companyInputModel.Name, userId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
-            else if (companyExist)
+            else if (companyExist != null)
             {
                 this.ModelState.AddModelError(
                     nameof(companyInputModel.Name),

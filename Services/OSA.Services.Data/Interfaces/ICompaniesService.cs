@@ -11,6 +11,6 @@
 
         Task<ICollection<SelectListItem>> GetAllCompaniesByUserIdAsync();
 
-        bool CompanyExist(string companyName, string userId);
+        Task<string> CompanyExistAsync(string companyName, string userId);
     }
 }
