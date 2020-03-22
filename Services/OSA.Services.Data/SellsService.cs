@@ -36,14 +36,14 @@
             await this.sellRepository.SaveChangesAsync();
         }
 
-        public async Task<string> SaleExistAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<string> SaleExistAsync(string stockName, int companyId)
         {
-            var stockName = await this.context.Sells
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+            var name = await this.context.Sells
+                .Where(x => x.StockName == stockName && x.CompanyId == companyId)
                 .Select(x => x.StockName)
                 .FirstOrDefaultAsync();
 
-            return stockName;
+            return name;
         }
     }
 }

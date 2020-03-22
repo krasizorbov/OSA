@@ -11,6 +11,7 @@
 
     public class SellController : BaseController
     {
+        private const string SaleErrorMessage = "Monthly sale for the current stock is already done!";
         private readonly ISellsService sellsService;
         private readonly ICompaniesService companiesService;
         private readonly IStocksService stocksService;
@@ -71,12 +72,27 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddPartTwo(CreateSellInputModelTwo sellInputModel, int id)
+        public async Task<IActionResult> AddPartTwo(CreateSellInputModelTwo sellInputModel, string stockName, int id)
         {
             var companyId = id;
+            var saleExist = await this.sellsService.SaleExistAsync(stockName, companyId);
+
             if (!this.ModelState.IsValid)
             {
                 return this.View();
+            }
+
+            if (saleExist != null)
+            {
+                var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
+
+                this.SetFlash(FlashMessageType.Error, SaleErrorMessage);
+
+                var model = new CreateSellInputModelTwo
+                {
+                    StockNames = stockNames,
+                };
+                return this.View(model);
             }
 
             await this.sellsService.AddAsync(
