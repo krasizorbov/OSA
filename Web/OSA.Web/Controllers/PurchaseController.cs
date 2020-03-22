@@ -1,7 +1,6 @@
 ﻿namespace OSA.Web.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Threading.Tasks;
 
@@ -15,6 +14,7 @@
     public class PurchaseController : BaseController
     {
         private const string PurchaseErrorMessage = "There is no available stock! Please check your invoices and register some stocks.";
+        private const string PurchaseExistMessage = "Purchases for the current month already done! Check your purchases for more details.";
 
         private readonly IPurchasesService purchasesService;
         private readonly ICompaniesService companiesService;
@@ -51,12 +51,14 @@
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
             var stockNames = await this.purchasesService.GetStockNamesAsync(start_Date, end_Date, companyId);
+            var purchaseExist = await this.purchasesService.PurchaseExist(start_Date, end_Date, companyId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
-            else if (stockNames.Count == 0)
+
+            if (stockNames.Count == 0)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
                 var model = new CreatePurchaseInputModel
@@ -65,6 +67,18 @@
                 };
 
                 this.SetFlash(FlashMessageType.Error, PurchaseErrorMessage);
+                return this.View(model);
+            }
+
+            if (purchaseExist.Count != 0)
+            {
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+                var model = new CreatePurchaseInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+
+                this.SetFlash(FlashMessageType.Warning, PurchaseExistMessage);
                 return this.View(model);
             }
 

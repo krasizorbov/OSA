@@ -30,7 +30,7 @@
 
             var productionInvoices = await this.GetAllProductionInvoicesByMonthAsync(start_Date, end_Date, companyId);
             var receipts = await this.GetAllReceiptsByMonthAsync(start_Date, end_Date, companyId);
-            var sells = await this.GetAllSellsByMonthAsync(start_Date, end_Date, companyId);
+            var sales = await this.GetAllSalesByMonthAsync(start_Date, end_Date, companyId);
             var bookValues = await this.GetAllBookValuesByMonthAsync(start_Date, end_Date, companyId);
 
             var expenseBook = new ExpenseBook
@@ -39,7 +39,7 @@
                 TotalExternalCost = productionInvoices.Sum(x => x.ExternalCost),
                 TotalSalaryCost = receipts.Sum(x => x.Salary),
                 TotalBookValue = bookValues.Sum(x => x.Price),
-                Profit = sells.Sum(x => x.TotalPrice),
+                Profit = sales.Sum(x => x.TotalPrice),
                 Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
@@ -77,7 +77,7 @@
             return receipts;
         }
 
-        public async Task<List<Sell>> GetAllSellsByMonthAsync(DateTime startDate, DateTime endDate, int id)
+        public async Task<List<Sell>> GetAllSalesByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
             var sells = await this.context.Sells
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)

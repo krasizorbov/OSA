@@ -135,5 +135,15 @@
 
             return this.totalQuantity;
         }
+
+        public async Task<List<string>> PurchaseExist(DateTime startDate, DateTime endDate, int companyId)
+        {
+            var stockNames = await this.context.Purchases
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Select(x => x.StockName)
+                .ToListAsync();
+
+            return stockNames;
+        }
     }
 }

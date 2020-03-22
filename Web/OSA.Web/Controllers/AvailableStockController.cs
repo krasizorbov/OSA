@@ -13,7 +13,7 @@
 
     public class AvailableStockController : BaseController
     {
-        private const string AvailableStockErrorMessage = "There is no purchases for the current month! Please register a purchase!";
+        private const string AvailableStockErrorMessage = "There is no sales for the current month! Please register a sale!";
 
         private readonly IAvailableStocksService availableStocksService;
         private readonly ICompaniesService companiesService;
@@ -50,14 +50,13 @@
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
-            var purchasedStockNamesForCurrentMonth = await this.availableStocksService.GetPurchasedStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
             var soldStockNamesForCurrentMonth = await this.availableStocksService.GetSoldStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
-            else if (purchasedStockNamesForCurrentMonth.Count == 0)
+            else if (soldStockNamesForCurrentMonth.Count == 0)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 

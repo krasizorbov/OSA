@@ -16,6 +16,6 @@
 
         Task<List<BookValue>> GetAllBookValuesByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<List<Sell>> GetAllSellsByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<List<Sell>> GetAllSalesByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }

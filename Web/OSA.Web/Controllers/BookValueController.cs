@@ -60,12 +60,11 @@
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
-                this.SetFlash(FlashMessageType.Warning, BookValueErrorMessage);
-
                 var model = new CreateBookValueInputModel
                 {
                     CompanyNames = companyNames,
                 };
+                this.SetFlash(FlashMessageType.Warning, BookValueErrorMessage);
                 return this.View(model);
             }
 
