@@ -25,6 +25,6 @@
 
         public Company Company { get; set; }
 
-        public decimal TotalQuantity => this.TotalPrice * 100 / this.ProfitPercent;
+        public decimal TotalPurchasePrice => this.TotalPrice * 100 / this.ProfitPercent;
     }
 }

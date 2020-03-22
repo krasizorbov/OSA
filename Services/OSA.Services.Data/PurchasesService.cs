@@ -113,7 +113,7 @@
         {
             this.quantitySold = await this.context.Sells
             .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.StockName == stockName && x.CompanyId == id)
-            .Select(x => x.TotalQuantity)
+            .Select(x => x.TotalPurchasePrice)
             .FirstOrDefaultAsync();
             return this.quantitySold;
         }

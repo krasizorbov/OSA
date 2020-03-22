@@ -43,7 +43,7 @@
                 }
                 else
                 {
-                    bookvalue = sell.TotalQuantity * purchasedStockAveragePrice;
+                    bookvalue = sell.TotalPurchasePrice;
                     //Console.WriteLine($"Material name : {sell.StockName} with Book Value {bookvalue:F2} lv.");
                 }
 

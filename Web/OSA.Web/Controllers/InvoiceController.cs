@@ -87,9 +87,7 @@
             {
                 var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(id);
 
-                this.ModelState.AddModelError(
-                    nameof(invoiceInputModelTwo.InvoiceNumber),
-                    invoiceInputModelTwo.InvoiceNumber + InvoiceAlreadyExist);
+                this.ModelState.AddModelError(nameof(invoiceInputModelTwo.InvoiceNumber), invoiceInputModelTwo.InvoiceNumber + InvoiceAlreadyExist);
 
                 var model = new CreateInvoiceInputModelTwo
                 {

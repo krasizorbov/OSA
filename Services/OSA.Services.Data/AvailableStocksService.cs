@@ -50,8 +50,9 @@
                         StockName = name,
                         TotalPurchasedAmount = currentPurchasedStock.TotalQuantity,
                         TotalPurchasedPrice = currentPurchasedStock.TotalPrice,
-                        TotalSoldAmount = currentSoldStock.TotalQuantity,
+                        TotalSoldPrice = currentSoldStock.TotalPrice,
                         BookValue = currentBookValue,
+                        AveragePrice = currentPurchasedStock.AveragePrice,
                         Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
@@ -64,8 +65,9 @@
                         StockName = name,
                         TotalPurchasedAmount = 0,
                         TotalPurchasedPrice = 0,
-                        TotalSoldAmount = currentSoldStock.TotalQuantity,
+                        TotalSoldPrice = currentSoldStock.TotalPrice,
                         BookValue = currentBookValue,
+                        AveragePrice = currentPurchasedStock.AveragePrice,
                         Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
@@ -78,8 +80,9 @@
                         StockName = name,
                         TotalPurchasedAmount = currentPurchasedStock.TotalQuantity,
                         TotalPurchasedPrice = currentPurchasedStock.TotalPrice,
-                        TotalSoldAmount = 0,
+                        TotalSoldPrice = 0,
                         BookValue = 0,
+                        AveragePrice = currentPurchasedStock.AveragePrice,
                         Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };

@@ -19,10 +19,13 @@
         public decimal TotalPurchasedPrice { get; set; }
 
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
-        public decimal TotalSoldAmount { get; set; }
+        public decimal TotalSoldPrice { get; set; }
 
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal BookValue { get; set; }
+
+        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
+        public decimal AveragePrice { get; set; }
 
         public DateTime Date { get; set; }
 
@@ -31,8 +34,10 @@
 
         public Company Company { get; set; }
 
-        public decimal RemainingAmount => this.TotalPurchasedAmount - this.TotalSoldAmount;
+        public decimal TotalSoldQuantity => this.BookValue / this.AveragePrice;
 
-        public decimal RemainingPrice => this.TotalPurchasedPrice - this.BookValue;
+        public decimal RemainingQuantity => this.TotalPurchasedAmount - this.TotalSoldQuantity;
+
+        public decimal RemainingPrice => this.RemainingQuantity * this.AveragePrice;
     }
 }
