@@ -44,6 +44,16 @@
             await this.cashBooksRepository.SaveChangesAsync();
         }
 
+        public async Task<CashBook> CashBookExistAsync(DateTime startDate, DateTime endDate, int companyId)
+        {
+            var cashBook = await this.context.CashBooks
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Select(x => x)
+                .FirstOrDefaultAsync();
+
+            return cashBook;
+        }
+
         public async Task<ExpenseBook> GetMonthlyExpenseBook(DateTime startDate, DateTime endDate, int id)
         {
             var expenseBook = await this.context.ExpenseBooks

@@ -1,5 +1,7 @@
 ﻿namespace OSA.Web.Controllers
 {
+    using System;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -11,6 +13,9 @@
 
     public class CashBookController : BaseController
     {
+        private const string DateFormat = "dd/MM/yyyy";
+        private const string CashBookErrorMessage = "Cash book for the month already done!";
+
         private readonly ICashBooksService cashBooksService;
         private readonly ICompaniesService companiesService;
 
@@ -41,11 +46,28 @@
         [HttpPost]
         public async Task<IActionResult> Add(CreateCashBookInputModel cashBookInputModel, string startDate, string endDate, int id)
         {
+            var start_Date = DateTime.ParseExact(startDate, DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture);
+
             var companyId = cashBookInputModel.CompanyId;
+            var cashBook = await this.cashBooksService.CashBookExistAsync(start_Date, end_Date, companyId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
+            }
+
+            if (cashBook != null)
+            {
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                this.SetFlash(FlashMessageType.Error, CashBookErrorMessage);
+
+                var model = new CreateCashBookInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
             await this.cashBooksService.AddAsync(

@@ -12,5 +12,7 @@
         decimal TotalSumStockCostAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<ExpenseBook> GetMonthlyExpenseBook(DateTime startDate, DateTime endDate, int companyId);
+
+        Task<CashBook> CashBookExistAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }
