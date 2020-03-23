@@ -11,6 +11,7 @@
 
     public class ProductionInvoiceController : BaseController
     {
+        private const string InvoiceAlreadyExist = " already exists! Please enter a new invoice number.";
         private readonly IProductionInvoicesService productionInvoicesService;
         private readonly ICompaniesService companiesService;
 
@@ -42,10 +43,24 @@
         public async Task<IActionResult> Add(CreateProductionInvoiceInputModel productionInvoiceInputModel, int id)
         {
             var companyId = productionInvoiceInputModel.CompanyId;
+            var invoiceExist = await this.productionInvoicesService.InvoiceExistAsync(productionInvoiceInputModel.InvoiceNumber, companyId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
+            }
+
+            if (invoiceExist != null)
+            {
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                this.ModelState.AddModelError(nameof(productionInvoiceInputModel.InvoiceNumber), productionInvoiceInputModel.InvoiceNumber + InvoiceAlreadyExist);
+
+                var model = new CreateProductionInvoiceInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
             await this.productionInvoicesService.AddAsync(

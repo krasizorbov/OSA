@@ -2,8 +2,11 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.EntityFrameworkCore;
+    using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
@@ -11,10 +14,12 @@
     {
         private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<ProductionInvoice> productionInvoicesRepository;
+        private readonly ApplicationDbContext context;
 
-        public ProductionInvoicesService(IDeletableEntityRepository<ProductionInvoice> productionInvoicesRepository)
+        public ProductionInvoicesService(IDeletableEntityRepository<ProductionInvoice> productionInvoicesRepository, ApplicationDbContext context)
         {
             this.productionInvoicesRepository = productionInvoicesRepository;
+            this.context = context;
         }
 
         public async Task AddAsync(string invoiceNumber, string date, decimal materialCost, decimal externalCost, int companyId)
@@ -29,6 +34,16 @@
             };
             await this.productionInvoicesRepository.AddAsync(productionInvoice);
             await this.productionInvoicesRepository.SaveChangesAsync();
+        }
+
+        public async Task<string> InvoiceExistAsync(string invoiceNumber, int companyId)
+        {
+            var number = await this.context.ProductionInvoices
+                .Where(x => x.CompanyId == companyId && x.InvoiceNumber == invoiceNumber)
+                .Select(x => x.InvoiceNumber)
+                .FirstOrDefaultAsync();
+
+            return number;
         }
     }
 }

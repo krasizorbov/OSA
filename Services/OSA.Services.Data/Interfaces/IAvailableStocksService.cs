@@ -19,5 +19,7 @@
         Task<Sell> GetCurrentSoldStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int companyId);
 
         Task<decimal> GetCurrentBookValueForStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int companyId);
+
+        Task<List<string>> AvailableStockExistAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }

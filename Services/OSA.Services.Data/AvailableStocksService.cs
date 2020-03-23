@@ -93,6 +93,16 @@
             }
         }
 
+        public async Task<List<string>> AvailableStockExistAsync(DateTime startDate, DateTime endDate, int companyId)
+        {
+            var stockNames = await this.context.AvailableStocks
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Select(x => x.StockName)
+                .ToListAsync();
+
+            return stockNames;
+        }
+
         public async Task<decimal> GetCurrentBookValueForStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
             var currentBookValueForStockName = await this.context.BookValues

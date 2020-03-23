@@ -14,6 +14,7 @@
     public class AvailableStockController : BaseController
     {
         private const string AvailableStockErrorMessage = "There is no sales for the current month! Please register a sale!";
+        private const string AvailableStockExistMessage = "Available stock for the month already done!";
 
         private readonly IAvailableStocksService availableStocksService;
         private readonly ICompaniesService companiesService;
@@ -51,12 +52,14 @@
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
             var soldStockNamesForCurrentMonth = await this.availableStocksService.GetSoldStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
+            var stockNames = await this.availableStocksService.AvailableStockExistAsync(start_Date, end_Date, companyId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
-            else if (soldStockNamesForCurrentMonth.Count == 0)
+
+            if (soldStockNamesForCurrentMonth.Count == 0)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
@@ -65,6 +68,18 @@
                     CompanyNames = companyNames,
                 };
                 this.SetFlash(FlashMessageType.Error, AvailableStockErrorMessage);
+                return this.View(model);
+            }
+
+            if (stockNames.Count != 0)
+            {
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                var model = new CreateAvailableStockInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                this.SetFlash(FlashMessageType.Error, AvailableStockExistMessage);
                 return this.View(model);
             }
 
