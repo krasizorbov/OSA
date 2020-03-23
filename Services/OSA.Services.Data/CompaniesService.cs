@@ -52,6 +52,14 @@
             return name;
         }
 
+        public async Task<IEnumerable<Company>> GetCompaniesByUserIdAsync()
+        {
+            var userId = this.usersService.GetCurrentUserId();
+            var companies = await this.companyRepository.All().Where(x => x.UserId == userId).ToListAsync();
+
+            return companies;
+        }
+
         async Task<ICollection<SelectListItem>> ICompaniesService.GetAllCompaniesByUserIdAsync()
         {
             var userId = this.usersService.GetCurrentUserId();

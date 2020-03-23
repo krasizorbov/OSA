@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using OSA.Data.Models;
 
     public interface ICompaniesService
     {
@@ -12,5 +13,7 @@
         Task<ICollection<SelectListItem>> GetAllCompaniesByUserIdAsync();
 
         Task<string> CompanyExistAsync(string companyName, string userId);
+
+        Task<IEnumerable<Company>> GetCompaniesByUserIdAsync();
     }
 }

@@ -1,0 +1,27 @@
+﻿@model OSA.Web.ViewModels.Companies.View_Models.CompanyBindingViewModel
+@{
+    this.ViewData["Title"] = "Get Company";
+}
+
+<div class="text-center">
+    <div class="col-md-12">
+        <center>
+            <table border="0">
+                <tr>
+                    <th>Company Name</th>
+                    <th>Bulstat</th>
+                </tr>
+                @foreach (var item in Model.Companies)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Bulstat</td>
+                    </tr>
+                }
+            </table>
+        </center>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

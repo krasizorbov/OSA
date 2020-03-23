@@ -7,6 +7,7 @@
     using OSA.Common;
     using OSA.Services.Data;
     using OSA.Web.ViewModels.Companies.Input_Models;
+    using OSA.Web.ViewModels.Companies.View_Models;
 
     public class CompanyController : BaseController
     {
@@ -38,7 +39,8 @@
             {
                 return this.View();
             }
-            else if (companyExist != null)
+
+            if (companyExist != null)
             {
                 this.ModelState.AddModelError(
                     nameof(companyInputModel.Name),
@@ -52,6 +54,19 @@
                 userId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Get(CompanyBindingViewModel companyViewModel)
+        {
+            var companies = await this.companiesService.GetCompaniesByUserIdAsync();
+
+            var model = new CompanyBindingViewModel
+            {
+                Companies = companies,
+            };
+
+            return this.View(model);
         }
     }
 }

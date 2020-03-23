@@ -4,10 +4,10 @@
     using System.Collections.Generic;
     using System.Text;
 
+    using OSA.Data.Models;
+
     public class CompanyBindingViewModel
     {
-        public string Name { get; set; }
-
-        public string Bulstat { get; set; }
+        public IEnumerable<Company> Companies { get; set; }
     }
 }
