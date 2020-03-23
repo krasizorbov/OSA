@@ -4,6 +4,7 @@
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using OSA.Common;
     using OSA.Services.Data;
     using OSA.Web.ViewModels.Companies.Input_Models;
 
@@ -49,6 +50,7 @@
                 companyInputModel.Name,
                 companyInputModel.Bulstat,
                 userId);
+            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
     }

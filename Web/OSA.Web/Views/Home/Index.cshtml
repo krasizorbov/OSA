@@ -1,12 +1,12 @@
-﻿@using OSA.Common
-@{
+﻿@{
     this.ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
-    <p>ONE-SIDED ACCOUNTING</p>
-</div>
+    <div class="text-center">
+        @*<h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>*@
+        <h4><partial name="_SuccessfullyRegisteredMessage" /></h4>
+        <p>ONE-SIDED ACCOUNTING</p>
+    </div>
 <div id="container-background">
     <div id="container"><img src="~/Image/Background.jpg" /></div>
 </div>
