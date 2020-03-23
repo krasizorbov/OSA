@@ -68,6 +68,7 @@
                 supplierInputModel.Name,
                 supplierInputModel.Bulstat,
                 supplierInputModel.CompanyId);
+            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
     }

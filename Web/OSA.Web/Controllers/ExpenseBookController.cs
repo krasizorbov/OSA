@@ -6,6 +6,7 @@
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using OSA.Common;
     using OSA.Services.Data;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.ExpenseBooks.Input_Models;
@@ -69,6 +70,7 @@
                 expenseBookInputModel.EndDate,
                 expenseBookInputModel.Date,
                 companyId);
+            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
     }

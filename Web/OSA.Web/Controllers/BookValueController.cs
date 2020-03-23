@@ -88,6 +88,7 @@
                 bookValueInputModel.EndDate,
                 bookValueInputModel.Date,
                 companyId);
+            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
     }

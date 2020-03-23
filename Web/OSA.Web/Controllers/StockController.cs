@@ -86,6 +86,7 @@
                 stockInputModelTwo.Date,
                 stockInputModelTwo.InvoiceId,
                 companyId);
+            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
     }

@@ -69,6 +69,7 @@
                 productionInvoiceInputModel.StockCost,
                 productionInvoiceInputModel.ExternalCost,
                 companyId);
+            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
     }

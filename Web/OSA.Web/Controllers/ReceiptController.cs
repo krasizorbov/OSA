@@ -69,6 +69,7 @@
                 receiptInputModel.Date,
                 receiptInputModel.Salary,
                 companyId);
+            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
     }

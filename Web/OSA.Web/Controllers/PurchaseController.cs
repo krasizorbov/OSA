@@ -87,6 +87,7 @@
                 purchaseInputModel.EndDate,
                 purchaseInputModel.Date,
                 companyId);
+            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
     }
