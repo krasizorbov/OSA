@@ -82,9 +82,11 @@ body {
 #container-background {
     background-repeat: no-repeat;
     background-size: cover;
-    background-attachment: fixed;
-    width: 1150px;
-    height: 545px;
+    background-position: center;
+    /*background-size: 300px;*/
+    background-position: right bottom !important;
+    width: 1100px;
+    height: 540px;
     overflow: hidden
 }
 /* BackgroundRegister Image
