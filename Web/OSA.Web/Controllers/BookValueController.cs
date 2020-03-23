@@ -14,6 +14,7 @@
     public class BookValueController : BaseController
     {
         private const string BookValueErrorMessage = "There is no monthly sale! Please register a sale before proceeding with your book values.";
+        private const string BookValueAlreadyExistMessage = "Book values already done for the month selected!";
 
         private readonly IBookValuesService bookValuesService;
         private readonly ICompaniesService companiesService;
@@ -50,13 +51,15 @@
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
-            var monthlySells = await this.bookValuesService.GetMonthlySellsAsync(start_Date, end_Date, companyId);
+            var monthlySales = await this.bookValuesService.GetMonthlySalesAsync(start_Date, end_Date, companyId);
+            var stockNames = await this.bookValuesService.BookValueExistAsync(start_Date, end_Date, companyId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
-            else if (monthlySells.Count == 0)
+
+            if (monthlySales.Count == 0)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
@@ -65,6 +68,18 @@
                     CompanyNames = companyNames,
                 };
                 this.SetFlash(FlashMessageType.Warning, BookValueErrorMessage);
+                return this.View(model);
+            }
+
+            if (stockNames.Count != 0)
+            {
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                var model = new CreateBookValueInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                this.SetFlash(FlashMessageType.Error, BookValueAlreadyExistMessage);
                 return this.View(model);
             }
 

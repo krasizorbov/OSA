@@ -28,7 +28,7 @@
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
-            var monthlySells = await this.GetMonthlySellsAsync(start_Date, end_Date, companyId);
+            var monthlySells = await this.GetMonthlySalesAsync(start_Date, end_Date, companyId);
             decimal bookvalue = 0;
 
             // Consider making a Dictionary<int, string> from "purchasedStockAveragePrice" for easy validation in the Controller later
@@ -60,7 +60,17 @@
             }
         }
 
-        public async Task<List<Sell>> GetMonthlySellsAsync(DateTime startDate, DateTime endDate, int id)
+        public async Task<List<string>> BookValueExistAsync(DateTime startDate, DateTime endDate, int companyId)
+        {
+            var stockNames = await this.context.BookValues
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Select(x => x.StockName)
+                .ToListAsync();
+
+            return stockNames;
+        }
+
+        public async Task<List<Sell>> GetMonthlySalesAsync(DateTime startDate, DateTime endDate, int id)
         {
             var monthlySell = await this.context.Sells
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)

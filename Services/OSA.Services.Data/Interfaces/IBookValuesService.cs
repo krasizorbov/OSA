@@ -10,8 +10,10 @@
     {
         Task AddAsync(string startDate, string endDate, string date, int companyId);
 
-        Task<List<Sell>> GetMonthlySellsAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<List<Sell>> GetMonthlySalesAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<decimal> GetStockMonthlyAveragePriceAsync(string stockName, DateTime startDate, DateTime endDate, int companyId);
+
+        Task<List<string>> BookValueExistAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }
