@@ -11,6 +11,8 @@
 
     public class ReceiptController : BaseController
     {
+        private const string ReceiptAlreadyExist = " already exists! Please enter a new receipt number.";
+
         private readonly IReceiptsService receiptsService;
         private readonly ICompaniesService companiesService;
 
@@ -42,10 +44,24 @@
         public async Task<IActionResult> Add(CreateReceiptInputModel receiptInputModel, int id)
         {
             var companyId = receiptInputModel.CompanyId;
+            var receiptExist = await this.receiptsService.ReceiptExistAsync(receiptInputModel.ReceiptNumber, companyId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
+            }
+
+            if (receiptExist != null)
+            {
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                this.ModelState.AddModelError(nameof(receiptInputModel.ReceiptNumber), receiptInputModel.ReceiptNumber + ReceiptAlreadyExist);
+
+                var model = new CreateReceiptInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
             await this.receiptsService.AddAsync(

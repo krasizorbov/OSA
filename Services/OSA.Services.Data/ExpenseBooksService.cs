@@ -47,6 +47,16 @@
             await this.expenseBooksRepository.SaveChangesAsync();
         }
 
+        public async Task<ExpenseBook> ExpenseBookExistAsync(DateTime startDate, DateTime endDate, int companyId)
+        {
+            var expenseBook = await this.context.ExpenseBooks
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Select(x => x)
+                .FirstOrDefaultAsync();
+
+            return expenseBook;
+        }
+
         public async Task<List<BookValue>> GetAllBookValuesByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
             var bookValues = await this.context.BookValues
