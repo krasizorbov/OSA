@@ -9,14 +9,16 @@
         <center>
             <table border="0">
                 <tr>
+                    <th>ID</th>
                     <th>Company Name</th>
                     <th>Bulstat</th>
                 </tr>
-                @foreach (var item in Model.Companies)
+                @foreach (var company in Model.Companies)
                 {
                     <tr>
-                        <td>@item.Name</td>
-                        <td>@item.Bulstat</td>
+                        <td>@company.Id</td>
+                        <td>@company.Name</td>
+                        <td>@company.Bulstat</td>
                     </tr>
                 }
             </table>
