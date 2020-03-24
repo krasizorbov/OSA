@@ -6,7 +6,7 @@
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class CreateSupplierByCompanyInputModel
+    public class ShowSupplierByCompanyInputModel
     {
         [BindRequired]
         [Display(Name = "Company")]

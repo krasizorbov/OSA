@@ -1,0 +1,32 @@
+﻿@model OSA.Web.ViewModels.Suppliers.View_Models.SupplierBindingViewModel
+@{
+    this.ViewData["Title"] = "Get Supplier";
+}
+
+<div class="text-center">
+    <h3>List of suppliers</h3>
+    <div class="col-md-12">
+        <center>
+            <table border="0">
+                <tr>
+                    <th>ID</th>
+                    <th>Supplier Name</th>
+                    <th>Bulstat</th>
+                    <th>Company ID</th>
+                </tr>
+                @foreach (var supplier in Model.Suppliers)
+                {
+                    <tr>
+                        <td>@supplier.Id</td>
+                        <td>@supplier.Name</td>
+                        <td>@supplier.Bulstat</td>
+                        <td>@supplier.CompanyId</td>
+                    </tr>
+                }
+            </table>
+        </center>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

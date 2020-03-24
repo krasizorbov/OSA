@@ -8,6 +8,7 @@
     using OSA.Services.Data;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Suppliers.Input_Models;
+    using OSA.Web.ViewModels.Suppliers.View_Models;
 
     public class SupplierController : BaseController
     {
@@ -49,7 +50,8 @@
             {
                 return this.View();
             }
-            else if (supplierExist != null)
+
+            if (supplierExist != null)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
@@ -58,9 +60,7 @@
                     CompanyNames = companyNames,
                 };
 
-                this.ModelState.AddModelError(
-                    nameof(supplierInputModel.Name),
-                    supplierInputModel.Name + SupplierAlreadyExist);
+                this.ModelState.AddModelError(nameof(supplierInputModel.Name), supplierInputModel.Name + SupplierAlreadyExist);
                 return this.View(model);
             }
 
@@ -70,6 +70,49 @@
                 supplierInputModel.CompanyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetCompany()
+        {
+            var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
+            }
+
+            var model = new ShowSupplierByCompanyInputModel
+            {
+                CompanyNames = companyNames,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult GetCompany(ShowSupplierByCompanyInputModel inputModel)
+        {
+            var companyId = inputModel.CompanyId;
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            return this.RedirectToAction("GetSupplier", "Supplier", new { id = companyId });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetSupplier(int id)
+        {
+            var suppliers = await this.suppliersService.GetSuppliersByCompanyIdAsync(id);
+
+            var model = new SupplierBindingViewModel
+            {
+                Suppliers = suppliers,
+            };
+
+            return this.View(model);
         }
     }
 }
