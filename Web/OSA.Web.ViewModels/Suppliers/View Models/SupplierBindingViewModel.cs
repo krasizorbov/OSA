@@ -6,6 +6,8 @@
 
     public class SupplierBindingViewModel
     {
+        public string Name { get; set; }
+
         public IEnumerable<Supplier> Suppliers { get; set; }
     }
 }

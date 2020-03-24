@@ -60,6 +60,13 @@
             return companies;
         }
 
+        public async Task<string> GetCompanyNameByIdAsync(int companyId)
+        {
+            var name = await this.context.Companies.Where(x => x.Id == companyId).Select(x => x.Name).FirstOrDefaultAsync();
+
+            return name;
+        }
+
         async Task<ICollection<SelectListItem>> ICompaniesService.GetAllCompaniesByUserIdAsync()
         {
             var userId = this.usersService.GetCurrentUserId();

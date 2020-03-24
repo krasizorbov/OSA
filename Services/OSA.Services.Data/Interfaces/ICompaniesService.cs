@@ -15,5 +15,7 @@
         Task<string> CompanyExistAsync(string companyName, string userId);
 
         Task<IEnumerable<Company>> GetCompaniesByUserIdAsync();
+
+        Task<string> GetCompanyNameByIdAsync(int companyId);
     }
 }

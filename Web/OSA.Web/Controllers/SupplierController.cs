@@ -1,5 +1,6 @@
 ﻿namespace OSA.Web.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -91,24 +92,26 @@
 
         [Authorize]
         [HttpPost]
-        public IActionResult GetCompany(ShowSupplierByCompanyInputModel inputModel)
+        public async Task<IActionResult> GetCompany(ShowSupplierByCompanyInputModel inputModel)
         {
             var companyId = inputModel.CompanyId;
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            return this.RedirectToAction("GetSupplier", "Supplier", new { id = companyId });
+            return this.RedirectToAction("GetSupplier", "Supplier", new { id = companyId, name = companyName });
         }
 
         [Authorize]
-        public async Task<IActionResult> GetSupplier(int id)
+        public async Task<IActionResult> GetSupplier(int id, string name)
         {
             var suppliers = await this.suppliersService.GetSuppliersByCompanyIdAsync(id);
 
             var model = new SupplierBindingViewModel
             {
+                Name = name,
                 Suppliers = suppliers,
             };
 
