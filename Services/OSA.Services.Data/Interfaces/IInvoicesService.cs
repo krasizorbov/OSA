@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using OSA.Data.Models;
 
     public interface IInvoicesService
     {
@@ -12,5 +13,7 @@
         Task<ICollection<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId);
 
         Task<string> InvoiceExistAsync(string invoiceNumber, int companyId);
+
+        Task<IEnumerable<Invoice>> GetInvoicesByByCompanyIdAsync(int companyId);
     }
 }

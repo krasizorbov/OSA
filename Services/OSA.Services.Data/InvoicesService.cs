@@ -47,6 +47,13 @@
             return invoices;
         }
 
+        public async Task<IEnumerable<Invoice>> GetInvoicesByByCompanyIdAsync(int companyId)
+        {
+            var invoices = await this.invoiceRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+
+            return invoices;
+        }
+
         public async Task<string> InvoiceExistAsync(string invoiceNumber, int companyId)
         {
             var number = await this.context.Invoices
