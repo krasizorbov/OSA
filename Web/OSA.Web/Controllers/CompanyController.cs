@@ -57,7 +57,7 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Get(CompanyBindingViewModel bindingViewModel)
+        public async Task<IActionResult> Get()
         {
             var companies = await this.companiesService.GetCompaniesByUserIdAsync();
 
