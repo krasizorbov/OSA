@@ -73,7 +73,7 @@
                     };
                     await this.availableStockRepository.AddAsync(availableStock);
                 }
-                else if (this.purchasedStockNamesForCurrentMonth.Contains(name) && !this.soldStockNamesForCurrentMonth.Contains(name)) // No satch stock in Sells
+                else if (this.purchasedStockNamesForCurrentMonth.Contains(name) && !this.soldStockNamesForCurrentMonth.Contains(name)) // No satch stock in Sales
                 {
                     var availableStock = new AvailableStock
                     {
