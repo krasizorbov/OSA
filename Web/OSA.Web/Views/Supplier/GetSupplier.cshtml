@@ -4,7 +4,7 @@
 }
 
 <div class="text-center">
-    <h3>List of suppliers for company @Model.Name</h3>
+    <h3>List of suppliers for @Model.Name</h3>
     <div class="col-md-12">
         <center>
             <table border="0">
@@ -12,7 +12,6 @@
                     <th>ID</th>
                     <th>Supplier Name</th>
                     <th>Bulstat</th>
-                    <th>Company ID</th>
                 </tr>
                 @foreach (var supplier in Model.Suppliers)
                 {
@@ -20,7 +19,6 @@
                         <td>@supplier.Id</td>
                         <td>@supplier.Name</td>
                         <td>@supplier.Bulstat</td>
-                        <td>@supplier.CompanyId</td>
                     </tr>
                 }
             </table>
