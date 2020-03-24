@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using OSA.Data.Models;
 
     public interface ISuppliersService
     {
@@ -12,5 +13,7 @@
         Task<ICollection<SelectListItem>> GetAllSuppliersByCompanyIdAsync(int companyId);
 
         Task<string> SupplierExistAsync(string supplierName, int companyId);
+
+        Task<IEnumerable<Supplier>> GetSuppliersByCompanyIdAsync(int companyId);
     }
 }
