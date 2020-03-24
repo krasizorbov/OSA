@@ -8,6 +8,7 @@
     using OSA.Services.Data;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Invoices.Input_Models;
+    using OSA.Web.ViewModels.Invoices.View_Models;
 
     public class InvoiceController : BaseController
     {
@@ -103,6 +104,51 @@
                 companyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetCompany()
+        {
+            var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
+            }
+
+            var model = new ShowInvoiceByCompanyInputModel
+            {
+                CompanyNames = companyNames,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> GetCompany(ShowInvoiceByCompanyInputModel inputModel)
+        {
+            var companyId = inputModel.CompanyId;
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            return this.RedirectToAction("GetInvoice", "Invoice", new { id = companyId, name = companyName });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetInvoice(int id, string name)
+        {
+            var invoices = await this.invoicesService.GetInvoicesByCompanyIdAsync(id);
+
+            var model = new InvoiceBindingViewModel
+            {
+                Name = name,
+                Invoices = invoices,
+            };
+
+            return this.View(model);
         }
     }
 }

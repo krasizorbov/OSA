@@ -1,0 +1,34 @@
+﻿@model OSA.Web.ViewModels.Invoices.View_Models.InvoiceBindingViewModel
+@{
+    this.ViewData["Title"] = "Get Supplier";
+}
+
+<div class="text-center">
+    <h3>List of invoices for @Model.Name</h3>
+    <div class="col-md-12">
+        <center>
+            <table border="0">
+                <tr>
+                    <th>ID</th>
+                    <th>Invoice Number</th>
+                    <th>Issue Date</th>
+                    <th>Supplier ID</th>
+                    <th>Company ID</th>
+                </tr>
+                @foreach (var invoice in Model.Invoices)
+                {
+                    <tr>
+                        <td>@invoice.Id</td>
+                        <td>@invoice.InvoiceNumber</td>
+                        <td>@invoice.Date</td>
+                        <td>@invoice.SupplierId</td>
+                        <td>@invoice.CompanyId</td>
+                    </tr>
+                }
+            </table>
+        </center>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
