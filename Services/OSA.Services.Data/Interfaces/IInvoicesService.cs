@@ -14,6 +14,6 @@
 
         Task<string> InvoiceExistAsync(string invoiceNumber, int companyId);
 
-        Task<IEnumerable<Invoice>> GetInvoicesByByCompanyIdAsync(int companyId);
+        Task<IEnumerable<Invoice>> GetInvoicesByCompanyIdAsync(int companyId);
     }
 }

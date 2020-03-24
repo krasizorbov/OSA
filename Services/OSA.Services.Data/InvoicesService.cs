@@ -47,7 +47,7 @@
             return invoices;
         }
 
-        public async Task<IEnumerable<Invoice>> GetInvoicesByByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<Invoice>> GetInvoicesByCompanyIdAsync(int companyId)
         {
             var invoices = await this.invoiceRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
 
