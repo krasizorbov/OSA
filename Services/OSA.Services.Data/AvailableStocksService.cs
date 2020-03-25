@@ -25,7 +25,7 @@
             this.context = context;
         }
 
-        public async Task AddAsync(string startDate, string endDate, string date, int companyId)
+        public async Task AddAsync(string startDate, string endDate, int companyId)
         {
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
@@ -53,7 +53,7 @@
                         TotalSoldPrice = currentSoldStock.TotalPrice,
                         BookValue = currentBookValue,
                         AveragePrice = currentPurchasedStock.AveragePrice,
-                        Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
+                        Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
                     await this.availableStockRepository.AddAsync(availableStock);
@@ -68,7 +68,7 @@
                         TotalSoldPrice = currentSoldStock.TotalPrice,
                         BookValue = currentBookValue,
                         AveragePrice = currentPurchasedStock.AveragePrice,
-                        Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
+                        Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
                     await this.availableStockRepository.AddAsync(availableStock);
@@ -83,7 +83,7 @@
                         TotalSoldPrice = 0,
                         BookValue = 0,
                         AveragePrice = currentPurchasedStock.AveragePrice,
-                        Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
+                        Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
                     await this.availableStockRepository.AddAsync(availableStock);

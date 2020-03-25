@@ -23,7 +23,7 @@
             this.context = context;
         }
 
-        public async Task AddAsync(string startDate, string endDate, string date, int companyId)
+        public async Task AddAsync(string startDate, string endDate, int companyId)
         {
             var start_Date = DateTime.ParseExact(startDate, DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture);
@@ -40,7 +40,7 @@
                 TotalSalaryCost = receipts.Sum(x => x.Salary),
                 TotalBookValue = bookValues.Sum(x => x.Price),
                 Profit = sales.Sum(x => x.TotalPrice),
-                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
+                Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
             await this.expenseBooksRepository.AddAsync(expenseBook);

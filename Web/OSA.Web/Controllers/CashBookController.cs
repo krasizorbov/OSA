@@ -73,7 +73,6 @@
             await this.cashBooksService.AddAsync(
                 cashBookInputModel.StartDate,
                 cashBookInputModel.EndDate,
-                cashBookInputModel.Date,
                 companyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");

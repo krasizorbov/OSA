@@ -26,10 +26,5 @@
         [Display(Name = "End date of the month - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string EndDate { get; set; }
-
-        [Required]
-        [Display(Name = "End date of the month - (dd/mm/yyyy)")]
-        [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
-        public string Date { get; set; }
     }
 }

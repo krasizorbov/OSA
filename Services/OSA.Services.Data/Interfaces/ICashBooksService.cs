@@ -7,7 +7,7 @@
 
     public interface ICashBooksService
     {
-        Task AddAsync(string startDate, string endDate, string date, int companyId);
+        Task AddAsync(string startDate, string endDate, int companyId);
 
         decimal TotalSumStockCostAsync(DateTime startDate, DateTime endDate, int companyId);
 

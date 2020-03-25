@@ -86,7 +86,6 @@
             await this.availableStocksService.AddAsync(
                 availableStockInputModel.StartDate,
                 availableStockInputModel.EndDate,
-                availableStockInputModel.Date,
                 companyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");

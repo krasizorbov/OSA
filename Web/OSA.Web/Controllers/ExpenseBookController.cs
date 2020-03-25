@@ -68,7 +68,6 @@
             await this.expenseBooksService.AddAsync(
                 expenseBookInputModel.StartDate,
                 expenseBookInputModel.EndDate,
-                expenseBookInputModel.Date,
                 companyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");

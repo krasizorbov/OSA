@@ -8,7 +8,7 @@
 
     public interface IExpenseBooksService
     {
-        Task AddAsync(string startDate, string endDate, string date, int companyId);
+        Task AddAsync(string startDate, string endDate, int companyId);
 
         Task<List<ProductionInvoice>> GetAllProductionInvoicesByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
 
