@@ -1,4 +1,4 @@
-﻿namespace OSA.Web.ViewModels.Sells.Input_Models
+﻿namespace OSA.Web.ViewModels.Sales.Input_Models
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using OSA.Common;
 
-    public class CreateSellInputModelTwo
+    public class CreateSaleInputModelTwo
     {
         private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
 

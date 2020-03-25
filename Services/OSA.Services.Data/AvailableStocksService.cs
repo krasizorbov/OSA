@@ -124,7 +124,7 @@
 
         public async Task<Sale> GetCurrentSoldStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
-            var currentSoldStockName = await this.context.Sells
+            var currentSoldStockName = await this.context.Sales
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id)
                 .FirstOrDefaultAsync();
 
@@ -143,7 +143,7 @@
 
         public async Task<List<string>> GetSoldStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
-            var soldStockNames = await this.context.Sells
+            var soldStockNames = await this.context.Sales
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
                 .Select(x => x.StockName)
                 .ToListAsync();

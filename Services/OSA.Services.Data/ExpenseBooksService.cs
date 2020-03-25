@@ -89,7 +89,7 @@
 
         public async Task<List<Sale>> GetAllSalesByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
-            var sells = await this.context.Sells
+            var sells = await this.context.Sales
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
                 .Select(x => x)
                 .ToListAsync();

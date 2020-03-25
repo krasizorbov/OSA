@@ -111,7 +111,7 @@
 
         public async Task<decimal> QuantitySoldAsync(string stockName, DateTime startDate, DateTime endDate, int id)
         {
-            this.quantitySold = await this.context.Sells
+            this.quantitySold = await this.context.Sales
             .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.StockName == stockName && x.CompanyId == id)
             .Select(x => x.TotalPurchasePrice)
             .FirstOrDefaultAsync();

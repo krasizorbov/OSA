@@ -7,7 +7,7 @@
     using OSA.Common;
     using OSA.Services.Data;
     using OSA.Web.ValidationEnum;
-    using OSA.Web.ViewModels.Sells.Input_Models;
+    using OSA.Web.ViewModels.Sales.Input_Models;
 
     public class SaleController : BaseController
     {
@@ -33,7 +33,7 @@
                 this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
             }
 
-            var model = new CreateSellInputModelOne
+            var model = new CreateSaleInputModelOne
             {
                 CompanyNames = companyNames,
             };
@@ -42,7 +42,7 @@
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddPartOne(CreateSellInputModelOne sellInputModelOne)
+        public IActionResult AddPartOne(CreateSaleInputModelOne sellInputModelOne)
         {
             if (!this.ModelState.IsValid)
             {
@@ -63,7 +63,7 @@
                 this.SetFlash(FlashMessageType.Error, GlobalConstants.StockErrorMessage);
             }
 
-            var model = new CreateSellInputModelTwo
+            var model = new CreateSaleInputModelTwo
             {
                 StockNames = stockNames,
             };
@@ -72,7 +72,7 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddPartTwo(CreateSellInputModelTwo sellInputModel, string stockName, int id)
+        public async Task<IActionResult> AddPartTwo(CreateSaleInputModelTwo sellInputModel, string stockName, int id)
         {
             var companyId = id;
             var saleExist = await this.salesService.SaleExistAsync(stockName, companyId);
@@ -88,7 +88,7 @@
 
                 this.SetFlash(FlashMessageType.Error, SaleErrorMessage);
 
-                var model = new CreateSellInputModelTwo
+                var model = new CreateSaleInputModelTwo
                 {
                     StockNames = stockNames,
                 };
