@@ -1,0 +1,38 @@
+﻿@model OSA.Web.ViewModels.Sales.View_Models.SaleBindingViewModel
+@{
+    this.ViewData["Title"] = "Get Sale";
+}
+
+<div class="text-center">
+    <h3>List of sales for @Model.Name</h3>
+    <div class="col-md-12">
+        <center>
+            <table border="0">
+                <tr>
+                    <th>ID</th>
+                    <th>Stock Name</th>
+                    <th>Total Price</th>
+                    <th>Profit Percent</th>
+                    <th>Date</th>
+                    <th>Total price of the purchase</th>
+                    <th>Company ID</th>
+                </tr>
+                @foreach (var sale in Model.Sales)
+                {
+                    <tr>
+                        <td>@sale.Id</td>
+                        <td>@sale.StockName</td>
+                        <td>@sale.TotalPrice</td>
+                        <td>@sale.ProfitPercent</td>
+                        <td>@sale.Date</td>
+                        <td>@sale.TotalPurchasePrice</td>
+                        <td>@sale.CompanyId</td>
+                    </tr>
+                }
+            </table>
+        </center>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
