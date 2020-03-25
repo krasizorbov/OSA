@@ -31,7 +31,6 @@
             var monthlySales = await this.GetMonthlySalesAsync(start_Date, end_Date, companyId);
             decimal bookvalue = 0;
 
-            // Consider making a Dictionary<int, string> from "purchasedStockAveragePrice" for easy validation in the Controller later
             foreach (var sale in monthlySales.OrderBy(x => x.StockName))
             {
                 var purchasedStockAveragePrice = await this.GetStockMonthlyAveragePriceAsync(sale.StockName, start_Date, end_Date, companyId);
@@ -44,7 +43,6 @@
                 else
                 {
                     bookvalue = sale.TotalPurchasePrice;
-                    //Console.WriteLine($"Material name : {sell.StockName} with Book Value {bookvalue:F2} lv.");
                 }
 
                 var bookValue = new BookValue
