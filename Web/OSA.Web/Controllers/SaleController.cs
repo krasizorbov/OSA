@@ -51,7 +51,7 @@
             }
 
             var companyId = sellInputModelOne.CompanyId;
-            return this.RedirectToAction("AddPartTwo", "Sell", new { id = companyId });
+            return this.RedirectToAction("AddPartTwo", "Sale", new { id = companyId });
         }
 
         [Authorize]
