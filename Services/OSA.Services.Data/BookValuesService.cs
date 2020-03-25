@@ -28,13 +28,13 @@
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
-            var monthlySells = await this.GetMonthlySalesAsync(start_Date, end_Date, companyId);
+            var monthlySales = await this.GetMonthlySalesAsync(start_Date, end_Date, companyId);
             decimal bookvalue = 0;
 
             // Consider making a Dictionary<int, string> from "purchasedStockAveragePrice" for easy validation in the Controller later
-            foreach (var sell in monthlySells.OrderBy(x => x.StockName))
+            foreach (var sale in monthlySales.OrderBy(x => x.StockName))
             {
-                var purchasedStockAveragePrice = await this.GetStockMonthlyAveragePriceAsync(sell.StockName, start_Date, end_Date, companyId);
+                var purchasedStockAveragePrice = await this.GetStockMonthlyAveragePriceAsync(sale.StockName, start_Date, end_Date, companyId);
 
                 if (purchasedStockAveragePrice == 0)
                 {
@@ -43,14 +43,14 @@
                 }
                 else
                 {
-                    bookvalue = sell.TotalPurchasePrice;
+                    bookvalue = sale.TotalPurchasePrice;
                     //Console.WriteLine($"Material name : {sell.StockName} with Book Value {bookvalue:F2} lv.");
                 }
 
                 var bookValue = new BookValue
                 {
                     Price = bookvalue,
-                    StockName = sell.StockName,
+                    StockName = sale.StockName,
                     Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                     CompanyId = companyId,
                 };
@@ -79,12 +79,12 @@
 
         public async Task<List<Sale>> GetMonthlySalesAsync(DateTime startDate, DateTime endDate, int id)
         {
-            var monthlySell = await this.context.Sales
+            var monthlySale = await this.context.Sales
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
                 .Select(x => x)
                 .ToListAsync();
 
-            return monthlySell;
+            return monthlySale;
         }
 
         public async Task<decimal> GetStockMonthlyAveragePriceAsync(string stockName, DateTime startDate, DateTime endDate, int id)
