@@ -27,7 +27,7 @@
         {
             var stock = new Stock
             {
-                Name = name,
+                Name = name.ToLower(),
                 Quantity = quantity,
                 Price = price,
                 Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
