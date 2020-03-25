@@ -8,6 +8,7 @@
     using OSA.Services.Data;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Sales.Input_Models;
+    using OSA.Web.ViewModels.Sales.View_Models;
 
     public class SaleController : BaseController
     {
@@ -103,6 +104,51 @@
                 companyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetCompany()
+        {
+            var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
+            }
+
+            var model = new ShowSaleByCompanyInputModel
+            {
+                CompanyNames = companyNames,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> GetCompany(ShowSaleByCompanyInputModel inputModel)
+        {
+            var companyId = inputModel.CompanyId;
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            return this.RedirectToAction("GetSale", "Sale", new { id = companyId, name = companyName });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetSale(int id, string name)
+        {
+            var sales = await this.salesService.GetSalesByCompanyIdAsync(id);
+
+            var model = new SaleBindingViewModel
+            {
+                Name = name,
+                Sales = sales,
+            };
+
+            return this.View(model);
         }
     }
 }
