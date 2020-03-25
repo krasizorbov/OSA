@@ -50,5 +50,12 @@
 
             return stockNames;
         }
+
+        public async Task<IEnumerable<Stock>> GetStocksByCompanyIdAsync(int companyId)
+        {
+            var stocks = await this.stockRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+
+            return stocks;
+        }
     }
 }
