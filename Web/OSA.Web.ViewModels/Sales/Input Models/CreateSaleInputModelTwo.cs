@@ -9,8 +9,6 @@
 
     public class CreateSaleInputModelTwo
     {
-        private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
-
         [BindRequired]
         [Required(ErrorMessage = "Please select a Stock")]
         [Display(Name = "Stock")]
@@ -27,7 +25,7 @@
 
         [Required]
         [Display(Name = "End date of the month - (dd/mm/yyyy)")]
-        [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
+        [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
     }
 }

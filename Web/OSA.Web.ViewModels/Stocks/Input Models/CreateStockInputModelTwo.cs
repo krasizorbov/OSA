@@ -10,8 +10,6 @@
 
     public class CreateStockInputModelTwo
     {
-        private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
-
         [Required]
         [Display(Name = "Stock")]
         [MaxLength(GlobalConstants.StockNameMaxLength)]
@@ -29,7 +27,7 @@
 
         [Required]
         [Display(Name = "Invoice issue date - (dd/mm/yyyy)")]
-        [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
+        [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
 
         [BindRequired]

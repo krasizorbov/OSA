@@ -9,7 +9,6 @@
 
     public class CreateInvoiceInputModelTwo
     {
-        private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
         private const string InvoiceNumberFormat = "0*[0-9]*";
 
         [Required]
@@ -20,7 +19,7 @@
 
         [Required]
         [Display(Name = "Invoice Issue Date - (dd/mm/yyyy)")]
-        [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
+        [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
 
         [BindRequired]

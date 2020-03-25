@@ -9,8 +9,6 @@
 
     public class ShowStockByCompanyInputModel
     {
-        private const string DateTimeFormat = @"[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
-
         [BindRequired]
         [Display(Name = "Company")]
         public int CompanyId { get; set; }
@@ -19,12 +17,12 @@
 
         [Required]
         [Display(Name = "Start Date - (dd/mm/yyyy)")]
-        [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
+        [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string StartDate { get; set; }
 
         [Required]
         [Display(Name = "End Date - (dd/mm/yyyy)")]
-        [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
+        [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string EndDate { get; set; }
     }
 }
