@@ -145,5 +145,12 @@
 
             return stockNames;
         }
+
+        public async Task<IEnumerable<Purchase>> GetPurchasesByCompanyIdAsync(int companyId)
+        {
+            var purchases = await this.purchaseRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+
+            return purchases;
+        }
     }
 }
