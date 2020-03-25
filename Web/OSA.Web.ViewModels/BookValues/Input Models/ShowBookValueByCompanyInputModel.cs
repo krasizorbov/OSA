@@ -1,4 +1,4 @@
-﻿namespace OSA.Web.ViewModels.BookValues.View_Models
+﻿namespace OSA.Web.ViewModels.BookValues.Input_Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
