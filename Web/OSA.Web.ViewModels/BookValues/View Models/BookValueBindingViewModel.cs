@@ -4,7 +4,7 @@
 
     using OSA.Data.Models;
 
-    public class BookValueBindingInputModel
+    public class BookValueBindingViewModel
     {
         public string Name { get; set; }
 
