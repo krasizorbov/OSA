@@ -15,5 +15,7 @@
         Task<decimal> GetStockMonthlyAveragePriceAsync(string stockName, DateTime startDate, DateTime endDate, int companyId);
 
         Task<List<string>> BookValueExistAsync(DateTime startDate, DateTime endDate, int companyId);
+
+        Task<IEnumerable<BookValue>> GetBookValuesByCompanyIdAsync(int companyId);
     }
 }

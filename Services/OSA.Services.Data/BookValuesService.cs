@@ -70,6 +70,13 @@
             return stockNames;
         }
 
+        public async Task<IEnumerable<BookValue>> GetBookValuesByCompanyIdAsync(int companyId)
+        {
+            var bookValues = await this.bookValueRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+
+            return bookValues;
+        }
+
         public async Task<List<Sale>> GetMonthlySalesAsync(DateTime startDate, DateTime endDate, int id)
         {
             var monthlySell = await this.context.Sales
