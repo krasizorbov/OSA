@@ -10,6 +10,7 @@
     using OSA.Services.Data;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Purchases.Input_Models;
+    using OSA.Web.ViewModels.Purchases.View_Models;
 
     public class PurchaseController : BaseController
     {
@@ -88,6 +89,51 @@
                 companyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetCompany()
+        {
+            var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
+            }
+
+            var model = new ShowPurchaseByCompanyInputModel
+            {
+                CompanyNames = companyNames,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> GetCompany(ShowPurchaseByCompanyInputModel inputModel)
+        {
+            var companyId = inputModel.CompanyId;
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            return this.RedirectToAction("GetPurchase", "Purchase", new { id = companyId, name = companyName });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetPurchase(int id, string name)
+        {
+            var purchases = await this.purchasesService.GetPurchasesByCompanyIdAsync(id);
+
+            var model = new PurchaseBindingViewModel
+            {
+                Name = name,
+                Purchases = purchases,
+            };
+
+            return this.View(model);
         }
     }
 }
