@@ -29,7 +29,7 @@
             this.context = context;
         }
 
-        public async Task AddAsync(string startDate, string endDate, string date, int companyId)
+        public async Task AddAsync(string startDate, string endDate, int companyId)
         {
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
@@ -62,7 +62,7 @@
                     StockName = name,
                     TotalQuantity = this.totalQuantity,
                     TotalPrice = this.totalPrice,
-                    Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
+                    Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                     CompanyId = companyId,
                 };
 

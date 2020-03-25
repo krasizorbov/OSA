@@ -6,7 +6,7 @@
 
     public interface IPurchasesService
     {
-        Task AddAsync(string startDate, string endDate, string date, int companyId);
+        Task AddAsync(string startDate, string endDate, int companyId);
 
         Task<List<string>> GetStockNamesForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 

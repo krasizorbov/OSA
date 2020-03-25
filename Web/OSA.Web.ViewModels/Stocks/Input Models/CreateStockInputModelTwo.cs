@@ -28,7 +28,7 @@
         public decimal Price { get; set; }
 
         [Required]
-        [Display(Name = "The last day of the month - (dd/mm/yyyy)")]
+        [Display(Name = "Invoice issue date - (dd/mm/yyyy)")]
         [RegularExpression(DateTimeFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
 
