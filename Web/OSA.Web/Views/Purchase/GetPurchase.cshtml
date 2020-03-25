@@ -1,0 +1,38 @@
+﻿@model OSA.Web.ViewModels.Purchases.View_Models.PurchaseBindingViewModel
+@{
+    this.ViewData["Title"] = "Get Purchase";
+}
+
+<div class="text-center">
+    <h3>List of purchases for @Model.Name</h3>
+    <div class="col-md-12">
+        <center>
+            <table border="0">
+                <tr>
+                    <th>ID</th>
+                    <th>Stock Name</th>
+                    <th>Total Quantity</th>
+                    <th>Total Price</th>
+                    <th>Average Price</th>
+                    <th>Date</th>
+                    <th>Company ID</th>
+                </tr>
+                @foreach (var purchase in Model.Purchases)
+                {
+                    <tr>
+                        <td>@purchase.Id</td>
+                        <td>@purchase.StockName</td>
+                        <td>@purchase.TotalQuantity</td>
+                        <td>@purchase.TotalPrice</td>
+                        <td>@purchase.AveragePrice.ToString("F")</td>
+                        <td>@purchase.Date</td>
+                        <td>@purchase.CompanyId</td>
+                    </tr>
+                }
+            </table>
+        </center>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
