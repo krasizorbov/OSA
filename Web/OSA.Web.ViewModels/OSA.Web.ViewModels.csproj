@@ -24,8 +24,4 @@
     <ProjectReference Include="..\..\Services\OSA.Services.Mapping\OSA.Services.Mapping.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="BookValues\View Models\" />
-  </ItemGroup>
-
 </Project>
