@@ -34,7 +34,7 @@
 
         public const string ValidReceiptNumber = "A Valid Receipt Number Contains Only Numbers!";
 
-        public const string InvalidDateTimeFormat = "This is not a valid date!";
+        public const string InvalidDateTimeFormat = "This is not a valid date format!";
 
         public const string CompanyErrorMessage = "Please register a company before proceeding!";
 
