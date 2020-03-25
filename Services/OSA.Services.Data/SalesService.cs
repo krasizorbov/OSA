@@ -1,6 +1,7 @@
 ﻿namespace OSA.Services.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
@@ -34,6 +35,13 @@
             };
             await this.saleRepository.AddAsync(sale);
             await this.saleRepository.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(int companyId)
+        {
+            var sales = await this.saleRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+
+            return sales;
         }
 
         public async Task<string> SaleExistAsync(string stockName, int companyId)
