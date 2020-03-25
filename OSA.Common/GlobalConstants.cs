@@ -30,9 +30,9 @@
 
         public const string InvalidBulstat = "A Valid Bulstat Contains Only Numbers!";
 
-        public const string ValidInvoiceNumber = "A Valid Invoice Number Contains Only Numbers!";
+        public const string ValidInvoiceNumber = "A Valid Invoice Contains Only Numbers!";
 
-        public const string ValidReceiptNumber = "A Valid Receipt Number Contains Only Numbers!";
+        public const string ValidReceiptNumber = "A Valid Receipt Contains Only Numbers!";
 
         public const string InvalidDateTimeFormat = "This is not a valid date format!";
 
