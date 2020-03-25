@@ -10,6 +10,7 @@
     using OSA.Services.Data;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.BookValues.Input_Models;
+    using OSA.Web.ViewModels.BookValues.View_Models;
 
     public class BookValueController : BaseController
     {
@@ -89,6 +90,51 @@
                 companyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetCompany()
+        {
+            var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
+            }
+
+            var model = new ShowBookValueByCompanyInputModel
+            {
+                CompanyNames = companyNames,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> GetCompany(ShowBookValueByCompanyInputModel inputModel)
+        {
+            var companyId = inputModel.CompanyId;
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            return this.RedirectToAction("GetBookValue", "BookValue", new { id = companyId, name = companyName });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetBookValue(int id, string name)
+        {
+            var bookValues = await this.bookValuesService.GetBookValuesByCompanyIdAsync(id);
+
+            var model = new BookValueBindingViewModel
+            {
+                Name = name,
+                BookValues = bookValues,
+            };
+
+            return this.View(model);
         }
     }
 }
