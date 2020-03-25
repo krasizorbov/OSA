@@ -10,21 +10,21 @@
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
-    public class SellsService : ISellsService
+    public class SalesService : ISalesService
     {
         private const string DateFormat = "dd/MM/yyyy";
-        private readonly IDeletableEntityRepository<Sell> sellRepository;
+        private readonly IDeletableEntityRepository<Sale> saleRepository;
         private readonly ApplicationDbContext context;
 
-        public SellsService(IDeletableEntityRepository<Sell> sellRepository, ApplicationDbContext context)
+        public SalesService(IDeletableEntityRepository<Sale> saleRepository, ApplicationDbContext context)
         {
-            this.sellRepository = sellRepository;
+            this.saleRepository = saleRepository;
             this.context = context;
         }
 
         public async Task AddAsync(string stockName, decimal totalPrice, int profitPercent, string date, int companyId)
         {
-            var sell = new Sell
+            var sale = new Sale
             {
                 StockName = stockName,
                 TotalPrice = totalPrice,
@@ -32,13 +32,13 @@
                 Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
-            await this.sellRepository.AddAsync(sell);
-            await this.sellRepository.SaveChangesAsync();
+            await this.saleRepository.AddAsync(sale);
+            await this.saleRepository.SaveChangesAsync();
         }
 
         public async Task<string> SaleExistAsync(string stockName, int companyId)
         {
-            var name = await this.context.Sells
+            var name = await this.context.Sales
                 .Where(x => x.StockName == stockName && x.CompanyId == companyId)
                 .Select(x => x.StockName)
                 .FirstOrDefaultAsync();

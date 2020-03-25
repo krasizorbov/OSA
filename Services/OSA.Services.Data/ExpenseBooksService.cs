@@ -87,7 +87,7 @@
             return receipts;
         }
 
-        public async Task<List<Sell>> GetAllSalesByMonthAsync(DateTime startDate, DateTime endDate, int id)
+        public async Task<List<Sale>> GetAllSalesByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
             var sells = await this.context.Sells
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)

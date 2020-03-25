@@ -70,7 +70,7 @@
             return stockNames;
         }
 
-        public async Task<List<Sell>> GetMonthlySalesAsync(DateTime startDate, DateTime endDate, int id)
+        public async Task<List<Sale>> GetMonthlySalesAsync(DateTime startDate, DateTime endDate, int id)
         {
             var monthlySell = await this.context.Sells
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)

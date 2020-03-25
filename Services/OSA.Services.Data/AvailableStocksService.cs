@@ -122,7 +122,7 @@
             return currentPurchasedStockName;
         }
 
-        public async Task<Sell> GetCurrentSoldStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
+        public async Task<Sale> GetCurrentSoldStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
             var currentSoldStockName = await this.context.Sells
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id)

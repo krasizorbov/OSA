@@ -9,16 +9,16 @@
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Sells.Input_Models;
 
-    public class SellController : BaseController
+    public class SaleController : BaseController
     {
         private const string SaleErrorMessage = "Monthly sale for the current stock is already done!";
-        private readonly ISellsService sellsService;
+        private readonly ISalesService salesService;
         private readonly ICompaniesService companiesService;
         private readonly IStocksService stocksService;
 
-        public SellController(ISellsService sellsService, ICompaniesService companiesService, IStocksService stocksService)
+        public SaleController(ISalesService salesService, ICompaniesService companiesService, IStocksService stocksService)
         {
-            this.sellsService = sellsService;
+            this.salesService = salesService;
             this.companiesService = companiesService;
             this.stocksService = stocksService;
         }
@@ -75,7 +75,7 @@
         public async Task<IActionResult> AddPartTwo(CreateSellInputModelTwo sellInputModel, string stockName, int id)
         {
             var companyId = id;
-            var saleExist = await this.sellsService.SaleExistAsync(stockName, companyId);
+            var saleExist = await this.salesService.SaleExistAsync(stockName, companyId);
 
             if (!this.ModelState.IsValid)
             {
@@ -95,7 +95,7 @@
                 return this.View(model);
             }
 
-            await this.sellsService.AddAsync(
+            await this.salesService.AddAsync(
                 sellInputModel.StockName,
                 sellInputModel.TotalPrice,
                 sellInputModel.ProfitPercent,

@@ -43,7 +43,7 @@
 
         public DbSet<Receipt> Receipts { get; set; }
 
-        public DbSet<Sell> Sells { get; set; }
+        public DbSet<Sale> Sales { get; set; }
 
         public DbSet<Stock> Stocks { get; set; }
 

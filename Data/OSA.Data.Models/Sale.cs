@@ -6,7 +6,7 @@
     using OSA.Common;
     using OSA.Data.Common.Models;
 
-    public class Sell : BaseDeletableModel<int>
+    public class Sale : BaseDeletableModel<int>
     {
         [Required]
         [MaxLength(GlobalConstants.StockNameMaxLength)]
