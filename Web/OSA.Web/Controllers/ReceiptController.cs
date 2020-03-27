@@ -8,6 +8,7 @@
     using OSA.Services.Data;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Receipts.Input_Models;
+    using OSA.Web.ViewModels.Receipts.View_Models;
 
     public class ReceiptController : BaseController
     {
@@ -71,6 +72,51 @@
                 companyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetCompany()
+        {
+            var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
+            }
+
+            var model = new ShowReceiptByCompanyInputModel
+            {
+                CompanyNames = companyNames,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> GetCompany(ShowReceiptByCompanyInputModel inputModel)
+        {
+            var companyId = inputModel.CompanyId;
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            return this.RedirectToAction("GetReceipt", "Receipt", new { id = companyId, name = companyName });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetReceipt(int id, string name)
+        {
+            var receipts = await this.receiptsService.GetReceiptsByCompanyIdAsync(id);
+
+            var model = new ReceiptBindingViewModel
+            {
+                Name = name,
+                Receipts = receipts,
+            };
+
+            return this.View(model);
         }
     }
 }
