@@ -1,6 +1,7 @@
 ﻿namespace OSA.Services.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
@@ -34,6 +35,13 @@
             };
             await this.productionInvoicesRepository.AddAsync(productionInvoice);
             await this.productionInvoicesRepository.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ProductionInvoice>> GetProductionInvoicesByCompanyIdAsync(int companyId)
+        {
+            var productionInvoices = await this.productionInvoicesRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+
+            return productionInvoices;
         }
 
         public async Task<string> InvoiceExistAsync(string invoiceNumber, int companyId)
