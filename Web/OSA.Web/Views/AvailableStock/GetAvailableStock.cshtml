@@ -1,0 +1,48 @@
+﻿@model OSA.Web.ViewModels.AvailableStocks.View_Models.AvailableStockBindingViewModel
+@{
+    this.ViewData["Title"] = "Get Available Stock";
+}
+
+<div class="text-center">
+    <h3>List of Available Stock for @Model.Name</h3>
+    <div class="col-md-12">
+        <center>
+            <table border="0">
+                <tr>
+                    <th>ID</th>
+                    <th>Stock Name</th>
+                    <th>Total Purchased Quantity</th>
+                    <th>Total Purchased Price</th>
+                    <th>Total Sold Quantity</th>
+                    <th>Total Sold Price</th>
+                    <th>Book Value</th>
+                    <th>Average Price</th>
+                    <th>Remaining Quantity</th>
+                    <th>Remaining Money</th>
+                    <th>Date</th>
+                    <th>Company ID</th>
+                </tr>
+                @foreach (var availableStock in Model.AvailableStocks)
+                {
+                    <tr>
+                        <td>@availableStock.Id</td>
+                        <td>@availableStock.StockName</td>
+                        <td>@availableStock.TotalPurchasedAmount.ToString("F")</td>
+                        <td>@availableStock.TotalPurchasedPrice.ToString("F")</td>
+                        <td>@availableStock.TotalSoldQuantity.ToString("F")</td>
+                        <td>@availableStock.TotalSoldPrice.ToString("F")</td>
+                        <td>@availableStock.BookValue.ToString("F")</td>
+                        <td>@availableStock.AveragePrice.ToString("F")</td>
+                        <td>@availableStock.RemainingQuantity.ToString("F")</td>
+                        <td>@availableStock.RemainingPrice.ToString("F")</td>
+                        <td>@availableStock.Date</td>
+                        <td>@availableStock.CompanyId</td>
+                    </tr>
+                }
+            </table>
+        </center>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
