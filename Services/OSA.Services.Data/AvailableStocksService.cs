@@ -103,6 +103,13 @@
             return stockNames;
         }
 
+        public async Task<IEnumerable<AvailableStock>> GetAvailableStocksByCompanyIdAsync(int companyId)
+        {
+            var availableStocks = await this.availableStockRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+
+            return availableStocks;
+        }
+
         public async Task<decimal> GetCurrentBookValueForStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
             var currentBookValueForStockName = await this.context.BookValues
