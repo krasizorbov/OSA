@@ -73,9 +73,8 @@ body {
     bottom: 0;
     width: 100%;
     white-space: nowrap;
-    /* Set the fixed height of the footer here */
     height: 60px;
-    line-height: 60px; /* Vertically center the text there */
+    line-height: 60px;
 }
 /* Background Image
 -------------------------------------------------- */
@@ -83,15 +82,6 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    /*background-size: 300px;*/
-    /*background-position: right bottom !important;*/
-    /*display: block;*/
-    /*margin-left: auto;
-    margin-right: auto;*/
-    /*width: 100%;*/
-    /*width: 1300px;
-    height: 540px;*/
-    /*overflow: hidden*/
 }
 /* BackgroundRegister Image
 -------------------------------------------------- */
@@ -124,6 +114,6 @@ tr:hover {
 }
 th {
     background-color: #a2a8a3;
-    /*color: white;*/
     height: 50px;
+    font-size: 12px;
 }
