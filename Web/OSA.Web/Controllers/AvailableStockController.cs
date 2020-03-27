@@ -10,6 +10,7 @@
     using OSA.Services.Data;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.AvailableStocks.Input_Models;
+    using OSA.Web.ViewModels.AvailableStocks.View_Models;
 
     public class AvailableStockController : BaseController
     {
@@ -89,6 +90,51 @@
                 companyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetCompany()
+        {
+            var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+            if (companyNames.Count == 0)
+            {
+                this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
+            }
+
+            var model = new ShowAvailableStockByCompanyInputModel
+            {
+                CompanyNames = companyNames,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> GetCompany(ShowAvailableStockByCompanyInputModel inputModel)
+        {
+            var companyId = inputModel.CompanyId;
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            return this.RedirectToAction("GetAvailableStock", "AvailableStock", new { id = companyId, name = companyName });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetAvailableStock(int id, string name)
+        {
+            var availableStocks = await this.availableStocksService.GetAvailableStocksByCompanyIdAsync(id);
+
+            var model = new AvailableStockBindingViewModel
+            {
+                Name = name,
+                AvailableStocks = availableStocks,
+            };
+
+            return this.View(model);
         }
     }
 }
