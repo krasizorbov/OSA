@@ -96,5 +96,12 @@
 
             return sells;
         }
+
+        public async Task<IEnumerable<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(int companyId)
+        {
+            var expenseBooks = await this.expenseBooksRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+
+            return expenseBooks;
+        }
     }
 }

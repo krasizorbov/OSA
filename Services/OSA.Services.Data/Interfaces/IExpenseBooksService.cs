@@ -19,5 +19,7 @@
         Task<List<Sale>> GetAllSalesByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<ExpenseBook> ExpenseBookExistAsync(DateTime startDate, DateTime endDate, int companyId);
+
+        Task<IEnumerable<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(int companyId);
     }
 }
