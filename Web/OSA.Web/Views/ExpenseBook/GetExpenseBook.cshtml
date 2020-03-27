@@ -1,0 +1,44 @@
+﻿@model OSA.Web.ViewModels.ExpenseBooks.View_Models.ExpenseBookBindingViewModel
+@{
+    this.ViewData["Title"] = "Get Expense Book";
+}
+
+<div class="text-center">
+    <h3>List of Expense Books for @Model.Name</h3>
+    <div class="col-md-12">
+        <center>
+            <table border="0">
+                <tr>
+                    <th>ID</th>
+                    <th>Total Stock Cost</th>
+                    <th>Total External Cost</th>
+                    <th>Total Salary Cost</th>
+                    <th>Total Book Value</th>
+                    <th>Total Cost</th>
+                    <th>Profit</th>
+                    <th>Total Profit</th>
+                    <th>Date</th>
+                    <th>Company ID</th>
+                </tr>
+                @foreach (var expenseBook in Model.ExpenseBooks)
+                {
+                    <tr>
+                        <td>@expenseBook.Id</td>
+                        <td>@expenseBook.TotalStockCost.ToString("F")</td>
+                        <td>@expenseBook.TotalExternalCost.ToString("F")</td>
+                        <td>@expenseBook.TotalSalaryCost.ToString("F")</td>
+                        <td>@expenseBook.TotalBookValue.ToString("F")</td>
+                        <td>@expenseBook.TotalCost.ToString("F")</td>
+                        <td>@expenseBook.Profit.ToString("F")</td>
+                        <td>@expenseBook.TotalProfit.ToString("F")</td>
+                        <td>@expenseBook.Date.ToShortDateString()</td>
+                        <td>@expenseBook.CompanyId</td>
+                    </tr>
+                }
+            </table>
+        </center>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
