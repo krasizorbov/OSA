@@ -43,14 +43,14 @@
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddPartOne(CreateSaleInputModelOne sellInputModelOne)
+        public IActionResult AddPartOne(CreateSaleInputModelOne saleInputModelOne)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            var companyId = sellInputModelOne.CompanyId;
+            var companyId = saleInputModelOne.CompanyId;
             return this.RedirectToAction("AddPartTwo", "Sale", new { id = companyId });
         }
 

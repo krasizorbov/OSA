@@ -119,13 +119,22 @@
                 return this.View();
             }
 
-            return this.RedirectToAction("GetPurchase", "Purchase", new { id = companyId, name = companyName });
+            return this.RedirectToAction("GetPurchase", "Purchase", new
+            {
+                id = inputModel.CompanyId,
+                name = companyName,
+                startDate = inputModel.StartDate,
+                endDate = inputModel.EndDate,
+            });
         }
 
         [Authorize]
-        public async Task<IActionResult> GetPurchase(int id, string name)
+        public async Task<IActionResult> GetPurchase(int id, string name, string startDate, string endDate)
         {
-            var purchases = await this.purchasesService.GetPurchasesByCompanyIdAsync(id);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var purchases = await this.purchasesService.GetPurchasesByCompanyIdAsync(start_Date, end_Date, id);
 
             var model = new PurchaseBindingViewModel
             {

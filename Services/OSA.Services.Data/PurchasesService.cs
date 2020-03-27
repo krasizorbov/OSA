@@ -146,9 +146,9 @@
             return stockNames;
         }
 
-        public async Task<IEnumerable<Purchase>> GetPurchasesByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<Purchase>> GetPurchasesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var purchases = await this.purchaseRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+            var purchases = await this.purchaseRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
 
             return purchases;
         }
