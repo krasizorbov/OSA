@@ -20,8 +20,8 @@
                     <tr>
                         <td>@receipt.Id</td>
                         <td>@receipt.ReceiptNumber</td>
-                        <td>@receipt.Salary</td>
-                        <td>@receipt.Date</td>
+                        <td>@receipt.Salary.ToString("F")</td>
+                        <td>@receipt.Date.ToShortDateString()</td>
                         <td>@receipt.CompanyId</td>
                     </tr>
                 }
