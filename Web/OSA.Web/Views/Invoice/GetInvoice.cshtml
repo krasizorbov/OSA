@@ -20,7 +20,7 @@
                     <tr>
                         <td>@invoice.Id</td>
                         <td>@invoice.InvoiceNumber</td>
-                        <td>@invoice.Date</td>
+                        <td>@invoice.Date.ToShortDateString()</td>
                         <td>@invoice.SupplierId</td>
                         <td>@invoice.CompanyId</td>
                     </tr>

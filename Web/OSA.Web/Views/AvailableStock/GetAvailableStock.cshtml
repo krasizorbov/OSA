@@ -35,7 +35,7 @@
                         <td>@availableStock.AveragePrice.ToString("F")</td>
                         <td>@availableStock.RemainingQuantity.ToString("F")</td>
                         <td>@availableStock.RemainingPrice.ToString("F")</td>
-                        <td>@availableStock.Date</td>
+                        <td>@availableStock.Date.ToShortDateString()</td>
                         <td>@availableStock.CompanyId</td>
                     </tr>
                 }

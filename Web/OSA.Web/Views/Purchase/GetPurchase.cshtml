@@ -25,7 +25,7 @@
                         <td>@purchase.TotalQuantity</td>
                         <td>@purchase.TotalPrice</td>
                         <td>@purchase.AveragePrice.ToString("F")</td>
-                        <td>@purchase.Date</td>
+                        <td>@purchase.Date.ToShortDateString()</td>
                         <td>@purchase.CompanyId</td>
                     </tr>
                 }
