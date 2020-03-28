@@ -15,7 +15,7 @@
     public class BookValueController : BaseController
     {
         private const string BookValueErrorMessage = "There is no monthly sale! Please register a sale before proceeding with your book values.";
-        private const string BookValueAlreadyExistMessage = "Book values already done for the company selected!";
+        private const string BookValueAlreadyExistMessage = "Book values already done for the month and company selected!";
 
         private readonly IBookValuesService bookValuesService;
         private readonly ICompaniesService companiesService;

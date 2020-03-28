@@ -113,20 +113,28 @@
         [HttpPost]
         public async Task<IActionResult> GetCompany(ShowAvailableStockByCompanyInputModel inputModel)
         {
-            var companyId = inputModel.CompanyId;
-            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            return this.RedirectToAction("GetAvailableStock", "AvailableStock", new { id = companyId, name = companyName });
+            return this.RedirectToAction("GetAvailableStock", "AvailableStock", new
+            {
+                id = inputModel.CompanyId,
+                name = companyName,
+                startDate = inputModel.StartDate,
+                endDate = inputModel.EndDate,
+            });
         }
 
         [Authorize]
-        public async Task<IActionResult> GetAvailableStock(int id, string name)
+        public async Task<IActionResult> GetAvailableStock(int id, string name, string startDate, string endDate)
         {
-            var availableStocks = await this.availableStocksService.GetAvailableStocksByCompanyIdAsync(id);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var availableStocks = await this.availableStocksService.GetAvailableStocksByCompanyIdAsync(start_Date, end_Date, id);
 
             var model = new AvailableStockBindingViewModel
             {
