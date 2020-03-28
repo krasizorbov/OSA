@@ -36,9 +36,9 @@
             await this.receiptsRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Receipt>> GetReceiptsByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<Receipt>> GetReceiptsByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var receipts = await this.receiptsRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+            var receipts = await this.receiptsRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
 
             return receipts;
         }

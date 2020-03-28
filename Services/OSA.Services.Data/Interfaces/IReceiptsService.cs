@@ -1,5 +1,6 @@
 ﻿namespace OSA.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -11,6 +12,6 @@
 
         Task<string> ReceiptExistAsync(string receiptNumber, int companyId);
 
-        Task<IEnumerable<Receipt>> GetReceiptsByCompanyIdAsync(int companyId);
+        Task<IEnumerable<Receipt>> GetReceiptsByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }
