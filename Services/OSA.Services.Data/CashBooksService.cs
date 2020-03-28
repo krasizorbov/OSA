@@ -1,6 +1,7 @@
 ﻿namespace OSA.Services.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
@@ -51,6 +52,15 @@
                 .FirstOrDefaultAsync();
 
             return cashBook;
+        }
+
+        public async Task<IEnumerable<CashBook>> GetCashBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        {
+            var cashBooks = await this.cashBooksRepository.All()
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .ToListAsync();
+
+            return cashBooks;
         }
 
         public async Task<ExpenseBook> GetMonthlyExpenseBook(DateTime startDate, DateTime endDate, int id)
