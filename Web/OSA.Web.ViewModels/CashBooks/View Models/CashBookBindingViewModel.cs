@@ -4,7 +4,7 @@
 
     using OSA.Data.Models;
 
-    public class CashBookBindingInputModel
+    public class CashBookBindingViewModel
     {
         public string Name { get; set; }
 
