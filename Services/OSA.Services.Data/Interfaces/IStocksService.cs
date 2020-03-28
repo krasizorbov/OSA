@@ -1,5 +1,6 @@
 ﻿namespace OSA.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -11,6 +12,6 @@
 
         Task<List<string>> GetStockNamesByCompanyIdAsync(int companyId);
 
-        Task<IEnumerable<Stock>> GetStocksByCompanyIdAsync(int companyId);
+        Task<IEnumerable<Stock>> GetStocksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }

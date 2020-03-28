@@ -1,5 +1,7 @@
 ﻿namespace OSA.Web.Controllers
 {
+    using System;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -42,15 +44,14 @@
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddPartOne(CreateStockInputModelOne stockInputModelOne)
+        public IActionResult AddPartOne(CreateStockInputModelOne inputModelOne)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            var companyId = stockInputModelOne.CompanyId;
-            return this.RedirectToAction("AddPartTwo", "Stock", new { id = companyId });
+            return this.RedirectToAction("AddPartTwo", "Stock", new { id = inputModelOne.CompanyId });
         }
 
         [Authorize]
@@ -72,21 +73,20 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddPartTwo(CreateStockInputModelTwo stockInputModelTwo, int id)
+        public async Task<IActionResult> AddPartTwo(CreateStockInputModelTwo inputModelTwo, int id)
         {
-            var companyId = id;
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
             await this.stocksService.AddAsync(
-                stockInputModelTwo.Name,
-                stockInputModelTwo.Quantity,
-                stockInputModelTwo.Price,
-                stockInputModelTwo.Date,
-                stockInputModelTwo.InvoiceId,
-                companyId);
+                inputModelTwo.Name,
+                inputModelTwo.Quantity,
+                inputModelTwo.Price,
+                inputModelTwo.Date,
+                inputModelTwo.InvoiceId,
+                id);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
@@ -112,20 +112,28 @@
         [HttpPost]
         public async Task<IActionResult> GetCompany(ShowStockByCompanyInputModel inputModel)
         {
-            var companyId = inputModel.CompanyId;
-            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            return this.RedirectToAction("GetStock", "Stock", new { id = companyId, name = companyName });
+            return this.RedirectToAction("GetStock", "Stock", new
+            {
+                id = inputModel.CompanyId,
+                name = companyName,
+                startDate = inputModel.StartDate,
+                endDate = inputModel.EndDate,
+            });
         }
 
         [Authorize]
-        public async Task<IActionResult> GetStock(int id, string name)
+        public async Task<IActionResult> GetStock(int id, string name, string startDate, string endDate)
         {
-            var stocks = await this.stocksService.GetStocksByCompanyIdAsync(id);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var stocks = await this.stocksService.GetStocksByCompanyIdAsync(start_Date, end_Date, id);
 
             var model = new StockBindingViewModel
             {
