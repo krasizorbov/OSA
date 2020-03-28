@@ -1,5 +1,7 @@
 ﻿namespace OSA.Web.Controllers
 {
+    using System;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -50,8 +52,7 @@
                 return this.View();
             }
 
-            var companyId = saleInputModelOne.CompanyId;
-            return this.RedirectToAction("AddPartTwo", "Sale", new { id = companyId });
+            return this.RedirectToAction("AddPartTwo", "Sale", new { id = saleInputModelOne.CompanyId });
         }
 
         [Authorize]
@@ -73,10 +74,12 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddPartTwo(CreateSaleInputModelTwo sellInputModel, string stockName, int id)
+        public async Task<IActionResult> AddPartTwo(CreateSaleInputModelTwo saleInputModel, string startDate, string endDate, string stockName, int id)
         {
-            var companyId = id;
-            var saleExist = await this.salesService.SaleExistAsync(stockName, companyId);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var saleExist = await this.salesService.SaleExistAsync(start_Date, end_Date, stockName, id);
 
             if (!this.ModelState.IsValid)
             {
@@ -97,11 +100,11 @@
             }
 
             await this.salesService.AddAsync(
-                sellInputModel.StockName,
-                sellInputModel.TotalPrice,
-                sellInputModel.ProfitPercent,
-                sellInputModel.Date,
-                companyId);
+                saleInputModel.StockName,
+                saleInputModel.TotalPrice,
+                saleInputModel.ProfitPercent,
+                saleInputModel.EndDate,
+                id);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }

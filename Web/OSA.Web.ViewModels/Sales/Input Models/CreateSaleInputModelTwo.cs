@@ -24,8 +24,13 @@
         public int ProfitPercent { get; set; }
 
         [Required]
+        [Display(Name = "Start date of the month - (dd/mm/yyyy)")]
+        [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
+        public string StartDate { get; set; }
+
+        [Required]
         [Display(Name = "End date of the month - (dd/mm/yyyy)")]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
-        public string Date { get; set; }
+        public string EndDate { get; set; }
     }
 }

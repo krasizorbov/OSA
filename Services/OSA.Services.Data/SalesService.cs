@@ -44,10 +44,10 @@
             return sales;
         }
 
-        public async Task<string> SaleExistAsync(string stockName, int companyId)
+        public async Task<string> SaleExistAsync(DateTime startDate, DateTime endDate, string stockName, int companyId)
         {
             var name = await this.context.Sales
-                .Where(x => x.StockName == stockName && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == companyId)
                 .Select(x => x.StockName)
                 .FirstOrDefaultAsync();
 
