@@ -130,20 +130,28 @@
         [HttpPost]
         public async Task<IActionResult> GetCompany(ShowSaleByCompanyInputModel inputModel)
         {
-            var companyId = inputModel.CompanyId;
-            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            return this.RedirectToAction("GetSale", "Sale", new { id = companyId, name = companyName });
+            return this.RedirectToAction("GetSale", "Sale", new
+            {
+                id = inputModel.CompanyId,
+                name = companyName,
+                startDate = inputModel.StartDate,
+                endDate = inputModel.EndDate,
+            });
         }
 
         [Authorize]
-        public async Task<IActionResult> GetSale(int id, string name)
+        public async Task<IActionResult> GetSale(int id, string name, string startDate, string endDate)
         {
-            var sales = await this.salesService.GetSalesByCompanyIdAsync(id);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var sales = await this.salesService.GetSalesByCompanyIdAsync(start_Date, end_Date, id);
 
             var model = new SaleBindingViewModel
             {

@@ -37,9 +37,9 @@
             await this.saleRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var sales = await this.saleRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+            var sales = await this.saleRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
 
             return sales;
         }

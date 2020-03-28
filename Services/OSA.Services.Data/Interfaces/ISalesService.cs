@@ -12,6 +12,6 @@
 
         Task<string> SaleExistAsync(DateTime startDate, DateTime endDate, string stockName, int companyId);
 
-        Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(int companyId);
+        Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }
