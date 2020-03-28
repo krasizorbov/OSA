@@ -68,9 +68,9 @@
             return stockNames;
         }
 
-        public async Task<IEnumerable<BookValue>> GetBookValuesByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<BookValue>> GetBookValuesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var bookValues = await this.bookValueRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+            var bookValues = await this.bookValueRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
 
             return bookValues;
         }

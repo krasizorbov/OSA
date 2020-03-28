@@ -16,6 +16,6 @@
 
         Task<List<string>> BookValueExistAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<IEnumerable<BookValue>> GetBookValuesByCompanyIdAsync(int companyId);
+        Task<IEnumerable<BookValue>> GetBookValuesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }
