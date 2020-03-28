@@ -20,6 +20,6 @@
 
         Task<ExpenseBook> ExpenseBookExistAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<IEnumerable<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(int companyId);
+        Task<IEnumerable<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }

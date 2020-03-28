@@ -97,9 +97,9 @@
             return sells;
         }
 
-        public async Task<IEnumerable<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var expenseBooks = await this.expenseBooksRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+            var expenseBooks = await this.expenseBooksRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
 
             return expenseBooks;
         }
