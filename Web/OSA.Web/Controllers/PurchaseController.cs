@@ -112,8 +112,7 @@
         [HttpPost]
         public async Task<IActionResult> GetCompany(ShowPurchaseByCompanyInputModel inputModel)
         {
-            var companyId = inputModel.CompanyId;
-            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
             if (!this.ModelState.IsValid)
             {
                 return this.View();

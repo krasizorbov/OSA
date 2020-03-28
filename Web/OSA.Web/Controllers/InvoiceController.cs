@@ -1,5 +1,7 @@
 ﻿namespace OSA.Web.Controllers
 {
+    using System;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -76,8 +78,7 @@
         [HttpPost]
         public async Task<IActionResult> AddPartTwo(CreateInvoiceInputModelTwo invoiceInputModelTwo, int id)
         {
-            var companyId = id;
-            var invoiceExist = await this.invoicesService.InvoiceExistAsync(invoiceInputModelTwo.InvoiceNumber, companyId);
+            var invoiceExist = await this.invoicesService.InvoiceExistAsync(invoiceInputModelTwo.InvoiceNumber, id);
 
             if (!this.ModelState.IsValid)
             {
@@ -101,7 +102,7 @@
                 invoiceInputModelTwo.InvoiceNumber,
                 invoiceInputModelTwo.Date,
                 invoiceInputModelTwo.SupplierId,
-                companyId);
+                id);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
@@ -127,20 +128,28 @@
         [HttpPost]
         public async Task<IActionResult> GetCompany(ShowInvoiceByCompanyInputModel inputModel)
         {
-            var companyId = inputModel.CompanyId;
-            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            return this.RedirectToAction("GetInvoice", "Invoice", new { id = companyId, name = companyName });
+            return this.RedirectToAction("GetInvoice", "Invoice", new
+            {
+                id = inputModel.CompanyId,
+                name = companyName,
+                startDate = inputModel.StartDate,
+                endDate = inputModel.EndDate,
+            });
         }
 
         [Authorize]
-        public async Task<IActionResult> GetInvoice(int id, string name)
+        public async Task<IActionResult> GetInvoice(int id, string name, string startDate, string endDate)
         {
-            var invoices = await this.invoicesService.GetInvoicesByCompanyIdAsync(id);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var invoices = await this.invoicesService.GetInvoicesByCompanyIdAsync(start_Date, end_Date, id);
 
             var model = new InvoiceBindingViewModel
             {
