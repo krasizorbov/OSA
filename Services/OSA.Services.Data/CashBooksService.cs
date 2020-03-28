@@ -6,14 +6,13 @@
     using System.Threading.Tasks;
 
     using Microsoft.EntityFrameworkCore;
-
+    using OSA.Common;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class CashBooksService : ICashBooksService
     {
-        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<CashBook> cashBooksRepository;
         private readonly ApplicationDbContext context;
 
@@ -25,8 +24,8 @@
 
         public async Task AddAsync(string startDate, string endDate, int companyId)
         {
-            var start_Date = DateTime.ParseExact(startDate, DateFormat, CultureInfo.InvariantCulture);
-            var end_Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
             var totalStockCost = this.TotalSumStockCostAsync(start_Date, end_Date, companyId);
             var expenseBook = await this.GetMonthlyExpenseBook(start_Date, end_Date, companyId);
@@ -37,7 +36,7 @@
                 TotalSalaryCost = expenseBook.TotalSalaryCost,
                 TotalStockExternalCost = expenseBook.TotalStockExternalCost,
                 TotalProfit = expenseBook.TotalProfit,
-                Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture),
+                Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
             await this.cashBooksRepository.AddAsync(cashBook);

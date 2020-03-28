@@ -7,13 +7,13 @@
     using System.Threading.Tasks;
 
     using Microsoft.EntityFrameworkCore;
+    using OSA.Common;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class ProductionInvoicesService : IProductionInvoicesService
     {
-        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<ProductionInvoice> productionInvoicesRepository;
         private readonly ApplicationDbContext context;
 
@@ -28,7 +28,7 @@
             var productionInvoice = new ProductionInvoice
             {
                 InvoiceNumber = invoiceNumber,
-                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
+                Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 StockCost = materialCost,
                 ExternalCost = externalCost,
                 CompanyId = companyId,

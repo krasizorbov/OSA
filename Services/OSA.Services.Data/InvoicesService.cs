@@ -8,13 +8,13 @@
 
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
+    using OSA.Common;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class InvoicesService : IInvoicesService
     {
-        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<Invoice> invoiceRepository;
         private readonly ApplicationDbContext context;
 
@@ -29,7 +29,7 @@
             var invoice = new Invoice
             {
                 InvoiceNumber = invoiceNumber,
-                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
+                Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 SupplierId = supplierId,
                 CompanyId = companyId,
             };

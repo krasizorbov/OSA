@@ -7,13 +7,13 @@
     using System.Threading.Tasks;
 
     using Microsoft.EntityFrameworkCore;
+    using OSA.Common;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class SalesService : ISalesService
     {
-        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<Sale> saleRepository;
         private readonly ApplicationDbContext context;
 
@@ -30,7 +30,7 @@
                 StockName = stockName,
                 TotalPrice = totalPrice,
                 ProfitPercent = profitPercent,
-                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
+                Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
             await this.saleRepository.AddAsync(sale);

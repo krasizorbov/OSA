@@ -7,13 +7,13 @@
     using System.Threading.Tasks;
 
     using Microsoft.EntityFrameworkCore;
+    using OSA.Common;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class ExpenseBooksService : IExpenseBooksService
     {
-        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<ExpenseBook> expenseBooksRepository;
         private readonly ApplicationDbContext context;
 
@@ -25,8 +25,8 @@
 
         public async Task AddAsync(string startDate, string endDate, int companyId)
         {
-            var start_Date = DateTime.ParseExact(startDate, DateFormat, CultureInfo.InvariantCulture);
-            var end_Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
             var productionInvoices = await this.GetAllProductionInvoicesByMonthAsync(start_Date, end_Date, companyId);
             var receipts = await this.GetAllReceiptsByMonthAsync(start_Date, end_Date, companyId);
@@ -40,7 +40,7 @@
                 TotalSalaryCost = receipts.Sum(x => x.Salary),
                 TotalBookValue = bookValues.Sum(x => x.Price),
                 Profit = sales.Sum(x => x.TotalPrice),
-                Date = DateTime.ParseExact(endDate, DateFormat, CultureInfo.InvariantCulture),
+                Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
             await this.expenseBooksRepository.AddAsync(expenseBook);

@@ -7,13 +7,13 @@
     using System.Threading.Tasks;
 
     using Microsoft.EntityFrameworkCore;
+    using OSA.Common;
     using OSA.Data;
     using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class ReceiptsService : IReceiptsService
     {
-        private const string DateFormat = "dd/MM/yyyy";
         private readonly IDeletableEntityRepository<Receipt> receiptsRepository;
         private readonly ApplicationDbContext context;
 
@@ -28,7 +28,7 @@
             var receipt = new Receipt
             {
                 ReceiptNumber = receiptNumber,
-                Date = DateTime.ParseExact(date, DateFormat, CultureInfo.InvariantCulture),
+                Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 Salary = salary,
                 CompanyId = companyId,
             };
