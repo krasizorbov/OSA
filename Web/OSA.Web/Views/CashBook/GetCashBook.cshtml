@@ -1,0 +1,42 @@
+﻿@model OSA.Web.ViewModels.CashBooks.View_Models.CashBookBindingViewModel
+@{
+    this.ViewData["Title"] = "Get Cash Book";
+}
+
+<div class="text-center">
+    <h3>List of Cash Books for @Model.Name</h3>
+    <div class="col-md-12">
+        <center>
+            <table border="0">
+                <tr>
+                    <th>ID</th>
+                    <th>Total Stock Cost</th>
+                    <th>Total Salary Cost</th>
+                    <th>Total Stock External Cost</th>
+                    <th>Total Profit</th>
+                    <th>Total Cost</th>
+                    <th>Money Available</th>
+                    <th>Date</th>
+                    <th>Company ID</th>
+                </tr>
+                @foreach (var cashBook in Model.CashBooks)
+                {
+                    <tr>
+                        <td>@cashBook.Id</td>
+                        <td>@cashBook.TotalInvoicePricesCost.ToString("F")</td>
+                        <td>@cashBook.TotalSalaryCost.ToString("F")</td>
+                        <td>@cashBook.TotalStockExternalCost.ToString("F")</td>
+                        <td>@cashBook.TotalProfit.ToString("F")</td>
+                        <td>@cashBook.TotalCost.ToString("F")</td>
+                        <td>@cashBook.MoneyAvailable.ToString("F")</td>
+                        <td>@cashBook.Date.ToShortDateString()</td>
+                        <td>@cashBook.CompanyId</td>
+                    </tr>
+                }
+            </table>
+        </center>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
