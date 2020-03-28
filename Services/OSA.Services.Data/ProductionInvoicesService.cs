@@ -37,9 +37,11 @@
             await this.productionInvoicesRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ProductionInvoice>> GetProductionInvoicesByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<ProductionInvoice>> GetProductionInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var productionInvoices = await this.productionInvoicesRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+            var productionInvoices = await this.productionInvoicesRepository.All()
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .ToListAsync();
 
             return productionInvoices;
         }

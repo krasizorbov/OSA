@@ -1,5 +1,7 @@
 ﻿namespace OSA.Web.Controllers
 {
+    using System;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
@@ -95,20 +97,28 @@
         [HttpPost]
         public async Task<IActionResult> GetCompany(ShowProductionInvoiceByCompanyInputModel inputModel)
         {
-            var companyId = inputModel.CompanyId;
-            var companyName = await this.companiesService.GetCompanyNameByIdAsync(companyId);
+            var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
-            return this.RedirectToAction("GetProductionInvoice", "ProductionInvoice", new { id = companyId, name = companyName });
+            return this.RedirectToAction("GetProductionInvoice", "ProductionInvoice", new
+            {
+                id = inputModel.CompanyId,
+                name = companyName,
+                startDate = inputModel.StartDate,
+                endDate = inputModel.EndDate,
+            });
         }
 
         [Authorize]
-        public async Task<IActionResult> GetProductionInvoice(int id, string name)
+        public async Task<IActionResult> GetProductionInvoice(int id, string name, string startDate, string endDate)
         {
-            var productionInvoices = await this.productionInvoicesService.GetProductionInvoicesByCompanyIdAsync(id);
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var productionInvoices = await this.productionInvoicesService.GetProductionInvoicesByCompanyIdAsync(start_Date, end_Date, id);
 
             var model = new ProductionInvoiceBindingViewModel
             {
