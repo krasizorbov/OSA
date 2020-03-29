@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using OSA.Common;
     using OSA.Services.Data;
+    using OSA.Services.Data.Interfaces;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Invoices.Input_Models;
     using OSA.Web.ViewModels.Invoices.View_Models;
@@ -19,12 +20,14 @@
         private readonly IInvoicesService invoicesService;
         private readonly ICompaniesService companiesService;
         private readonly ISuppliersService suppliersService;
+        private readonly IDateTimeValidationService dateTimeValidationService;
 
-        public InvoiceController(IInvoicesService invoicesService, ICompaniesService companiesService, ISuppliersService suppliersService)
+        public InvoiceController(IInvoicesService invoicesService, ICompaniesService companiesService, ISuppliersService suppliersService, IDateTimeValidationService dateTimeValidationService)
         {
             this.invoicesService = invoicesService;
             this.companiesService = companiesService;
             this.suppliersService = suppliersService;
+            this.dateTimeValidationService = dateTimeValidationService;
         }
 
         [Authorize]
@@ -53,12 +56,11 @@
                 return this.View();
             }
 
-            var companyId = invoiceInputModelOne.CompanyId;
-            return this.RedirectToAction("AddPartTwo", "Invoice", new { id = companyId });
+            return this.RedirectToAction("AddPartTwo", "Invoice", new { id = invoiceInputModelOne.CompanyId });
         }
 
         [Authorize]
-        public async Task<IActionResult> AddPartTwo(int id, string date)
+        public async Task<IActionResult> AddPartTwo(int id)
         {
             var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(id);
 
@@ -76,19 +78,29 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddPartTwo(CreateInvoiceInputModelTwo invoiceInputModelTwo, int id)
+        public async Task<IActionResult> AddPartTwo(CreateInvoiceInputModelTwo invoiceInputModelTwo, int id, string date)
         {
             var invoiceExist = await this.invoicesService.InvoiceExistAsync(invoiceInputModelTwo.InvoiceNumber, id);
+            var isValidDateTime = this.dateTimeValidationService.IsValidDateTime(date);
+            var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(id);
 
-            if (!this.ModelState.IsValid)
+            if (!this.ModelState.IsValid || !isValidDateTime)
             {
-                return this.View();
+                var model = new CreateInvoiceInputModelTwo
+                {
+                    SupplierNames = supplierNames,
+                };
+
+                if (!isValidDateTime)
+                {
+                    this.ModelState.AddModelError(nameof(invoiceInputModelTwo.Date), invoiceInputModelTwo.Date + GlobalConstants.InvalidDateTime);
+                }
+
+                return this.View(model);
             }
 
             if (invoiceExist != null)
             {
-                var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(id);
-
                 this.ModelState.AddModelError(nameof(invoiceInputModelTwo.InvoiceNumber), invoiceInputModelTwo.InvoiceNumber + InvoiceAlreadyExist);
 
                 var model = new CreateInvoiceInputModelTwo
@@ -126,12 +138,31 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> GetCompany(ShowInvoiceByCompanyInputModel inputModel)
+        public async Task<IActionResult> GetCompany(ShowInvoiceByCompanyInputModel inputModel, string startDate, string endDate)
         {
             var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
-            if (!this.ModelState.IsValid)
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
+
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
             {
-                return this.View();
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.StartDate), inputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.EndDate), inputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new ShowInvoiceByCompanyInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
             return this.RedirectToAction("GetInvoice", "Invoice", new

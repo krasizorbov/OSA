@@ -16,6 +16,7 @@
     using OSA.Data.Repositories;
     using OSA.Data.Seeding;
     using OSA.Services.Data;
+    using OSA.Services.Data.Interfaces;
     using OSA.Services.Mapping;
     using OSA.Services.Messaging;
     using OSA.Web.ViewModels;
@@ -72,6 +73,7 @@
             services.AddTransient<IReceiptsService, ReceiptsService>();
             services.AddTransient<IExpenseBooksService, ExpenseBooksService>();
             services.AddTransient<ICashBooksService, CashBooksService>();
+            services.AddTransient<IDateTimeValidationService, DateTimeValidationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -36,6 +36,8 @@
 
         public const string InvalidDateTimeFormat = "This is not a valid date format!";
 
+        public const string InvalidDateTime = " This is not a valid date!";
+
         public const string DateTimeRegexFormat = @"[0-9]{2}\/(0*[1-9]|1[0-2])\/[0-9]{4}";
 
         public const string CompanyErrorMessage = "Please register a company before proceeding!";
