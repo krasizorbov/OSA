@@ -49,6 +49,13 @@
             return supplierNames;
         }
 
+        public async Task<string> GetSupplierNameBySupplierIdAsync(int supplierId)
+        {
+            var supplierName = await this.supplierRepository.All().Where(x => x.Id == supplierId).Select(x => x.Name).FirstOrDefaultAsync();
+
+            return supplierName;
+        }
+
         public async Task<IEnumerable<Supplier>> GetSuppliersByCompanyIdAsync(int companyId)
         {
             var suppliers = await this.supplierRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
