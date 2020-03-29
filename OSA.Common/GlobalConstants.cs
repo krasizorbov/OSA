@@ -6,11 +6,11 @@
 
         public const string AdministratorRoleName = "Administrator";
 
-        public const int SupplierNameMaxLength = 40;
+        public const int SupplierNameMaxLength = 80;
 
-        public const int CompanyNameMaxLength = 40;
+        public const int CompanyNameMaxLength = 80;
 
-        public const int StockNameMaxLength = 20;
+        public const int StockNameMaxLength = 50;
 
         public const int BulstatMinLength = 9;
 
