@@ -58,7 +58,7 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> AddPartTwo(int id)
+        public async Task<IActionResult> AddPartTwo(int id, string date)
         {
             var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(id);
 
