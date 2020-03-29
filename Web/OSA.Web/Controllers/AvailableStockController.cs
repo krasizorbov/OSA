@@ -14,7 +14,6 @@
 
     public class AvailableStockController : BaseController
     {
-        private const string AvailableStockErrorMessage = "There is no sales for the current month! Please register a sale!";
         private const string AvailableStockExistMessage = "Available stock for the month already done!";
 
         private readonly IAvailableStocksService availableStocksService;
@@ -53,23 +52,12 @@
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
             var soldStockNamesForCurrentMonth = await this.availableStocksService.GetSoldStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
+            var purchasedStockNamesForCurrentMonth = await this.availableStocksService.GetPurchasedStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
             var stockNames = await this.availableStocksService.AvailableStockExistAsync(start_Date, end_Date, companyId);
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
-            }
-
-            if (soldStockNamesForCurrentMonth.Count == 0)
-            {
-                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
-
-                var model = new CreateAvailableStockInputModel
-                {
-                    CompanyNames = companyNames,
-                };
-                this.SetFlash(FlashMessageType.Error, AvailableStockErrorMessage);
-                return this.View(model);
             }
 
             if (stockNames.Count != 0)
@@ -88,7 +76,16 @@
                 availableStockInputModel.StartDate,
                 availableStockInputModel.EndDate,
                 companyId);
-            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
+
+            if (soldStockNamesForCurrentMonth.Count == 0 && purchasedStockNamesForCurrentMonth.Count == 0)
+            {
+                this.TempData["message"] = GlobalConstants.AvailableStockRegisterErrorMessage;
+            }
+            else
+            {
+                this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
+            }
+
             return this.Redirect("/");
         }
 
