@@ -13,7 +13,6 @@
                     <th>Receipt Number</th>
                     <th>Salary</th>
                     <th>Date</th>
-                    <th>Company ID</th>
                 </tr>
                 @foreach (var receipt in Model.Receipts)
                 {
@@ -22,7 +21,6 @@
                         <td>@receipt.ReceiptNumber</td>
                         <td>@receipt.Salary.ToString("F")</td>
                         <td>@receipt.Date.ToShortDateString()</td>
-                        <td>@receipt.CompanyId</td>
                     </tr>
                 }
             </table>

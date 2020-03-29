@@ -15,7 +15,6 @@
                     <th>Total Price</th>
                     <th>Average Price</th>
                     <th>Date</th>
-                    <th>Company ID</th>
                 </tr>
                 @foreach (var purchase in Model.Purchases)
                 {
@@ -26,7 +25,6 @@
                         <td>@purchase.TotalPrice</td>
                         <td>@purchase.AveragePrice.ToString("F")</td>
                         <td>@purchase.Date.ToShortDateString()</td>
-                        <td>@purchase.CompanyId</td>
                     </tr>
                 }
             </table>

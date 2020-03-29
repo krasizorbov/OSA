@@ -20,7 +20,6 @@
                     <th>Available Quantity</th>
                     <th>Available Money</th>
                     <th>Date</th>
-                    <th>Company ID</th>
                 </tr>
                 @foreach (var availableStock in Model.AvailableStocks)
                 {
@@ -36,7 +35,6 @@
                         <td>@availableStock.RemainingQuantity.ToString("F")</td>
                         <td>@availableStock.RemainingPrice.ToString("F")</td>
                         <td>@availableStock.Date.ToShortDateString()</td>
-                        <td>@availableStock.CompanyId</td>
                     </tr>
                 }
             </table>

@@ -17,7 +17,6 @@
                     <th>Total Cost</th>
                     <th>Money Available</th>
                     <th>Date</th>
-                    <th>Company ID</th>
                 </tr>
                 @foreach (var cashBook in Model.CashBooks)
                 {
@@ -30,7 +29,6 @@
                         <td>@cashBook.TotalCost.ToString("F")</td>
                         <td>@cashBook.MoneyAvailable.ToString("F")</td>
                         <td>@cashBook.Date.ToShortDateString()</td>
-                        <td>@cashBook.CompanyId</td>
                     </tr>
                 }
             </table>

@@ -13,7 +13,6 @@
                     <th>Stock Name</th>
                     <th>Book Value</th>
                     <th>Date</th>
-                    <th>Company ID</th>
                 </tr>
                 @foreach (var bookValue in Model.BookValues)
                 {
@@ -22,7 +21,6 @@
                         <td>@bookValue.StockName</td>
                         <td>@bookValue.Price.ToString("F")</td>
                         <td>@bookValue.Date.ToShortDateString()</td>
-                        <td>@bookValue.CompanyId</td>
                     </tr>
                 }
             </table>

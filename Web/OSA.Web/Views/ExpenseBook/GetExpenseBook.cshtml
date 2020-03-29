@@ -18,7 +18,6 @@
                     <th>Profit</th>
                     <th>Total Profit</th>
                     <th>Date</th>
-                    <th>Company ID</th>
                 </tr>
                 @foreach (var expenseBook in Model.ExpenseBooks)
                 {
@@ -32,7 +31,6 @@
                         <td>@expenseBook.Profit.ToString("F")</td>
                         <td>@expenseBook.TotalProfit.ToString("F")</td>
                         <td>@expenseBook.Date.ToShortDateString()</td>
-                        <td>@expenseBook.CompanyId</td>
                     </tr>
                 }
             </table>
