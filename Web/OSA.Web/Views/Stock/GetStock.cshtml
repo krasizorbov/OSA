@@ -1,4 +1,5 @@
 ﻿@model OSA.Web.ViewModels.Stocks.View_Models.StockBindingViewModel
+@inject OSA.Services.Data.IInvoicesService invoicesService
 @{
     this.ViewData["Title"] = "Get Stock";
 }
@@ -14,8 +15,7 @@
                     <th>Total Quantity</th>
                     <th>Total Price</th>
                     <th>Issue Date</th>
-                    <th>Invoice ID</th>
-                    <th>Company ID</th>
+                    <th>Invoice Number</th>
                 </tr>
                 @foreach (var stock in Model.Stocks)
                 {
@@ -25,8 +25,7 @@
                         <td>@stock.Quantity</td>
                         <td>@stock.Price</td>
                         <td>@stock.Date.ToShortDateString()</td>
-                        <td>@stock.InvoiceId</td>
-                        <td>@stock.CompanyId</td>
+                        <td>@await this.invoicesService.GetInvoiceNumberByInvoiceIdAsync(stock.InvoiceId)</td>
                     </tr>
                 }
             </table>

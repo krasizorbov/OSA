@@ -47,6 +47,13 @@
             return invoices;
         }
 
+        public async Task<string> GetInvoiceNumberByInvoiceIdAsync(int invoiceId)
+        {
+            var invoiceNumber = await this.invoiceRepository.All().Where(x => x.Id == invoiceId).Select(x => x.InvoiceNumber).FirstOrDefaultAsync();
+
+            return invoiceNumber;
+        }
+
         public async Task<IEnumerable<Invoice>> GetInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var invoices = await this.invoiceRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
