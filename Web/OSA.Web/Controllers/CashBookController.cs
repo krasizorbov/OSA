@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using OSA.Common;
     using OSA.Services.Data;
+    using OSA.Services.Data.Interfaces;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.CashBooks.Input_Models;
     using OSA.Web.ViewModels.CashBooks.View_Models;
@@ -18,11 +19,13 @@
 
         private readonly ICashBooksService cashBooksService;
         private readonly ICompaniesService companiesService;
+        private readonly IDateTimeValidationService dateTimeValidationService;
 
-        public CashBookController(ICashBooksService cashBooksService, ICompaniesService companiesService)
+        public CashBookController(ICashBooksService cashBooksService, ICompaniesService companiesService, IDateTimeValidationService dateTimeValidationService)
         {
             this.cashBooksService = cashBooksService;
             this.companiesService = companiesService;
+            this.dateTimeValidationService = dateTimeValidationService;
         }
 
         [Authorize]
@@ -44,19 +47,35 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreateCashBookInputModel cashBookInputModel, string startDate, string endDate, int id)
+        public async Task<IActionResult> Add(CreateCashBookInputModel cashBookInputModel, string startDate, string endDate)
         {
-            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
 
-            var companyId = cashBookInputModel.CompanyId;
-            var cashBook = await this.cashBooksService.CashBookExistAsync(start_Date, end_Date, companyId);
-
-            if (!this.ModelState.IsValid)
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
             {
-                return this.View();
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(cashBookInputModel.StartDate), cashBookInputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(cashBookInputModel.EndDate), cashBookInputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new CreateCashBookInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var cashBook = await this.cashBooksService.CashBookExistAsync(start_Date, end_Date, cashBookInputModel.CompanyId);
             if (cashBook != null)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
@@ -73,7 +92,7 @@
             await this.cashBooksService.AddAsync(
                 cashBookInputModel.StartDate,
                 cashBookInputModel.EndDate,
-                companyId);
+                cashBookInputModel.CompanyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
@@ -97,12 +116,31 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> GetCompany(ShowCashBookByCompanyInputModel inputModel)
+        public async Task<IActionResult> GetCompany(ShowCashBookByCompanyInputModel inputModel, string startDate, string endDate)
         {
             var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
-            if (!this.ModelState.IsValid)
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
+
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
             {
-                return this.View();
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.StartDate), inputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.EndDate), inputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new ShowCashBookByCompanyInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
             return this.RedirectToAction("GetCashBook", "CashBook", new
