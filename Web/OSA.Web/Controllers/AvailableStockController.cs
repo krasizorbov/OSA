@@ -94,16 +94,7 @@
                 availableStockInputModel.EndDate,
                 availableStockInputModel.CompanyId);
 
-            var availableStockForPreviousMonth = await this.availableStocksService.GetAvailableStocksForPreviousMonthByCompanyIdAsync(start_Date, end_Date, availableStockInputModel.CompanyId);
-            if (availableStockForPreviousMonth.Count == 0)
-            {
-                this.TempData["message"] = GlobalConstants.AvailableStockRegisterErrorMessage;
-            }
-            else
-            {
-                this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
-            }
-
+            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
 
