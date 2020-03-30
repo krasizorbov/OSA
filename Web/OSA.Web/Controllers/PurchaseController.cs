@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using OSA.Common;
     using OSA.Services.Data;
+    using OSA.Services.Data.Interfaces;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Purchases.Input_Models;
     using OSA.Web.ViewModels.Purchases.View_Models;
@@ -19,18 +20,19 @@
 
         private readonly IPurchasesService purchasesService;
         private readonly ICompaniesService companiesService;
+        private readonly IDateTimeValidationService dateTimeValidationService;
 
-        public PurchaseController(IPurchasesService purchasesService, ICompaniesService companiesService)
+        public PurchaseController(IPurchasesService purchasesService, ICompaniesService companiesService, IDateTimeValidationService dateTimeValidationService)
         {
             this.purchasesService = purchasesService;
             this.companiesService = companiesService;
+            this.dateTimeValidationService = dateTimeValidationService;
         }
 
         [Authorize]
         public async Task<IActionResult> Add()
         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
-
             if (companyNames.Count == 0)
             {
                 this.SetFlash(FlashMessageType.Error, GlobalConstants.CompanyErrorMessage);
@@ -45,21 +47,37 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreatePurchaseInputModel purchaseInputModel, string startDate, string endDate, int id)
+        public async Task<IActionResult> Add(CreatePurchaseInputModel purchaseInputModel, string startDate, string endDate)
         {
-            var companyId = purchaseInputModel.CompanyId;
-            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
-            var stockNames = await this.purchasesService.GetStockNamesAsync(start_Date, end_Date, companyId);
-            var purchaseExist = await this.purchasesService.PurchaseExistAsync(start_Date, end_Date, companyId);
-
-            if (!this.ModelState.IsValid)
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
             {
-                return this.View();
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(purchaseInputModel.StartDate), purchaseInputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(purchaseInputModel.EndDate), purchaseInputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new CreatePurchaseInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
-            if (stockNames.Count == 0)
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var stockNames = await this.purchasesService.GetStockNamesAsync(start_Date, end_Date, purchaseInputModel.CompanyId);
+            var purchaseExist = await this.purchasesService.PurchaseExistAsync(start_Date, end_Date, purchaseInputModel.CompanyId);
+
+            if (stockNames.Count == 0) // Check This!!!
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
                 var model = new CreatePurchaseInputModel
@@ -71,7 +89,7 @@
                 return this.View(model);
             }
 
-            if (purchaseExist.Count != 0)
+            if (purchaseExist.Count != 0) // Check This!!!
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
                 var model = new CreatePurchaseInputModel
@@ -86,7 +104,7 @@
             await this.purchasesService.AddAsync(
                 purchaseInputModel.StartDate,
                 purchaseInputModel.EndDate,
-                companyId);
+                purchaseInputModel.CompanyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
@@ -110,12 +128,31 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> GetCompany(ShowPurchaseByCompanyInputModel inputModel)
+        public async Task<IActionResult> GetCompany(ShowPurchaseByCompanyInputModel inputModel, string startDate, string endDate)
         {
             var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
-            if (!this.ModelState.IsValid)
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
+
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
             {
-                return this.View();
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.StartDate), inputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.EndDate), inputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new ShowPurchaseByCompanyInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
             return this.RedirectToAction("GetPurchase", "Purchase", new
