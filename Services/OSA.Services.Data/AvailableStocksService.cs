@@ -54,8 +54,9 @@
                         CompanyId = companyId,
                     };
                     await this.availableStockRepository.AddAsync(availableStockFromPreviousMonth);
-                    await this.availableStockRepository.SaveChangesAsync();
                 }
+
+                await this.availableStockRepository.SaveChangesAsync();
             }
 
             foreach (var name in stockNamesList.OrderBy(x => x))
