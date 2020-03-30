@@ -79,7 +79,7 @@
 
             if (soldStockNamesForCurrentMonth.Count == 0 && purchasedStockNamesForCurrentMonth.Count == 0)
             {
-                this.TempData["message"] = GlobalConstants.AvailableStockRegisterErrorMessage;
+                this.TempData["message"] = GlobalConstants.AvailableStockRegisterErrorMessage; // Rectifay This!!!
             }
             else
             {

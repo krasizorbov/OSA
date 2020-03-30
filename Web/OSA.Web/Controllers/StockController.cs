@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using OSA.Common;
     using OSA.Services.Data;
+    using OSA.Services.Data.Interfaces;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Stocks.Input_Models;
     using OSA.Web.ViewModels.Stocks.View_Models;
@@ -17,12 +18,14 @@
         private readonly IStocksService stocksService;
         private readonly ICompaniesService companiesService;
         private readonly IInvoicesService invoicesService;
+        private readonly IDateTimeValidationService dateTimeValidationService;
 
-        public StockController(IStocksService stocksService, ICompaniesService companiesService, IInvoicesService invoicesService)
+        public StockController(IStocksService stocksService, ICompaniesService companiesService, IInvoicesService invoicesService, IDateTimeValidationService dateTimeValidationService)
         {
             this.stocksService = stocksService;
             this.invoicesService = invoicesService;
             this.companiesService = companiesService;
+            this.dateTimeValidationService = dateTimeValidationService;
         }
 
         [Authorize]
@@ -73,11 +76,25 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddPartTwo(CreateStockInputModelTwo inputModelTwo, int id)
+        public async Task<IActionResult> AddPartTwo(CreateStockInputModelTwo inputModelTwo, int id, string date)
         {
-            if (!this.ModelState.IsValid)
+            var isValidDateTime = this.dateTimeValidationService.IsValidDateTime(date);
+
+            if (!this.ModelState.IsValid || !isValidDateTime)
             {
-                return this.View();
+                var invoices = await this.invoicesService.GetAllInvoicesByCompanyIdAsync(id);
+
+                var model = new CreateStockInputModelTwo
+                {
+                    Invoices = invoices,
+                };
+
+                if (!isValidDateTime)
+                {
+                    this.ModelState.AddModelError(nameof(inputModelTwo.Date), inputModelTwo.Date + GlobalConstants.InvalidDateTime);
+                }
+
+                return this.View(model);
             }
 
             await this.stocksService.AddAsync(
@@ -110,12 +127,31 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> GetCompany(ShowStockByCompanyInputModel inputModel)
+        public async Task<IActionResult> GetCompany(ShowStockByCompanyInputModel inputModel, string startDate, string endDate)
         {
             var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
-            if (!this.ModelState.IsValid)
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
+
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
             {
-                return this.View();
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.StartDate), inputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.EndDate), inputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new ShowStockByCompanyInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
             return this.RedirectToAction("GetStock", "Stock", new
