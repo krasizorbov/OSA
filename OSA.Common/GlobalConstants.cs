@@ -34,7 +34,7 @@
 
         public const string ValidReceiptNumber = "A Valid Receipt Contains Only Numbers!";
 
-        public const string InvalidDateTimeFormat = "This is not a valid date format!";
+        public const string InvalidDateTimeFormat = "This is not a valid date!";
 
         public const string InvalidDateTime = " This is not a valid date!";
 
