@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using OSA.Common;
     using OSA.Services.Data;
+    using OSA.Services.Data.Interfaces;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Receipts.Input_Models;
     using OSA.Web.ViewModels.Receipts.View_Models;
@@ -18,11 +19,13 @@
 
         private readonly IReceiptsService receiptsService;
         private readonly ICompaniesService companiesService;
+        private readonly IDateTimeValidationService dateTimeValidationService;
 
-        public ReceiptController(IReceiptsService receiptsService, ICompaniesService companiesService)
+        public ReceiptController(IReceiptsService receiptsService, ICompaniesService companiesService, IDateTimeValidationService dateTimeValidationService)
         {
             this.receiptsService = receiptsService;
             this.companiesService = companiesService;
+            this.dateTimeValidationService = dateTimeValidationService;
         }
 
         [Authorize]
@@ -44,16 +47,27 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreateReceiptInputModel receiptInputModel, int id)
+        public async Task<IActionResult> Add(CreateReceiptInputModel receiptInputModel, string date)
         {
-            var companyId = receiptInputModel.CompanyId;
-            var receiptExist = await this.receiptsService.ReceiptExistAsync(receiptInputModel.ReceiptNumber, companyId);
+            var isValidDateTime = this.dateTimeValidationService.IsValidDateTime(date);
 
-            if (!this.ModelState.IsValid)
+            if (!this.ModelState.IsValid || !isValidDateTime)
             {
-                return this.View();
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+                var model = new CreateReceiptInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+
+                if (!isValidDateTime)
+                {
+                    this.ModelState.AddModelError(nameof(receiptInputModel.Date), receiptInputModel.Date + GlobalConstants.InvalidDateTime);
+                }
+
+                return this.View(model);
             }
 
+            var receiptExist = await this.receiptsService.ReceiptExistAsync(receiptInputModel.ReceiptNumber, receiptInputModel.CompanyId);
             if (receiptExist != null)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
@@ -71,7 +85,7 @@
                 receiptInputModel.ReceiptNumber,
                 receiptInputModel.Date,
                 receiptInputModel.Salary,
-                companyId);
+                receiptInputModel.CompanyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
@@ -95,12 +109,31 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> GetCompany(ShowReceiptByCompanyInputModel inputModel)
+        public async Task<IActionResult> GetCompany(ShowReceiptByCompanyInputModel inputModel, string startDate, string endDate)
         {
             var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
-            if (!this.ModelState.IsValid)
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
+
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
             {
-                return this.View();
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.StartDate), inputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.EndDate), inputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new ShowReceiptByCompanyInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
             return this.RedirectToAction("GetReceipt", "Receipt", new
