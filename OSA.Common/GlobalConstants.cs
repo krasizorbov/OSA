@@ -52,6 +52,6 @@
 
         public const string SuccessfullyRegistered = "Data has been registered successfully!";
 
-        public const string AvailableStockRegisterErrorMessage = "Nothing has been registered! Check your monthly sales or purchases!";
+        public const string AvailableStockRegisterErrorMessage = "Nothing has been registered! No available stock for previous month found!";
     }
 }
