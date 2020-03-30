@@ -42,10 +42,20 @@
                 var availableStockForPreviousMonth = await this.GetAvailableStocksForPreviousMonthByCompanyIdAsync(start_Date, end_Date, companyId);
                 foreach (var availableStock in availableStockForPreviousMonth)
                 {
-                    await this.availableStockRepository.AddAsync(availableStock);
+                    var availableStockFromPreviousMonth = new AvailableStock
+                    {
+                        StockName = availableStock.StockName,
+                        TotalPurchasedAmount = availableStock.TotalPurchasedAmount,
+                        TotalPurchasedPrice = availableStock.TotalPurchasedPrice,
+                        TotalSoldPrice = availableStock.TotalSoldPrice,
+                        BookValue = availableStock.BookValue,
+                        AveragePrice = availableStock.AveragePrice,
+                        Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
+                        CompanyId = companyId,
+                    };
+                    await this.availableStockRepository.AddAsync(availableStockFromPreviousMonth);
+                    await this.availableStockRepository.SaveChangesAsync();
                 }
-
-                await this.availableStockRepository.SaveChangesAsync();
             }
 
             foreach (var name in stockNamesList.OrderBy(x => x))
@@ -123,7 +133,7 @@
 
         public async Task<IEnumerable<AvailableStock>> GetAvailableStocksForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var availableStocks = await this.availableStockRepository.All().Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.CompanyId == companyId).ToListAsync();
+            var availableStocks = await this.availableStockRepository.All().Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == companyId).ToListAsync();
 
             return availableStocks;
         }
