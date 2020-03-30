@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using OSA.Common;
     using OSA.Services.Data;
+    using OSA.Services.Data.Interfaces;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.BookValues.Input_Models;
     using OSA.Web.ViewModels.BookValues.View_Models;
@@ -19,11 +20,13 @@
 
         private readonly IBookValuesService bookValuesService;
         private readonly ICompaniesService companiesService;
+        private readonly IDateTimeValidationService dateTimeValidationService;
 
-        public BookValueController(IBookValuesService bookValuesService, ICompaniesService companiesService)
+        public BookValueController(IBookValuesService bookValuesService, ICompaniesService companiesService, IDateTimeValidationService dateTimeValidationService)
         {
             this.bookValuesService = bookValuesService;
             this.companiesService = companiesService;
+            this.dateTimeValidationService = dateTimeValidationService;
         }
 
         [Authorize]
@@ -45,20 +48,36 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreateBookValueInputModel bookValueInputModel, string startDate, string endDate, int id)
+        public async Task<IActionResult> Add(CreateBookValueInputModel bookValueInputModel, string startDate, string endDate)
         {
-            var companyId = bookValueInputModel.CompanyId;
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
+
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
+            {
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(bookValueInputModel.StartDate), bookValueInputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(bookValueInputModel.EndDate), bookValueInputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new CreateBookValueInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
+            }
 
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
-            var monthlySales = await this.bookValuesService.GetMonthlySalesAsync(start_Date, end_Date, companyId);
-            var stockNames = await this.bookValuesService.BookValueExistAsync(start_Date, end_Date, companyId);
-
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
+            var monthlySales = await this.bookValuesService.GetMonthlySalesAsync(start_Date, end_Date, bookValueInputModel.CompanyId);
+            var stockNames = await this.bookValuesService.BookValueExistAsync(start_Date, end_Date, bookValueInputModel.CompanyId);
 
             if (monthlySales.Count == 0)
             {
@@ -87,7 +106,7 @@
             await this.bookValuesService.AddAsync(
                 bookValueInputModel.StartDate,
                 bookValueInputModel.EndDate,
-                companyId);
+                bookValueInputModel.CompanyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
@@ -111,12 +130,31 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> GetCompany(ShowBookValueByCompanyInputModel inputModel)
+        public async Task<IActionResult> GetCompany(ShowBookValueByCompanyInputModel inputModel, string startDate, string endDate)
         {
             var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
-            if (!this.ModelState.IsValid)
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
+
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
             {
-                return this.View();
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.StartDate), inputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.EndDate), inputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new ShowBookValueByCompanyInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
             return this.RedirectToAction("GetBookValue", "BookValue", new
