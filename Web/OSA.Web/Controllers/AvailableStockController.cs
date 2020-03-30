@@ -159,7 +159,7 @@
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
-            var availableStocks = await this.availableStocksService.GetAvailableStocksByCompanyIdAsync(start_Date, end_Date, id);
+            var availableStocks = await this.availableStocksService.GetAvailableStocksForCurrentMonthByCompanyIdAsync(start_Date, end_Date, id);
 
             var model = new AvailableStockBindingViewModel
             {

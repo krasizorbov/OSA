@@ -22,6 +22,8 @@
 
         Task<List<string>> AvailableStockExistAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<IEnumerable<AvailableStock>> GetAvailableStocksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<IEnumerable<AvailableStock>> GetAvailableStocksForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+
+        Task<IEnumerable<AvailableStock>> GetAvailableStocksForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
     }
 }

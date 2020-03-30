@@ -37,6 +37,17 @@
 
             var stockNamesList = this.purchasedStockNamesForCurrentMonth.Distinct();
 
+            if (stockNamesList.Count() == 0)
+            {
+                var availableStockForPreviousMonth = await this.GetAvailableStocksForPreviousMonthByCompanyIdAsync(start_Date, end_Date, companyId);
+                foreach (var availableStock in availableStockForPreviousMonth)
+                {
+                    await this.availableStockRepository.AddAsync(availableStock);
+                }
+
+                await this.availableStockRepository.SaveChangesAsync();
+            }
+
             foreach (var name in stockNamesList.OrderBy(x => x))
             {
                 var currentPurchasedStock = await this.GetCurrentPurchasedStockNameAsync(start_Date, end_Date, name, companyId);
@@ -103,9 +114,16 @@
             return stockNames;
         }
 
-        public async Task<IEnumerable<AvailableStock>> GetAvailableStocksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<IEnumerable<AvailableStock>> GetAvailableStocksForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var availableStocks = await this.availableStockRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
+
+            return availableStocks;
+        }
+
+        public async Task<IEnumerable<AvailableStock>> GetAvailableStocksForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        {
+            var availableStocks = await this.availableStockRepository.All().Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.CompanyId == companyId).ToListAsync();
 
             return availableStocks;
         }
