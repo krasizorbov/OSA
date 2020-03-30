@@ -8,6 +8,7 @@
     using Microsoft.AspNetCore.Mvc;
     using OSA.Common;
     using OSA.Services.Data;
+    using OSA.Services.Data.Interfaces;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.AvailableStocks.Input_Models;
     using OSA.Web.ViewModels.AvailableStocks.View_Models;
@@ -18,11 +19,13 @@
 
         private readonly IAvailableStocksService availableStocksService;
         private readonly ICompaniesService companiesService;
+        private readonly IDateTimeValidationService dateTimeValidationService;
 
-        public AvailableStockController(IAvailableStocksService availableStocksService, ICompaniesService companiesService)
+        public AvailableStockController(IAvailableStocksService availableStocksService, ICompaniesService companiesService, IDateTimeValidationService dateTimeValidationService)
         {
             this.availableStocksService = availableStocksService;
             this.companiesService = companiesService;
+            this.dateTimeValidationService = dateTimeValidationService;
         }
 
         [Authorize]
@@ -44,21 +47,37 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add(CreateAvailableStockInputModel availableStockInputModel, string startDate, string endDate, int id)
+        public async Task<IActionResult> Add(CreateAvailableStockInputModel availableStockInputModel, string startDate, string endDate)
         {
-            var companyId = availableStockInputModel.CompanyId;
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
+
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
+            {
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(availableStockInputModel.StartDate), availableStockInputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(availableStockInputModel.EndDate), availableStockInputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new CreateAvailableStockInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
+            }
 
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
-            var soldStockNamesForCurrentMonth = await this.availableStocksService.GetSoldStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
-            var purchasedStockNamesForCurrentMonth = await this.availableStocksService.GetPurchasedStockNamesByCompanyIdAsync(start_Date, end_Date, companyId);
-            var stockNames = await this.availableStocksService.AvailableStockExistAsync(start_Date, end_Date, companyId);
-
-            if (!this.ModelState.IsValid)
-            {
-                return this.View();
-            }
+            var soldStockNamesForCurrentMonth = await this.availableStocksService.GetSoldStockNamesByCompanyIdAsync(start_Date, end_Date, availableStockInputModel.CompanyId);
+            var purchasedStockNamesForCurrentMonth = await this.availableStocksService.GetPurchasedStockNamesByCompanyIdAsync(start_Date, end_Date, availableStockInputModel.CompanyId);
+            var stockNames = await this.availableStocksService.AvailableStockExistAsync(start_Date, end_Date, availableStockInputModel.CompanyId);
 
             if (stockNames.Count != 0)
             {
@@ -75,7 +94,7 @@
             await this.availableStocksService.AddAsync(
                 availableStockInputModel.StartDate,
                 availableStockInputModel.EndDate,
-                companyId);
+                availableStockInputModel.CompanyId);
 
             if (soldStockNamesForCurrentMonth.Count == 0 && purchasedStockNamesForCurrentMonth.Count == 0)
             {
@@ -108,12 +127,31 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> GetCompany(ShowAvailableStockByCompanyInputModel inputModel)
+        public async Task<IActionResult> GetCompany(ShowAvailableStockByCompanyInputModel inputModel, string startDate, string endDate)
         {
             var companyName = await this.companiesService.GetCompanyNameByIdAsync(inputModel.CompanyId);
-            if (!this.ModelState.IsValid)
+            var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
+            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
+
+            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
             {
-                return this.View();
+                var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+
+                if (!isValidStartDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.StartDate), inputModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                if (!isValidEndDate)
+                {
+                    this.ModelState.AddModelError(nameof(inputModel.EndDate), inputModel.EndDate + GlobalConstants.InvalidDateTime);
+                }
+
+                var model = new ShowAvailableStockByCompanyInputModel
+                {
+                    CompanyNames = companyNames,
+                };
+                return this.View(model);
             }
 
             return this.RedirectToAction("GetAvailableStock", "AvailableStock", new
