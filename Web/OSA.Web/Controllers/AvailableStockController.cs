@@ -75,8 +75,6 @@
 
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var soldStockNamesForCurrentMonth = await this.availableStocksService.GetSoldStockNamesByCompanyIdAsync(start_Date, end_Date, availableStockInputModel.CompanyId);
-            var purchasedStockNamesForCurrentMonth = await this.availableStocksService.GetPurchasedStockNamesByCompanyIdAsync(start_Date, end_Date, availableStockInputModel.CompanyId);
             var stockNames = await this.availableStocksService.AvailableStockExistAsync(start_Date, end_Date, availableStockInputModel.CompanyId);
 
             if (stockNames.Count != 0)
@@ -96,15 +94,7 @@
                 availableStockInputModel.EndDate,
                 availableStockInputModel.CompanyId);
 
-            if (soldStockNamesForCurrentMonth.Count == 0 && purchasedStockNamesForCurrentMonth.Count == 0)
-            {
-                this.TempData["message"] = GlobalConstants.AvailableStockRegisterErrorMessage; // Rectifay This!!!
-            }
-            else
-            {
-                this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
-            }
-
+            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
         }
 
