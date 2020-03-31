@@ -44,21 +44,18 @@
                 var availableStocksForPreviousMonth = await this.GetAvailableStocksForPreviousMonthByCompanyIdAsync(start_Date, end_Date, companyId);
                 foreach (var availableStock in availableStocksForPreviousMonth)
                 {
-                    if (availableStock != null)
+                    var availableStockFromPreviousMonth = new AvailableStock
                     {
-                        var availableStockFromPreviousMonth = new AvailableStock
-                        {
-                            StockName = availableStock.StockName,
-                            TotalPurchasedAmount = availableStock.TotalPurchasedAmount,
-                            TotalPurchasedPrice = availableStock.TotalPurchasedPrice,
-                            TotalSoldPrice = availableStock.TotalSoldPrice,
-                            BookValue = availableStock.BookValue,
-                            AveragePrice = availableStock.AveragePrice,
-                            Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
-                            CompanyId = companyId,
-                        };
-                        await this.availableStockRepository.AddAsync(availableStockFromPreviousMonth);
-                    }
+                        StockName = availableStock.StockName,
+                        TotalPurchasedAmount = availableStock.TotalPurchasedAmount,
+                        TotalPurchasedPrice = availableStock.TotalPurchasedPrice,
+                        TotalSoldPrice = availableStock.TotalSoldPrice,
+                        BookValue = availableStock.BookValue,
+                        AveragePrice = availableStock.AveragePrice,
+                        Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
+                        CompanyId = companyId,
+                    };
+                    await this.availableStockRepository.AddAsync(availableStockFromPreviousMonth);
                 }
 
                 await this.availableStockRepository.SaveChangesAsync();

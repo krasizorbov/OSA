@@ -27,5 +27,7 @@
         Task<List<string>> PurchaseExistAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<IEnumerable<Purchase>> GetPurchasesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+
+        Task<decimal> GetAvailableStockForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, string name, int companyId);
     }
 }

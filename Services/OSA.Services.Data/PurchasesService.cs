@@ -18,6 +18,7 @@
         private readonly ApplicationDbContext context;
         private List<string> stockNamesForCurrentMonth;
         private List<string> stockNamesForPreviousMonth;
+        private List<string> stockNamesList;
         private decimal quantityPurchased = 0;
         private decimal quantitySold = 0;
         private decimal totalQuantity = 0;
@@ -27,46 +28,102 @@
         {
             this.purchaseRepository = purchaseRepository;
             this.context = context;
+            this.stockNamesList = new List<string>();
         }
 
         public async Task AddAsync(string startDate, string endDate, int companyId)
         {
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
-            var stockNames = await this.GetStockNamesAsync(start_Date, end_Date, companyId);
+            this.stockNamesForCurrentMonth = await this.GetStockNamesForCurrentMonthByCompanyIdAsync(start_Date, end_Date, companyId);
+            this.stockNamesForPreviousMonth = await this.GetStockNamesForPrevoiusMonthByCompanyIdAsync(start_Date, end_Date, companyId);
+            this.stockNamesList.AddRange(this.stockNamesForCurrentMonth);
+            this.stockNamesList.AddRange(this.stockNamesForPreviousMonth);
+            var stockNames = this.stockNamesList.Distinct();
 
             foreach (var name in stockNames)
             {
-                this.quantitySold = await this.QuantitySoldAsync(name, start_Date, end_Date, companyId);
-                this.quantityPurchased = await this.QuantityPurchasedAsync(name, start_Date, end_Date, companyId);
-
                 decimal quantityAvailable = 0;
-
-                if (this.quantityPurchased < this.quantitySold)
+                if (this.stockNamesForCurrentMonth.Contains(name) && this.stockNamesForPreviousMonth.Contains(name))
                 {
-                    // Console.WriteLine("The quantity sold is bigger than the quantity purchased");
-                    continue;
+                    this.quantitySold = await this.QuantitySoldAsync(name, start_Date, end_Date, companyId);
+                    this.quantityPurchased = await this.QuantityPurchasedAsync(name, start_Date, end_Date, companyId);
+                    if (this.quantityPurchased < this.quantitySold)
+                    {
+                        // Console.WriteLine("The quantity sold is bigger than the quantity purchased");
+                        continue;
+                    }
+                    else
+                    {
+                        quantityAvailable = this.quantityPurchased - this.quantitySold;
+                    }
+
+                    this.totalQuantity = this.TotalQuantity(name, start_Date, end_Date, companyId);
+                    this.totalQuantity += quantityAvailable;
+                    var availableStockMoney = await this.GetAvailableStockForPreviousMonthByCompanyIdAsync(start_Date, end_Date, name, companyId);
+                    this.totalPrice = this.TotalPrice(name, start_Date, end_Date, companyId);
+                    this.totalPrice += availableStockMoney;
+                    var purchase = new Purchase
+                    {
+                        StockName = name,
+                        TotalQuantity = this.totalQuantity,
+                        TotalPrice = this.totalPrice,
+                        Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
+                        CompanyId = companyId,
+                    };
+
+                    await this.purchaseRepository.AddAsync(purchase);
                 }
-                else
+
+                if (!this.stockNamesForCurrentMonth.Contains(name) && this.stockNamesForPreviousMonth.Contains(name))
                 {
-                    quantityAvailable = this.quantityPurchased - this.quantitySold;
+                    this.quantitySold = await this.QuantitySoldAsync(name, start_Date, end_Date, companyId);
+                    this.quantityPurchased = await this.QuantityPurchasedAsync(name, start_Date, end_Date, companyId);
+                    if (this.quantityPurchased < this.quantitySold)
+                    {
+                        // Console.WriteLine("The quantity sold is bigger than the quantity purchased");
+                        continue;
+                    }
+                    else
+                    {
+                        quantityAvailable = this.quantityPurchased - this.quantitySold;
+                    }
+
+                    this.totalQuantity = 0;
+                    this.totalQuantity += quantityAvailable;
+                    var availableStockMoney = await this.GetAvailableStockForPreviousMonthByCompanyIdAsync(start_Date, end_Date, name, companyId);
+                    this.totalPrice = 0;
+                    this.totalPrice += availableStockMoney;
+                    var purchase = new Purchase
+                    {
+                        StockName = name,
+                        TotalQuantity = this.totalQuantity,
+                        TotalPrice = this.totalPrice,
+                        Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
+                        CompanyId = companyId,
+                    };
+
+                    await this.purchaseRepository.AddAsync(purchase);
                 }
 
-                this.totalQuantity = this.TotalQuantity(name, start_Date, end_Date, companyId);
-                this.totalQuantity += quantityAvailable;
-                this.totalPrice = this.TotalPrice(name, start_Date, end_Date, companyId);
-
-                var purchase = new Purchase
+                if (this.stockNamesForCurrentMonth.Contains(name) && !this.stockNamesForPreviousMonth.Contains(name))
                 {
-                    StockName = name,
-                    TotalQuantity = this.totalQuantity,
-                    TotalPrice = this.totalPrice,
-                    Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
-                    CompanyId = companyId,
-                };
+                    this.totalQuantity = this.TotalQuantity(name, start_Date, end_Date, companyId);
+                    var availableStockMoney = await this.GetAvailableStockForPreviousMonthByCompanyIdAsync(start_Date, end_Date, name, companyId);
+                    this.totalPrice = this.TotalPrice(name, start_Date, end_Date, companyId);
+                    this.totalPrice += availableStockMoney;
+                    var purchase = new Purchase
+                    {
+                        StockName = name,
+                        TotalQuantity = this.totalQuantity,
+                        TotalPrice = this.totalPrice,
+                        Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
+                        CompanyId = companyId,
+                    };
 
-                await this.purchaseRepository.AddAsync(purchase);
+                    await this.purchaseRepository.AddAsync(purchase);
+                }
+
                 await this.purchaseRepository.SaveChangesAsync();
             }
         }
@@ -78,6 +135,16 @@
             this.stockNamesForCurrentMonth.AddRange(this.stockNamesForPreviousMonth);
             var stockNames = this.stockNamesForCurrentMonth.Distinct();
             return stockNames.ToList();
+        }
+
+        public async Task<decimal> GetAvailableStockForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, string name, int companyId)
+        {
+            var availableStockMoney = await this.context.AvailableStocks
+                .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == companyId && x.StockName == name)
+                .Select(x => x.RemainingPrice)
+                .FirstOrDefaultAsync();
+
+            return availableStockMoney;
         }
 
         public async Task<List<string>> GetStockNamesForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
@@ -93,7 +160,7 @@
         public async Task<List<string>> GetStockNamesForPrevoiusMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
             this.stockNamesForPreviousMonth = await this.context.Stocks
-            .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.CompanyId == id)
+            .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == id)
             .Select(x => x.Name)
             .Distinct()
             .ToListAsync();
@@ -103,7 +170,7 @@
         public async Task<decimal> QuantityPurchasedAsync(string stockName, DateTime startDate, DateTime endDate, int id)
         {
             this.quantityPurchased = await this.context.Purchases
-            .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.StockName == stockName && x.CompanyId == id)
+            .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.StockName == stockName && x.CompanyId == id)
             .Select(x => x.TotalQuantity)
             .FirstOrDefaultAsync();
             return this.quantityPurchased;
@@ -112,7 +179,7 @@
         public async Task<decimal> QuantitySoldAsync(string stockName, DateTime startDate, DateTime endDate, int id)
         {
             this.quantitySold = await this.context.Sales
-            .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= endDate.AddMonths(-1) && x.StockName == stockName && x.CompanyId == id)
+            .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.StockName == stockName && x.CompanyId == id)
             .Select(x => x.TotalPurchasePrice)
             .FirstOrDefaultAsync();
             return this.quantitySold;
