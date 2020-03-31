@@ -38,7 +38,7 @@
                 TotalStockCost = productionInvoices.Sum(x => x.StockCost),
                 TotalExternalCost = productionInvoices.Sum(x => x.ExternalCost),
                 TotalSalaryCost = receipts.Sum(x => x.Salary),
-                TotalBookValue = bookValues.Sum(x => x.Price),
+                TotalBookValue = bookValues.Sum(x => x.BookValue),
                 Profit = sales.Sum(x => x.TotalPrice),
                 Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
@@ -57,9 +57,9 @@
             return expenseBook;
         }
 
-        public async Task<List<BookValue>> GetAllBookValuesByMonthAsync(DateTime startDate, DateTime endDate, int id)
+        public async Task<List<Sale>> GetAllBookValuesByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
-            var bookValues = await this.context.BookValues
+            var bookValues = await this.context.Sales
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
                 .Select(x => x)
                 .ToListAsync();

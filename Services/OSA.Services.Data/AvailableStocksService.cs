@@ -160,9 +160,9 @@
 
         public async Task<decimal> GetCurrentBookValueForStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
-            var currentBookValueForStockName = await this.context.BookValues
+            var currentBookValueForStockName = await this.context.Sales
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id)
-                .Select(x => x.Price)
+                .Select(x => x.BookValue)
                 .FirstOrDefaultAsync();
 
             return currentBookValueForStockName;

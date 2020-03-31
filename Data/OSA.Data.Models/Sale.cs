@@ -28,6 +28,8 @@
 
         public Company Company { get; set; }
 
-        public decimal TotalPurchaseQuantity => this.TotalPrice / this.ProfitPercent / 100 / this.AveragePrice;
+        public decimal BookValue => this.TotalPrice / this.ProfitPercent / 100;
+
+        public decimal TotalPurchaseQuantity => this.BookValue / this.AveragePrice;
     }
 }

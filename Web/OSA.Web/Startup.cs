@@ -67,7 +67,6 @@
             services.AddTransient<IStocksService, StocksService>();
             services.AddTransient<ISalesService, SalesService>();
             services.AddTransient<IPurchasesService, PurchasesService>();
-            services.AddTransient<IBookValuesService, BookValuesService>();
             services.AddTransient<IAvailableStocksService, AvailableStocksService>();
             services.AddTransient<IProductionInvoicesService, ProductionInvoicesService>();
             services.AddTransient<IReceiptsService, ReceiptsService>();

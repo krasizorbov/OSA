@@ -10,8 +10,10 @@
     {
         Task AddAsync(string stockName, decimal totalPrice, int profitPercent, string date, int companyId);
 
-        Task<string> SaleExistAsync(DateTime startDate, DateTime endDate, string stockName, int companyId);
+        Task<string> SaleExistAsync(DateTime startDate, string stockName, int companyId);
 
         Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+
+        Task<decimal> GetAveragePrice(DateTime startDate, DateTime endDate, string stockName, int companyId);
     }
 }

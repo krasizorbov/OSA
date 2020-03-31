@@ -77,22 +77,16 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddPartTwo(CreateSaleInputModelTwo saleInputModel, string startDate, string endDate, string stockName, int id)
+        public async Task<IActionResult> AddPartTwo(CreateSaleInputModelTwo saleInputModelTwo, string startDate, string stockName, int id)
         {
             var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
-            var isValidEndDate = this.dateTimeValidationService.IsValidDateTime(endDate);
-            if (!this.ModelState.IsValid || !isValidStartDate || !isValidEndDate)
+            if (!this.ModelState.IsValid || !isValidStartDate)
             {
                 var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
 
                 if (!isValidStartDate)
                 {
-                    this.ModelState.AddModelError(nameof(saleInputModel.StartDate), saleInputModel.StartDate + GlobalConstants.InvalidDateTime);
-                }
-
-                if (!isValidEndDate)
-                {
-                    this.ModelState.AddModelError(nameof(saleInputModel.EndDate), saleInputModel.EndDate + GlobalConstants.InvalidDateTime);
+                    this.ModelState.AddModelError(nameof(saleInputModelTwo.StartDate), saleInputModelTwo.StartDate + GlobalConstants.InvalidDateTime);
                 }
 
                 var model = new CreateSaleInputModelTwo
@@ -103,8 +97,7 @@
             }
 
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var saleExist = await this.salesService.SaleExistAsync(start_Date, end_Date, stockName, id);
+            var saleExist = await this.salesService.SaleExistAsync(start_Date, stockName, id);
 
             if (saleExist != null)
             {
@@ -120,10 +113,10 @@
             }
 
             await this.salesService.AddAsync(
-                saleInputModel.StockName,
-                saleInputModel.TotalPrice,
-                saleInputModel.ProfitPercent,
-                saleInputModel.EndDate,
+                saleInputModelTwo.StockName,
+                saleInputModelTwo.TotalPrice,
+                saleInputModelTwo.ProfitPercent,
+                saleInputModelTwo.StartDate,
                 id);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");

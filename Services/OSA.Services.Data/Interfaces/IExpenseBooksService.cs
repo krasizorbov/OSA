@@ -14,7 +14,7 @@
 
         Task<List<Receipt>> GetAllReceiptsByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<List<BookValue>> GetAllBookValuesByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<List<Sale>> GetAllBookValuesByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<List<Sale>> GetAllSalesByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
 

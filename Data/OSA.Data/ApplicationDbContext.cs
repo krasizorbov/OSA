@@ -27,8 +27,6 @@
 
         public DbSet<AvailableStock> AvailableStocks { get; set; }
 
-        public DbSet<BookValue> BookValues { get; set; }
-
         public DbSet<CashBook> CashBooks { get; set; }
 
         public DbSet<Company> Companies { get; set; }

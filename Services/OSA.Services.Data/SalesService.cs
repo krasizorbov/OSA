@@ -25,16 +25,29 @@
 
         public async Task AddAsync(string stockName, decimal totalPrice, int profitPercent, string date, int companyId)
         {
+            var start_Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var averagePrice = await this.GetAveragePrice(start_Date, start_Date, stockName, companyId);
             var sale = new Sale
             {
                 StockName = stockName,
                 TotalPrice = totalPrice,
                 ProfitPercent = profitPercent,
+                AveragePrice = averagePrice,
                 Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
             await this.saleRepository.AddAsync(sale);
             await this.saleRepository.SaveChangesAsync();
+        }
+
+        public async Task<decimal> GetAveragePrice(DateTime startDate, DateTime endDate, string stockName, int companyId)
+        {
+            var averagePrice = await this.context.Purchases
+                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName)
+                .Select(x => x.AveragePrice)
+                .FirstOrDefaultAsync();
+
+            return averagePrice;
         }
 
         public async Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
@@ -44,10 +57,10 @@
             return sales;
         }
 
-        public async Task<string> SaleExistAsync(DateTime startDate, DateTime endDate, string stockName, int companyId)
+        public async Task<string> SaleExistAsync(DateTime startDate, string stockName, int companyId)
         {
             var name = await this.context.Sales
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.StockName == stockName && x.CompanyId == companyId)
                 .Select(x => x.StockName)
                 .FirstOrDefaultAsync();
 
