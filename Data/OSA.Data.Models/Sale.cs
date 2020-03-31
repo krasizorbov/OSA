@@ -28,7 +28,7 @@
 
         public Company Company { get; set; }
 
-        public decimal BookValue => this.TotalPrice / this.ProfitPercent / 100;
+        public decimal BookValue => this.TotalPrice / ((decimal)this.ProfitPercent / 100);
 
         public decimal TotalPurchaseQuantity => this.BookValue / this.AveragePrice;
     }

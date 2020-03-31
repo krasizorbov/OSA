@@ -14,6 +14,7 @@
                     <th>Total Price</th>
                     <th>Profit Percent</th>
                     <th>Average Price</th>
+                    <th>Book Value</th>
                     <th>Total Quantity of the purchase</th>
                     <th>Date</th>
                 </tr>
@@ -25,6 +26,7 @@
                         <td>@sale.TotalPrice</td>
                         <td>@sale.ProfitPercent</td>
                         <td>@sale.AveragePrice</td>
+                        <td>@sale.BookValue.ToString("F")</td>
                         <td>@sale.TotalPurchaseQuantity.ToString("F")</td>
                         <td>@sale.Date.ToShortDateString()</td>
                     </tr>
