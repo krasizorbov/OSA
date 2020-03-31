@@ -42,7 +42,7 @@
                 }
                 else
                 {
-                    bookvalue = sale.TotalPurchasePrice;
+                    bookvalue = sale.TotalPurchaseQuantity * purchasedStockAveragePrice;
                 }
 
                 var bookValue = new BookValue

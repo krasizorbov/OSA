@@ -18,6 +18,9 @@
         [Range(GlobalConstants.ProfitMinValue, GlobalConstants.ProfitMaxValue)]
         public int ProfitPercent { get; set; }
 
+        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
+        public decimal AveragePrice { get; set; }
+
         public DateTime Date { get; set; }
 
         [Required]
@@ -25,6 +28,6 @@
 
         public Company Company { get; set; }
 
-        public decimal TotalPurchasePrice => this.TotalPrice * 100 / this.ProfitPercent;
+        public decimal TotalPurchaseQuantity => this.TotalPrice / this.ProfitPercent / 100 / this.AveragePrice;
     }
 }

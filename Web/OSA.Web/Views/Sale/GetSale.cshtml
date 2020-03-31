@@ -13,7 +13,8 @@
                     <th>Stock Name</th>
                     <th>Total Price</th>
                     <th>Profit Percent</th>
-                    <th>Total price of the purchase</th>
+                    <th>Average Price</th>
+                    <th>Total Quantity of the purchase</th>
                     <th>Date</th>
                 </tr>
                 @foreach (var sale in Model.Sales)
@@ -23,7 +24,8 @@
                         <td>@sale.StockName</td>
                         <td>@sale.TotalPrice</td>
                         <td>@sale.ProfitPercent</td>
-                        <td>@sale.TotalPurchasePrice.ToString("F")</td>
+                        <td>@sale.AveragePrice</td>
+                        <td>@sale.TotalPurchaseQuantity.ToString("F")</td>
                         <td>@sale.Date.ToShortDateString()</td>
                     </tr>
                 }
