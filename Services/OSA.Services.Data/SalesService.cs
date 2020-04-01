@@ -26,7 +26,7 @@
         public async Task AddAsync(string stockName, decimal totalPrice, int profitPercent, string date, int companyId)
         {
             var start_Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var averagePrice = await this.GetAveragePrice(start_Date, start_Date, stockName, companyId);
+            var averagePrice = await this.GetAveragePrice(start_Date, stockName, companyId);
             var sale = new Sale
             {
                 StockName = stockName,
@@ -37,7 +37,7 @@
                 CompanyId = companyId,
             };
 
-            var totalQuantity = await this.GetTotalPurchasedQuantity(start_Date, start_Date, stockName, companyId);
+            var totalQuantity = await this.GetTotalPurchasedQuantity(start_Date, stockName, companyId);
             if (sale.TotalPurchaseQuantity > totalQuantity)
             {
                 this.IsBigger();
@@ -49,7 +49,7 @@
             }
         }
 
-        public async Task<decimal> GetAveragePrice(DateTime startDate, DateTime endDate, string stockName, int companyId)
+        public async Task<decimal> GetAveragePrice(DateTime startDate, string stockName, int companyId)
         {
             var averagePrice = await this.context.Purchases
                 .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName)
@@ -66,7 +66,7 @@
             return sales;
         }
 
-        public async Task<decimal> GetTotalPurchasedQuantity(DateTime startDate, DateTime endDate, string stockName, int companyId)
+        public async Task<decimal> GetTotalPurchasedQuantity(DateTime startDate, string stockName, int companyId)
         {
             var totalQuantity = await this.context.Purchases
                 .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName)
@@ -81,7 +81,7 @@
             return true;
         }
 
-        public async Task<string> PurchasedStockExist(DateTime startDate, DateTime endDate, string stockName, int companyId)
+        public async Task<string> PurchasedStockExist(DateTime startDate, string stockName, int companyId)
         {
             var purchasedStockName = await this.context.Purchases
                 .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName)

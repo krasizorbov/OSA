@@ -100,7 +100,7 @@
 
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var saleExist = await this.salesService.SaleExistAsync(start_Date, stockName, id);
-            var purchasedStockNameExist = await this.salesService.PurchasedStockExist(start_Date, start_Date, stockName, id);
+            var purchasedStockNameExist = await this.salesService.PurchasedStockExist(start_Date, stockName, id);
             if (saleExist != null || purchasedStockNameExist == null)
             {
                 if (saleExist != null)
