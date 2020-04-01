@@ -48,6 +48,8 @@
 
         public const string StockErrorMessage = "Please register a stock before proceeding!";
 
+        public const string PurchaseErrorMessage = "Please register a purchase before proceeding!";
+
         public const string DateFormat = "dd/MM/yyyy";
 
         public const string SuccessfullyRegistered = "Data has been registered successfully!";

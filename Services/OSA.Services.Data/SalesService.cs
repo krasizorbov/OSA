@@ -36,8 +36,17 @@
                 Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
-            await this.saleRepository.AddAsync(sale);
-            await this.saleRepository.SaveChangesAsync();
+
+            var totalQuantity = await this.GetTotalPurchasedQuantity(start_Date, start_Date, stockName, companyId);
+            if (sale.TotalPurchaseQuantity > totalQuantity)
+            {
+                this.IsBigger();
+            }
+            else
+            {
+                await this.saleRepository.AddAsync(sale);
+                await this.saleRepository.SaveChangesAsync();
+            }
         }
 
         public async Task<decimal> GetAveragePrice(DateTime startDate, DateTime endDate, string stockName, int companyId)
@@ -55,6 +64,31 @@
             var sales = await this.saleRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
 
             return sales;
+        }
+
+        public async Task<decimal> GetTotalPurchasedQuantity(DateTime startDate, DateTime endDate, string stockName, int companyId)
+        {
+            var totalQuantity = await this.context.Purchases
+                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName)
+                .Select(x => x.TotalQuantity)
+                .FirstOrDefaultAsync();
+
+            return totalQuantity;
+        }
+
+        public bool IsBigger()
+        {
+            return true;
+        }
+
+        public async Task<string> PurchasedStockExist(DateTime startDate, DateTime endDate, string stockName, int companyId)
+        {
+            var purchasedStockName = await this.context.Purchases
+                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName)
+                .Select(x => x.StockName)
+                .FirstOrDefaultAsync();
+
+            return purchasedStockName;
         }
 
         public async Task<string> SaleExistAsync(DateTime startDate, string stockName, int companyId)

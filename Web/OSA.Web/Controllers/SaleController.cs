@@ -16,6 +16,7 @@
     public class SaleController : BaseController
     {
         private const string SaleErrorMessage = "Monthly sale for the current stock is already done!";
+        private const string SaleQuantityErrorMessage = "Registration failed! The quantity of the sale is bigger than the quantity of the purchase!";
         private readonly ISalesService salesService;
         private readonly ICompaniesService companiesService;
         private readonly IStocksService stocksService;
@@ -80,7 +81,10 @@
         public async Task<IActionResult> AddPartTwo(CreateSaleInputModelTwo saleInputModelTwo, string startDate, string stockName, int id)
         {
             var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
-            if (!this.ModelState.IsValid || !isValidStartDate)
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var saleExist = await this.salesService.SaleExistAsync(start_Date, stockName, id);
+            var purchasedStockNameExist = await this.salesService.PurchasedStockExist(start_Date, start_Date, stockName, id);
+            if (!this.ModelState.IsValid || !isValidStartDate || saleExist != null || purchasedStockNameExist == null)
             {
                 var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
 
@@ -89,21 +93,15 @@
                     this.ModelState.AddModelError(nameof(saleInputModelTwo.StartDate), saleInputModelTwo.StartDate + GlobalConstants.InvalidDateTime);
                 }
 
-                var model = new CreateSaleInputModelTwo
+                if (saleExist != null)
                 {
-                    StockNames = stockNames,
-                };
-                return this.View(model);
-            }
+                    this.SetFlash(FlashMessageType.Error, SaleErrorMessage);
+                }
 
-            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var saleExist = await this.salesService.SaleExistAsync(start_Date, stockName, id);
-
-            if (saleExist != null)
-            {
-                var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
-
-                this.SetFlash(FlashMessageType.Error, SaleErrorMessage);
+                if (purchasedStockNameExist == null)
+                {
+                    this.SetFlash(FlashMessageType.Error, GlobalConstants.PurchaseErrorMessage);
+                }
 
                 var model = new CreateSaleInputModelTwo
                 {
@@ -118,8 +116,23 @@
                 saleInputModelTwo.ProfitPercent,
                 saleInputModelTwo.StartDate,
                 id);
-            this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
-            return this.Redirect("/");
+
+            if (this.salesService.IsBigger() == true)
+            {
+                var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
+                this.SetFlash(FlashMessageType.Error, SaleQuantityErrorMessage);
+
+                var model = new CreateSaleInputModelTwo
+                {
+                    StockNames = stockNames,
+                };
+                return this.View(model);
+            }
+            else
+            {
+                this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
+                return this.Redirect("/");
+            }
         }
 
         [Authorize]

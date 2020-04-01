@@ -15,5 +15,11 @@
         Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<decimal> GetAveragePrice(DateTime startDate, DateTime endDate, string stockName, int companyId);
+
+        Task<decimal> GetTotalPurchasedQuantity(DateTime startDate, DateTime endDate, string stockName, int companyId);
+
+        Task<string> PurchasedStockExist(DateTime startDate, DateTime endDate, string stockName, int companyId);
+
+        bool IsBigger();
     }
 }
