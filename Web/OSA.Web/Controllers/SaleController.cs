@@ -81,10 +81,8 @@
         public async Task<IActionResult> AddPartTwo(CreateSaleInputModelTwo saleInputModelTwo, string startDate, string stockName, int id)
         {
             var isValidStartDate = this.dateTimeValidationService.IsValidDateTime(startDate);
-            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var saleExist = await this.salesService.SaleExistAsync(start_Date, stockName, id);
-            var purchasedStockNameExist = await this.salesService.PurchasedStockExist(start_Date, start_Date, stockName, id);
-            if (!this.ModelState.IsValid || !isValidStartDate || saleExist != null || purchasedStockNameExist == null)
+
+            if (!this.ModelState.IsValid || !isValidStartDate)
             {
                 var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
 
@@ -93,6 +91,18 @@
                     this.ModelState.AddModelError(nameof(saleInputModelTwo.StartDate), saleInputModelTwo.StartDate + GlobalConstants.InvalidDateTime);
                 }
 
+                var model = new CreateSaleInputModelTwo
+                {
+                    StockNames = stockNames,
+                };
+                return this.View(model);
+            }
+
+            var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var saleExist = await this.salesService.SaleExistAsync(start_Date, stockName, id);
+            var purchasedStockNameExist = await this.salesService.PurchasedStockExist(start_Date, start_Date, stockName, id);
+            if (saleExist != null || purchasedStockNameExist == null)
+            {
                 if (saleExist != null)
                 {
                     this.SetFlash(FlashMessageType.Error, SaleErrorMessage);
@@ -103,6 +113,7 @@
                     this.SetFlash(FlashMessageType.Error, GlobalConstants.PurchaseErrorMessage);
                 }
 
+                var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
                 var model = new CreateSaleInputModelTwo
                 {
                     StockNames = stockNames,
