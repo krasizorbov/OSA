@@ -14,6 +14,7 @@
 
     public class SalesService : ISalesService
     {
+        public const string InvalidSaleErrorMessage = "Invalid Sale!";
         private readonly IDeletableEntityRepository<Sale> saleRepository;
         private readonly ApplicationDbContext context;
 
@@ -37,16 +38,8 @@
                 CompanyId = companyId,
             };
 
-            var totalQuantity = await this.GetTotalPurchasedQuantity(start_Date, stockName, companyId);
-            if (sale.TotalPurchaseQuantity > totalQuantity)
-            {
-                this.IsBigger();
-            }
-            else
-            {
-                await this.saleRepository.AddAsync(sale);
-                await this.saleRepository.SaveChangesAsync();
-            }
+            await this.saleRepository.AddAsync(sale);
+            await this.saleRepository.SaveChangesAsync();
         }
 
         public async Task<decimal> GetAveragePrice(DateTime startDate, string stockName, int companyId)
@@ -76,9 +69,23 @@
             return totalQuantity;
         }
 
-        public bool IsBigger()
+        public async Task<bool> IsBigger(decimal totalPrice, int profitPercent, DateTime startDate, string stockName, int companyId)
         {
-            return true;
+            var averagePrice = await this.GetAveragePrice(startDate, stockName, companyId);
+            var sale = new Sale
+            {
+                StockName = stockName,
+                TotalPrice = totalPrice,
+                ProfitPercent = profitPercent,
+                AveragePrice = averagePrice,
+            };
+            var totalQuantity = await this.GetTotalPurchasedQuantity(startDate, stockName, companyId);
+            if (sale.TotalPurchaseQuantity > totalQuantity)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<string> PurchasedStockExist(DateTime startDate, string stockName, int companyId)

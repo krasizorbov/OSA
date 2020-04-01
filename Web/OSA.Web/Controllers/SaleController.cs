@@ -121,7 +121,8 @@
                 return this.View(model);
             }
 
-            if (this.salesService.IsBigger() == true)
+            var isTrue = await this.salesService.IsBigger(saleInputModelTwo.TotalPrice, saleInputModelTwo.ProfitPercent, start_Date, stockName, id);
+            if (isTrue == true)
             {
                 var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
                 this.SetFlash(FlashMessageType.Error, SaleQuantityErrorMessage);

@@ -20,6 +20,6 @@
 
         Task<string> PurchasedStockExist(DateTime startDate, string stockName, int companyId);
 
-        bool IsBigger();
+        Task<bool> IsBigger(decimal totalPrice, int profitPercent, DateTime startDate, string stockName, int companyId);
     }
 }
