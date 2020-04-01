@@ -121,13 +121,6 @@
                 return this.View(model);
             }
 
-            await this.salesService.AddAsync(
-                saleInputModelTwo.StockName,
-                saleInputModelTwo.TotalPrice,
-                saleInputModelTwo.ProfitPercent,
-                saleInputModelTwo.StartDate,
-                id);
-
             if (this.salesService.IsBigger() == true)
             {
                 var stockNames = await this.stocksService.GetStockNamesByCompanyIdAsync(id);
@@ -141,6 +134,12 @@
             }
             else
             {
+                await this.salesService.AddAsync(
+                saleInputModelTwo.StockName,
+                saleInputModelTwo.TotalPrice,
+                saleInputModelTwo.ProfitPercent,
+                saleInputModelTwo.StartDate,
+                id);
                 this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
                 return this.Redirect("/");
             }
