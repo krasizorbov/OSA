@@ -103,22 +103,20 @@
                 }
                 else if (this.purchasedStockNamesForCurrentMonth.Contains(name) && !this.soldStockNamesForCurrentMonth.Contains(name)) // No satch stock in Sales
                 {
-                    var availableStockName = await this.GetAvailableStockForPreviousMonthByCompanyIdAsync(start_Date, end_Date, name, companyId);
-                    if (availableStockName != null)
+
+                    var availableStock = new AvailableStock
                     {
-                        var availableStock = new AvailableStock
-                        {
-                            StockName = name,
-                            TotalPurchasedAmount = currentPurchasedStock.TotalQuantity,
-                            TotalPurchasedPrice = currentPurchasedStock.TotalPrice,
-                            TotalSoldPrice = availableStockName.TotalSoldPrice,
-                            BookValue = availableStockName.BookValue,
-                            AveragePrice = currentPurchasedStock.AveragePrice,
-                            Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
-                            CompanyId = companyId,
-                        };
-                        await this.availableStockRepository.AddAsync(availableStock);
-                    }
+                        StockName = name,
+                        TotalPurchasedAmount = currentPurchasedStock.TotalQuantity,
+                        TotalPurchasedPrice = currentPurchasedStock.TotalPrice,
+                        TotalSoldPrice = 0,
+                        BookValue = 0,
+                        AveragePrice = currentPurchasedStock.AveragePrice,
+                        Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
+                        CompanyId = companyId,
+                    };
+                    await this.availableStockRepository.AddAsync(availableStock);
+
                 }
 
                 await this.availableStockRepository.SaveChangesAsync();
