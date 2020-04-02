@@ -159,9 +159,9 @@
 
         public async Task<List<string>> GetStockNamesForPrevoiusMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
-            this.stockNamesForPreviousMonth = await this.context.Stocks
+            this.stockNamesForPreviousMonth = await this.context.Purchases
             .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == id)
-            .Select(x => x.Name)
+            .Select(x => x.StockName)
             .Distinct()
             .ToListAsync();
             return this.stockNamesForPreviousMonth;
