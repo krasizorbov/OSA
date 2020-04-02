@@ -42,9 +42,7 @@
 
             if (companyExist != null)
             {
-                this.ModelState.AddModelError(
-                    nameof(companyInputModel.Name),
-                    companyInputModel.Name + CompanyAlreadyExist);
+                this.ModelState.AddModelError(nameof(companyInputModel.Name), companyInputModel.Name + CompanyAlreadyExist);
                 return this.View();
             }
 

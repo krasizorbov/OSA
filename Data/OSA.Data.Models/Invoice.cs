@@ -20,6 +20,9 @@
 
         public DateTime Date { get; set; }
 
+        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
+        public decimal TotalAmount { get; set; }
+
         [Required]
         public int SupplierId { get; set; }
 
