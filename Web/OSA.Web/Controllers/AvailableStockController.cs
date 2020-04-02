@@ -16,7 +16,7 @@
     public class AvailableStockController : BaseController
     {
         private const string AvailableStockExistMessage = "Available stock for the month already done!";
-        private const string NoPurchaseNoSaleMessage = "Reister a sale and (or) a purchase please!";
+        private const string NoPurchaseNoSaleMessage = "Register a sale and (or) a purchase please!";
 
         private readonly IAvailableStocksService availableStocksService;
         private readonly ICompaniesService companiesService;
