@@ -112,6 +112,7 @@
 
             await this.invoicesService.AddAsync(
                 invoiceInputModelTwo.InvoiceNumber,
+                invoiceInputModelTwo.TotalAmount,
                 invoiceInputModelTwo.Date,
                 invoiceInputModelTwo.SupplierId,
                 id);

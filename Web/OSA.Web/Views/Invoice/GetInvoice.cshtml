@@ -12,6 +12,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Invoice Number</th>
+                    <th>Total Amount</th>
                     <th>Issue Date</th>
                     <th>Supplier Name</th>
                 </tr>
@@ -20,6 +21,7 @@
                     <tr>
                         <td>@invoice.Id</td>
                         <td>@invoice.InvoiceNumber</td>
+                        <td>@invoice.TotalAmount.ToString("F")</td>
                         <td>@invoice.Date.ToShortDateString()</td>
                         <td>@await this.suppliersService.GetSupplierNameBySupplierIdAsync(invoice.SupplierId)</td>
                     </tr>

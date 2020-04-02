@@ -24,11 +24,12 @@
             this.context = context;
         }
 
-        public async Task AddAsync(string invoiceNumber, string date, int supplierId, int companyId)
+        public async Task AddAsync(string invoiceNumber, decimal totalAmount, string date, int supplierId, int companyId)
         {
             var invoice = new Invoice
             {
                 InvoiceNumber = invoiceNumber,
+                TotalAmount = totalAmount,
                 Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 SupplierId = supplierId,
                 CompanyId = companyId,

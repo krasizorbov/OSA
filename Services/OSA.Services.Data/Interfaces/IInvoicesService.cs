@@ -9,7 +9,7 @@
 
     public interface IInvoicesService
     {
-        Task AddAsync(string invoiceNumber, string date, int supplierId, int companyId);
+        Task AddAsync(string invoiceNumber, decimal totalAmount, string date, int supplierId, int companyId);
 
         Task<ICollection<SelectListItem>> GetAllInvoicesByCompanyIdAsync(int companyId);
 
