@@ -16,6 +16,7 @@
     public class AvailableStockController : BaseController
     {
         private const string AvailableStockExistMessage = "Available stock for the month already done!";
+        private const string NoPurchaseNoSaleMessage = "Reister a sale and (or) a purchase please!";
 
         private readonly IAvailableStocksService availableStocksService;
         private readonly ICompaniesService companiesService;
@@ -76,8 +77,10 @@
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var stockNames = await this.availableStocksService.AvailableStockExistAsync(start_Date, end_Date, availableStockInputModel.CompanyId);
+            var purchasedStockNamesForCurrentMonth = await this.availableStocksService.GetPurchasedStockNamesByCompanyIdAsync(start_Date, end_Date, availableStockInputModel.CompanyId);
+            var soldStockNamesForCurrentMonth = await this.availableStocksService.GetSoldStockNamesByCompanyIdAsync(start_Date, end_Date, availableStockInputModel.CompanyId);
 
-            if (stockNames.Count != 0)
+            if (stockNames.Count != 0 || (purchasedStockNamesForCurrentMonth.Count == 0 && soldStockNamesForCurrentMonth.Count == 0))
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
@@ -85,7 +88,17 @@
                 {
                     CompanyNames = companyNames,
                 };
-                this.SetFlash(FlashMessageType.Error, AvailableStockExistMessage);
+
+                if (stockNames.Count != 0)
+                {
+                    this.SetFlash(FlashMessageType.Error, AvailableStockExistMessage);
+                }
+
+                if (purchasedStockNamesForCurrentMonth.Count == 0 && soldStockNamesForCurrentMonth.Count == 0)
+                {
+                    this.SetFlash(FlashMessageType.Error, NoPurchaseNoSaleMessage);
+                }
+
                 return this.View(model);
             }
 

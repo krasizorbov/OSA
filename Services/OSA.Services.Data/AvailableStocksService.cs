@@ -103,7 +103,6 @@
                 }
                 else if (this.purchasedStockNamesForCurrentMonth.Contains(name) && !this.soldStockNamesForCurrentMonth.Contains(name)) // No satch stock in Sales
                 {
-
                     var availableStock = new AvailableStock
                     {
                         StockName = name,
@@ -116,7 +115,6 @@
                         CompanyId = companyId,
                     };
                     await this.availableStockRepository.AddAsync(availableStock);
-
                 }
 
                 await this.availableStockRepository.SaveChangesAsync();
@@ -144,14 +142,18 @@
 
         public async Task<IEnumerable<AvailableStock>> GetAvailableStocksForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var availableStocks = await this.availableStockRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
+            var availableStocks = await this.availableStockRepository.All()
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .ToListAsync();
 
             return availableStocks;
         }
 
         public async Task<List<AvailableStock>> GetAvailableStocksForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var availableStocks = await this.availableStockRepository.All().Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == companyId).ToListAsync();
+            var availableStocks = await this.availableStockRepository.All()
+                .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == companyId)
+                .ToListAsync();
 
             return availableStocks;
         }
