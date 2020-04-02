@@ -18,8 +18,9 @@
         [Range(GlobalConstants.ProfitMinValue, GlobalConstants.ProfitMaxValue)]
         public int ProfitPercent { get; set; }
 
+        [Required]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
-        public decimal AveragePrice { get; set; }
+        public string AveragePrice { get; set; }
 
         public DateTime Date { get; set; }
 
@@ -30,6 +31,6 @@
 
         public decimal BookValue => this.TotalPrice / ((decimal)this.ProfitPercent / 100);
 
-        public decimal TotalPurchaseQuantity => this.BookValue / this.AveragePrice;
+        public decimal TotalPurchaseQuantity => this.BookValue / Convert.ToDecimal(this.AveragePrice);
     }
 }

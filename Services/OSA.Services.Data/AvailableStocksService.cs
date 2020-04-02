@@ -76,7 +76,7 @@
                         TotalPurchasedPrice = currentPurchasedStock.TotalPrice,
                         TotalSoldPrice = currentSoldStock.TotalPrice,
                         BookValue = currentBookValue,
-                        AveragePrice = currentPurchasedStock.AveragePrice,
+                        AveragePrice = currentPurchasedStock.AveragePrice.ToString(),
                         Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
@@ -110,7 +110,7 @@
                         TotalPurchasedPrice = currentPurchasedStock.TotalPrice,
                         TotalSoldPrice = 0,
                         BookValue = 0,
-                        AveragePrice = currentPurchasedStock.AveragePrice,
+                        AveragePrice = currentPurchasedStock.AveragePrice.ToString(),
                         Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };

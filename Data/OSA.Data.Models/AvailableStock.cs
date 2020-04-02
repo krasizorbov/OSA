@@ -24,8 +24,9 @@
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal BookValue { get; set; }
 
+        [Required]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
-        public decimal AveragePrice { get; set; }
+        public string AveragePrice { get; set; }
 
         public DateTime Date { get; set; }
 
@@ -34,10 +35,10 @@
 
         public Company Company { get; set; }
 
-        public decimal TotalSoldQuantity => this.BookValue / this.AveragePrice;
+        public decimal TotalSoldQuantity => this.BookValue / Convert.ToDecimal(this.AveragePrice);
 
         public decimal RemainingQuantity => this.TotalPurchasedAmount - this.TotalSoldQuantity;
 
-        public decimal RemainingPrice => this.RemainingQuantity * this.AveragePrice;
+        public decimal RemainingPrice => this.RemainingQuantity * Convert.ToDecimal(this.AveragePrice);
     }
 }

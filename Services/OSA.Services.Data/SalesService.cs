@@ -33,7 +33,7 @@
                 StockName = stockName,
                 TotalPrice = totalPrice,
                 ProfitPercent = profitPercent,
-                AveragePrice = averagePrice,
+                AveragePrice = averagePrice.ToString(),
                 Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };
@@ -77,7 +77,7 @@
                 StockName = stockName,
                 TotalPrice = totalPrice,
                 ProfitPercent = profitPercent,
-                AveragePrice = averagePrice,
+                AveragePrice = averagePrice.ToString(),
             };
             var totalQuantity = await this.GetTotalPurchasedQuantity(startDate, stockName, companyId);
             if (sale.TotalPurchaseQuantity > totalQuantity)
