@@ -14,7 +14,6 @@
 
     public class SalesService : ISalesService
     {
-        public const string InvalidSaleErrorMessage = "Invalid Sale!";
         private readonly IDeletableEntityRepository<Sale> saleRepository;
         private readonly ApplicationDbContext context;
 
@@ -86,16 +85,6 @@
             }
 
             return false;
-        }
-
-        public async Task<string> PurchasedStockExist(DateTime startDate, string stockName, int companyId)
-        {
-            var purchasedStockName = await this.context.Purchases
-                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName)
-                .Select(x => x.StockName)
-                .FirstOrDefaultAsync();
-
-            return purchasedStockName;
         }
 
         public async Task<string> SaleExistAsync(DateTime startDate, string stockName, int companyId)

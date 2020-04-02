@@ -18,8 +18,6 @@
 
         Task<decimal> GetTotalPurchasedQuantity(DateTime startDate, string stockName, int companyId);
 
-        Task<string> PurchasedStockExist(DateTime startDate, string stockName, int companyId);
-
         Task<bool> IsBigger(decimal totalPrice, int profitPercent, DateTime startDate, string stockName, int companyId);
     }
 }
