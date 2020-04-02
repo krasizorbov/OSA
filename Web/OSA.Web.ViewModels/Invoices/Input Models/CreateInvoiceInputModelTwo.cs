@@ -22,6 +22,11 @@
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
 
+        [Required]
+        [Display(Name = "Total Amount")]
+        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
+        public decimal TotalAmount { get; set; }
+
         [BindRequired]
         [Display(Name = "Supplier")]
         public int SupplierId { get; set; }

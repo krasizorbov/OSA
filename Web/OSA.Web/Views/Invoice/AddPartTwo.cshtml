@@ -15,6 +15,11 @@
                 <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="TotalAmount"></label>
+                <input asp-for="TotalAmount" class="form-control">
+                <span asp-validation-for="TotalAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" id="picker" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
