@@ -28,7 +28,7 @@
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
-            var totalStockCost = this.TotalSumStockCostAsync(start_Date, end_Date, companyId);
+            var totalStockCost = this.TotalSumStockCost(start_Date, end_Date, companyId);
             var expenseBook = await this.GetMonthlyExpenseBook(start_Date, end_Date, companyId);
 
             var cashBook = new CashBook
@@ -73,7 +73,7 @@
             return expenseBook;
         }
 
-        public decimal TotalSumStockCostAsync(DateTime startDate, DateTime endDate, int id)
+        public decimal TotalSumStockCost(DateTime startDate, DateTime endDate, int id)
         {
             var stockCost = this.context.Stocks
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)

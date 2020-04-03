@@ -16,6 +16,8 @@
     public class CashBookController : BaseController
     {
         private const string CashBookErrorMessage = "Cash book for the month already done!";
+        private const string ExpenseBookErrorMessage = "Please calculate monthly Expense Book before proceeding!";
+        private const string StockErrorMessage = "Please register stock before proceeding!";
 
         private readonly ICashBooksService cashBooksService;
         private readonly ICompaniesService companiesService;
@@ -76,11 +78,25 @@
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var cashBook = await this.cashBooksService.CashBookExistAsync(start_Date, end_Date, cashBookInputModel.CompanyId);
-            if (cashBook != null)
+            var expenseBook = await this.cashBooksService.GetMonthlyExpenseBook(start_Date, end_Date, cashBookInputModel.CompanyId);
+            var totalStockCostSum = this.cashBooksService.TotalSumStockCost(start_Date, end_Date, cashBookInputModel.CompanyId);
+            if (cashBook != null || expenseBook == null || totalStockCostSum == 0)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
+                if (cashBook != null)
+                {
+                    this.SetFlash(FlashMessageType.Error, CashBookErrorMessage);
+                }
 
-                this.SetFlash(FlashMessageType.Error, CashBookErrorMessage);
+                if (expenseBook == null)
+                {
+                    this.SetFlash(FlashMessageType.Error, ExpenseBookErrorMessage);
+                }
+
+                if (totalStockCostSum == 0)
+                {
+                    this.SetFlash(FlashMessageType.Error, StockErrorMessage);
+                }
 
                 var model = new CreateCashBookInputModel
                 {

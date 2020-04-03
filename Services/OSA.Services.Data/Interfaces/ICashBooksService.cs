@@ -10,7 +10,7 @@
     {
         Task AddAsync(string startDate, string endDate, int companyId);
 
-        decimal TotalSumStockCostAsync(DateTime startDate, DateTime endDate, int companyId);
+        decimal TotalSumStockCost(DateTime startDate, DateTime endDate, int companyId);
 
         Task<ExpenseBook> GetMonthlyExpenseBook(DateTime startDate, DateTime endDate, int companyId);
 
