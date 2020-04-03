@@ -25,7 +25,7 @@
                         <td>@sale.StockName</td>
                         <td>@sale.TotalPrice</td>
                         <td>@sale.ProfitPercent</td>
-                        <td>@sale.AveragePrice</td>
+                        <td>@Convert.ToDecimal(sale.AveragePrice).ToString("F")</td>
                         <td>@sale.BookValue.ToString("F")</td>
                         <td>@sale.TotalPurchaseQuantity.ToString("F")</td>
                         <td>@sale.Date.ToShortDateString()</td>
