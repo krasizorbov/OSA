@@ -48,16 +48,7 @@
                 {
                     this.quantitySold = await this.QuantitySoldAsync(name, start_Date, end_Date, companyId);
                     this.quantityPurchased = await this.QuantityPurchasedAsync(name, start_Date, end_Date, companyId);
-                    if (this.quantityPurchased < this.quantitySold)
-                    {
-                        // Console.WriteLine("The quantity sold is bigger than the quantity purchased");
-                        continue;
-                    }
-                    else
-                    {
-                        quantityAvailable = this.quantityPurchased - this.quantitySold;
-                    }
-
+                    quantityAvailable = this.quantityPurchased - this.quantitySold;
                     this.totalQuantity = this.TotalQuantity(name, start_Date, end_Date, companyId);
                     this.totalQuantity += quantityAvailable;
                     var availableStockMoney = await this.GetAvailableStockForPreviousMonthByCompanyIdAsync(start_Date, end_Date, name, companyId);
@@ -79,16 +70,7 @@
                 {
                     this.quantitySold = await this.QuantitySoldAsync(name, start_Date, end_Date, companyId);
                     this.quantityPurchased = await this.QuantityPurchasedAsync(name, start_Date, end_Date, companyId);
-                    if (this.quantityPurchased < this.quantitySold)
-                    {
-                        // Console.WriteLine("The quantity sold is bigger than the quantity purchased");
-                        continue;
-                    }
-                    else
-                    {
-                        quantityAvailable = this.quantityPurchased - this.quantitySold;
-                    }
-
+                    quantityAvailable = this.quantityPurchased - this.quantitySold;
                     this.totalQuantity = 0;
                     this.totalQuantity += quantityAvailable;
                     var availableStockMoney = await this.GetAvailableStockForPreviousMonthByCompanyIdAsync(start_Date, end_Date, name, companyId);
