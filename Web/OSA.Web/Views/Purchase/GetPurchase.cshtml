@@ -2,7 +2,6 @@
 @{
     this.ViewData["Title"] = "Get Purchase";
 }
-
 <div class="text-center">
     <h3>List of Purchases for @Model.Name</h3>
     <div class="col-md-12">
@@ -28,6 +27,7 @@
                     </tr>
                 }
             </table>
+            <div align="left" class="col-md-6">Total Price Sum: @Model.Purchases.Sum(x => x.TotalPrice)</div>
         </center>
     </div>
 </div>
