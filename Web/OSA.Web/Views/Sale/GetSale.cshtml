@@ -2,7 +2,7 @@
 @{
     this.ViewData["Title"] = "Get Sale";
 }
-
+@{ int index = 0;}
 <div class="text-center">
     <h3>List of Sales for @Model.Name</h3>
     <div class="col-md-12">
@@ -21,7 +21,7 @@
                 @foreach (var sale in Model.Sales)
                 {
                     <tr>
-                        <td>@sale.Id</td>
+                        <td>@(index += 1)</td>
                         <td>@sale.StockName</td>
                         <td>@sale.TotalPrice</td>
                         <td>@sale.ProfitPercent</td>
@@ -32,6 +32,7 @@
                     </tr>
                 }
             </table>
+            <div align="left" class="col-md-8">Total Price Sum: @Model.Sales.Sum(x => x.TotalPrice)</div>
         </center>
     </div>
 </div>
