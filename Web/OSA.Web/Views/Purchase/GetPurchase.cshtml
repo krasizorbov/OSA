@@ -2,6 +2,7 @@
 @{
     this.ViewData["Title"] = "Get Purchase";
 }
+@{ int index = 0;}
 <div class="text-center">
     <h3>List of Purchases for @Model.Name</h3>
     <div class="col-md-12">
@@ -18,7 +19,7 @@
                 @foreach (var purchase in Model.Purchases)
                 {
                     <tr>
-                        <td>@purchase.Id</td>
+                        <td>@(index += 1)</td>
                         <td>@purchase.StockName</td>
                         <td>@purchase.TotalQuantity</td>
                         <td>@purchase.TotalPrice</td>
