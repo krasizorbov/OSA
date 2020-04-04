@@ -2,7 +2,7 @@
 @{
     this.ViewData["Title"] = "Get Available Stock";
 }
-
+@{ int index = 0;}
 <div class="text-center">
     <h3>List of Available Stocks for @Model.Name</h3>
     <div class="col-md-12">
@@ -24,7 +24,7 @@
                 @foreach (var availableStock in Model.AvailableStocks)
                 {
                     <tr>
-                        <td>@availableStock.Id</td>
+                        <td>@(index += 1)</td>
                         <td>@availableStock.StockName</td>
                         <td>@availableStock.TotalPurchasedAmount.ToString("F")</td>
                         <td>@availableStock.TotalPurchasedPrice.ToString("F")</td>
@@ -38,6 +38,10 @@
                     </tr>
                 }
             </table>
+            <div align="left" class="col-md-12">Total Purchased Price Sum: @Model.AvailableStocks.Sum(x => x.TotalPurchasedPrice)</div>
+            <div align="left" class="col-md-12">Total Sold Price Sum: @Model.AvailableStocks.Sum(x => x.TotalSoldPrice)</div>
+            <div align="left" class="col-md-12">Total Book Value Sum: @Model.AvailableStocks.Sum(x => x.BookValue)</div>
+            <div align="left" class="col-md-12">Total Available Money Sum: @Model.AvailableStocks.Sum(x => x.RemainingPrice).ToString("F2")</div>
         </center>
     </div>
 </div>
