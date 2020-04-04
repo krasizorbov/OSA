@@ -2,7 +2,7 @@
 @{
     this.ViewData["Title"] = "Get Expense Book";
 }
-
+@{ int index = 0;}
 <div class="text-center">
     <h3>List of Expense Books for @Model.Name</h3>
     <div class="col-md-12">
@@ -22,7 +22,7 @@
                 @foreach (var expenseBook in Model.ExpenseBooks)
                 {
                     <tr>
-                        <td>@expenseBook.Id</td>
+                        <td>@(index += 1)</td>
                         <td>@expenseBook.TotalStockCost.ToString("F")</td>
                         <td>@expenseBook.TotalExternalCost.ToString("F")</td>
                         <td>@expenseBook.TotalSalaryCost.ToString("F")</td>
