@@ -23,7 +23,7 @@
             this.context = context;
         }
 
-        public async Task AddAsync(string startDate, string endDate, int companyId)
+        public async Task AddAsync(string startDate, string endDate, decimal saldo, decimal ownFunds, int companyId)
         {
             var start_Date = DateTime.ParseExact(startDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
@@ -33,10 +33,12 @@
 
             var cashBook = new CashBook
             {
-                TotalInvoicePricesCost = totalStockCost,
+                TotalInvoicePricesCost = totalStockCost - saldo,
                 TotalSalaryCost = expenseBook.TotalSalaryCost,
                 TotalStockExternalCost = expenseBook.TotalStockExternalCost,
                 TotalProfit = expenseBook.TotalProfit,
+                Saldo = saldo,
+                OwnFunds = ownFunds,
                 Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                 CompanyId = companyId,
             };

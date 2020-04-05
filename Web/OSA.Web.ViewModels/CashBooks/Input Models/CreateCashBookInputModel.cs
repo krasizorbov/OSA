@@ -16,6 +16,16 @@
         public IEnumerable<SelectListItem> CompanyNames { get; set; }
 
         [Required]
+        [Display(Name = "Saldo")]
+        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
+        public decimal Saldo { get; set; }
+
+        [Required]
+        [Display(Name = "Own Funds")]
+        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
+        public decimal OwnFunds { get; set; }
+
+        [Required]
         [Display(Name = "Start date of the month - (dd/mm/yyyy)")]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string StartDate { get; set; }

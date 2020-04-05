@@ -108,6 +108,8 @@
             await this.cashBooksService.AddAsync(
                 cashBookInputModel.StartDate,
                 cashBookInputModel.EndDate,
+                cashBookInputModel.Saldo,
+                cashBookInputModel.OwnFunds,
                 cashBookInputModel.CompanyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
             return this.Redirect("/");
