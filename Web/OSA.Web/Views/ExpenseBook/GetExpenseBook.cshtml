@@ -30,7 +30,7 @@
                         <td>@expenseBook.TotalCost.ToString("F")</td>
                         <td>@expenseBook.Profit.ToString("F")</td>
                         <td>@expenseBook.TotalProfit.ToString("F")</td>
-                        <td>@expenseBook.Date.ToShortDateString()</td>
+                        <td>@String.Format("{0:d/M/yyyy}", expenseBook.Date)</td>
                     </tr>
                 }
             </table>

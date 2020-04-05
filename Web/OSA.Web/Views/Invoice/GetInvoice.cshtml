@@ -22,7 +22,7 @@
                         <td>@(index += 1)</td>
                         <td>@invoice.InvoiceNumber</td>
                         <td>@invoice.TotalAmount.ToString("F")</td>
-                        <td>@invoice.Date.ToShortDateString()</td>
+                        <td>@String.Format("{0:d/M/yyyy}", invoice.Date)</td>
                         <td>@await this.suppliersService.GetSupplierNameBySupplierIdAsync(invoice.SupplierId)</td>
                     </tr>
                 }

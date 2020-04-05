@@ -34,7 +34,7 @@
                         <td>@Convert.ToDecimal(availableStock.AveragePrice).ToString("F")</td>
                         <td>@availableStock.RemainingQuantity.ToString("F")</td>
                         <td>@availableStock.RemainingPrice.ToString("F")</td>
-                        <td>@availableStock.Date.ToShortDateString()</td>
+                        <td>@String.Format("{0:d/M/yyyy}", availableStock.Date)</td>
                     </tr>
                 }
             </table>

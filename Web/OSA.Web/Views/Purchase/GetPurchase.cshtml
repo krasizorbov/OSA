@@ -24,7 +24,7 @@
                         <td>@purchase.TotalQuantity</td>
                         <td>@purchase.TotalPrice</td>
                         <td>@purchase.AveragePrice.ToString("F")</td>
-                        <td>@purchase.Date.ToShortDateString()</td>
+                        <td>@String.Format("{0:d/M/yyyy}", purchase.Date)</td>
                     </tr>
                 }
             </table>

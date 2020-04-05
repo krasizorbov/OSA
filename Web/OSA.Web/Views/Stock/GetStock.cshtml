@@ -24,7 +24,7 @@
                         <td>@stock.Name</td>
                         <td>@stock.Quantity</td>
                         <td>@stock.Price</td>
-                        <td>@stock.Date.ToShortDateString()</td>
+                        <td>@String.Format("{0:d/M/yyyy}", stock.Date)</td>
                         <td>@await this.invoicesService.GetInvoiceNumberByInvoiceIdAsync(stock.InvoiceId)</td>
                     </tr>
                 }

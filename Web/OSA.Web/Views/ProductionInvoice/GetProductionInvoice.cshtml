@@ -22,7 +22,7 @@
                         <td>@productionInvoice.InvoiceNumber</td>
                         <td>@productionInvoice.StockCost.ToString("F")</td>
                         <td>@productionInvoice.ExternalCost.ToString("F")</td>
-                        <td>@productionInvoice.Date.ToShortDateString()</td>
+                        <td>@String.Format("{0:d/M/yyyy}", productionInvoice.Date)</td>
                     </tr>
                 }
             </table>

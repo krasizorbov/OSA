@@ -4,7 +4,7 @@
 }
 @{ int index = 0;}
 <div class="text-center">
-    <h3>List of Cash Books for @Model.Name</h3>
+    <h3>Cash Book for @Model.Name</h3>
     <div class="col-md-12">
         <center>
             <table border="0">
@@ -17,6 +17,7 @@
                     <th>Total Cost</th>
                     <th>Money Available</th>
                     <th>Saldo</th>
+                    <th>Own Funds</th>
                     <th>Date</th>
                 </tr>
                 @foreach (var cashBook in Model.CashBooks)
@@ -31,7 +32,7 @@
                         <td>@cashBook.MoneyAvailable.ToString("F")</td>
                         <td>@cashBook.Saldo.ToString("F")</td>
                         <td>@cashBook.OwnFunds.ToString("F")</td>
-                        <td>@cashBook.Date.ToShortDateString()</td>
+                        <td>@String.Format("{0:d/M/yyyy}", cashBook.Date)</td>
                     </tr>
                 }
             </table>

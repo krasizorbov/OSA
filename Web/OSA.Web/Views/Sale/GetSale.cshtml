@@ -28,7 +28,7 @@
                         <td>@Convert.ToDecimal(sale.AveragePrice).ToString("F")</td>
                         <td>@sale.BookValue.ToString("F")</td>
                         <td>@sale.TotalPurchaseQuantity.ToString("F")</td>
-                        <td>@sale.Date.ToShortDateString()</td>
+                        <td>@String.Format("{0:d/M/yyyy}", sale.Date)</td>
                     </tr>
                 }
             </table>

@@ -20,7 +20,7 @@
                         <td>@receipt.Id</td>
                         <td>@receipt.ReceiptNumber</td>
                         <td>@receipt.Salary.ToString("F")</td>
-                        <td>@receipt.Date.ToShortDateString()</td>
+                        <td>@String.Format("{0:d/M/yyyy}", receipt.Date)</td>
                     </tr>
                 }
             </table>
