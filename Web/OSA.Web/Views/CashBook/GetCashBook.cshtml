@@ -16,6 +16,7 @@
                     <th>Total Profit</th>
                     <th>Total Cost</th>
                     <th>Money Available</th>
+                    <th>Saldo</th>
                     <th>Date</th>
                 </tr>
                 @foreach (var cashBook in Model.CashBooks)
@@ -28,6 +29,8 @@
                         <td>@cashBook.TotalProfit.ToString("F")</td>
                         <td>@cashBook.TotalCost.ToString("F")</td>
                         <td>@cashBook.MoneyAvailable.ToString("F")</td>
+                        <td>@cashBook.Saldo.ToString("F")</td>
+                        <td>@cashBook.OwnFunds.ToString("F")</td>
                         <td>@cashBook.Date.ToShortDateString()</td>
                     </tr>
                 }
