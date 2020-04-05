@@ -22,6 +22,12 @@
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal TotalProfit { get; set; }
 
+        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
+        public decimal Saldo { get; set; }
+
+        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
+        public decimal OwnFunds { get; set; }
+
         [Required]
         public int CompanyId { get; set; }
 
