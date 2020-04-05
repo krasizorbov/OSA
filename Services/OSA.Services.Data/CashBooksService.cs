@@ -49,17 +49,35 @@
         public async Task<CashBook> CashBookExistAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var cashBook = await this.context.CashBooks
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .Select(x => x)
                 .FirstOrDefaultAsync();
 
             return cashBook;
         }
 
+        public async Task<CashBook> DeleteAsync(int id)
+        {
+            var cashBook = await this.cashBooksRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (cashBook != null)
+            {
+                this.cashBooksRepository.Delete(cashBook);
+                await this.cashBooksRepository.SaveChangesAsync();
+            }
+
+            return cashBook;
+        }
+
+        public async Task<CashBook> GetCashBookByIdAsync(int id)
+        {
+            var cashBook = await this.cashBooksRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+            return cashBook;
+        }
+
         public async Task<IEnumerable<CashBook>> GetCashBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var cashBooks = await this.cashBooksRepository.All()
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .ToListAsync();
 
             return cashBooks;
