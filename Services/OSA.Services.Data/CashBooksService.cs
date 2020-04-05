@@ -33,7 +33,7 @@
 
             var cashBook = new CashBook
             {
-                TotalInvoicePricesCost = totalStockCost,
+                TotalInvoicePricesCost = totalStockCost - saldo,
                 TotalSalaryCost = expenseBook.TotalSalaryCost,
                 TotalStockExternalCost = expenseBook.TotalStockExternalCost,
                 TotalProfit = expenseBook.Profit,

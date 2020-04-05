@@ -33,7 +33,7 @@
 
         public Company Company { get; set; }
 
-        public decimal TotalCost => this.TotalInvoicePricesCost + this.TotalSalaryCost + this.TotalStockExternalCost - this.Saldo;
+        public decimal TotalCost => this.TotalInvoicePricesCost + this.TotalSalaryCost + this.TotalStockExternalCost;
 
         public decimal MoneyAvailable => this.TotalProfit + this.OwnFunds - this.TotalCost;
     }
