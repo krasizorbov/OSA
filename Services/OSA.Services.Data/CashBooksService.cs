@@ -33,10 +33,10 @@
 
             var cashBook = new CashBook
             {
-                TotalInvoicePricesCost = totalStockCost - saldo,
+                TotalInvoicePricesCost = totalStockCost,
                 TotalSalaryCost = expenseBook.TotalSalaryCost,
                 TotalStockExternalCost = expenseBook.TotalStockExternalCost,
-                TotalProfit = expenseBook.TotalProfit,
+                TotalProfit = expenseBook.Profit,
                 Saldo = saldo,
                 OwnFunds = ownFunds,
                 Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
@@ -77,9 +77,9 @@
 
         public decimal TotalSumStockCost(DateTime startDate, DateTime endDate, int id)
         {
-            var stockCost = this.context.Stocks
+            var stockCost = this.context.Purchases
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
-                .Sum(x => x.Price);
+                .Sum(x => x.TotalPrice);
 
             return stockCost;
         }
