@@ -195,14 +195,14 @@
 
             if (cashBook == null)
             {
-                return this.RedirectToPage("/NotFound");
+                return this.NotFound();
             }
 
             var cashBookToDelete = await this.cashBooksService.DeleteAsync(id);
 
             if (cashBookToDelete == null)
             {
-                return this.RedirectToPage("/NotFound");
+                return this.NotFound();
             }
 
             this.TempData["message"] = GlobalConstants.SuccessfullyDeleted;

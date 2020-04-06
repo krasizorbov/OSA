@@ -124,17 +124,34 @@
         public async Task<List<string>> AvailableStockExistAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var stockNames = await this.context.AvailableStocks
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .Select(x => x.StockName)
                 .ToListAsync();
 
             return stockNames;
         }
 
+        public async Task<List<AvailableStock>> DeleteAsync(List<int> ids)
+        {
+            var availableStocks = new List<AvailableStock>();
+            foreach (var id in ids)
+            {
+                var availableStock = await this.availableStockRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+                if (availableStock != null)
+                {
+                    availableStocks.Add(availableStock);
+                    this.availableStockRepository.Delete(availableStock);
+                }
+            }
+
+            await this.availableStockRepository.SaveChangesAsync();
+            return availableStocks;
+        }
+
         public async Task<AvailableStock> GetAvailableStockForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, string name, int companyId)
         {
             var availableStockName = await this.availableStockRepository.All()
-                .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == companyId && x.StockName == name)
+                .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == companyId && x.StockName == name && x.IsDeleted == false)
                 .FirstOrDefaultAsync();
 
             return availableStockName;
@@ -143,7 +160,7 @@
         public async Task<IEnumerable<AvailableStock>> GetAvailableStocksForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var availableStocks = await this.availableStockRepository.All()
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .ToListAsync();
 
             return availableStocks;
@@ -152,7 +169,7 @@
         public async Task<List<AvailableStock>> GetAvailableStocksForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var availableStocks = await this.availableStockRepository.All()
-                .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == companyId && x.IsDeleted == false)
                 .ToListAsync();
 
             return availableStocks;
@@ -161,7 +178,7 @@
         public async Task<decimal> GetCurrentBookValueForStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
             var currentBookValueForStockName = await this.context.Sales
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id && x.IsDeleted == false)
                 .Select(x => x.BookValue)
                 .FirstOrDefaultAsync();
 
@@ -171,7 +188,7 @@
         public async Task<Purchase> GetCurrentPurchasedStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
             var currentPurchasedStockName = await this.context.Purchases
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id && x.IsDeleted == false)
                 .FirstOrDefaultAsync();
 
             return currentPurchasedStockName;
@@ -180,7 +197,7 @@
         public async Task<Sale> GetCurrentSoldStockNameAsync(DateTime startDate, DateTime endDate, string stockName, int id)
         {
             var currentSoldStockName = await this.context.Sales
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.StockName == stockName && x.CompanyId == id && x.IsDeleted == false)
                 .FirstOrDefaultAsync();
 
             return currentSoldStockName;
@@ -189,7 +206,7 @@
         public async Task<List<string>> GetPurchasedStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
             var purchasedStockNames = await this.context.Purchases
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id && x.IsDeleted == false)
                 .Select(x => x.StockName)
                 .ToListAsync();
 
@@ -199,7 +216,7 @@
         public async Task<List<string>> GetSoldStockNamesByCompanyIdAsync(DateTime startDate, DateTime endDate, int id)
         {
             var soldStockNames = await this.context.Sales
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id && x.IsDeleted == false)
                 .Select(x => x.StockName)
                 .ToListAsync();
 
