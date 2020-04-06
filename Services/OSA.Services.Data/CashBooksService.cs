@@ -86,7 +86,7 @@
         public async Task<ExpenseBook> GetMonthlyExpenseBook(DateTime startDate, DateTime endDate, int id)
         {
             var expenseBook = await this.context.ExpenseBooks
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id && x.IsDeleted == false)
                 .Select(x => x)
                 .FirstOrDefaultAsync();
 
@@ -96,7 +96,7 @@
         public decimal TotalSumStockCost(DateTime startDate, DateTime endDate, int id)
         {
             var stockCost = this.context.Purchases
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id && x.IsDeleted == false)
                 .Sum(x => x.TotalPrice);
 
             return stockCost;
