@@ -1,6 +1,7 @@
 ﻿namespace OSA.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Threading.Tasks;
 
@@ -178,6 +179,21 @@
             };
 
             return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Delete(List<int> ids)
+        {
+            var stocksToDelete = await this.stocksService.DeleteAsync(ids);
+
+            if (stocksToDelete.Count == 0)
+            {
+                return this.NotFound();
+            }
+
+            this.TempData["message"] = GlobalConstants.SuccessfullyDeleted;
+            return this.Redirect("/");
         }
     }
 }

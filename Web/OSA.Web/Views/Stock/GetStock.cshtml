@@ -3,13 +3,18 @@
 @{
     this.ViewData["Title"] = "Get Stock";
 }
-
-<div class="text-center">
-    <h3>List of Stocks for @Model.Name</h3>
-    <div class="col-md-12">
-        <center>
+@{ List<int> ids = new List<int>();}
+<div id="checkboxes" class="text-center">
+    <h3 style="text-align:left">List of Stocks for @Model.Name</h3>
+    <form asp-controller="Stock" asp-action="Delete" method="post" class="form-inline" role="form">
+        <div class="col-md-12">
+            @*<center>*@
             <table border="0">
                 <tr>
+                    @if (Model.Stocks.Count() != 0)
+                    {
+                        <th><input type="checkbox" id="checkall" /></th>
+                    }
                     <th>ID</th>
                     <th>Name</th>
                     <th>Total Quantity</th>
@@ -19,7 +24,11 @@
                 </tr>
                 @foreach (var stock in Model.Stocks)
                 {
+                    ids.Add(stock.Id);
                     <tr>
+                        <td>
+                            <input type="checkbox" name="ids" id="@stock.Id" value="@stock.Id" />
+                        </td>
                         <td>@stock.Id</td>
                         <td>@stock.Name</td>
                         <td>@stock.Quantity</td>
@@ -29,9 +38,39 @@
                     </tr>
                 }
             </table>
-        </center>
-    </div>
+            @*</center>*@
+        </div>
+        @if (Model.Stocks.Count() != 0)
+        {
+            <input type="hidden" id="@ids">
+            <button type="submit" class="btn btn-danger" id="DelButon" disabled value="Delete" onclick="return confirm('Are you sure you want to delete Stock(s)?')">
+                <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: 50px"></span> Delete
+            </button>
+        }
+    </form>
 </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function toggleChecked(status) {
+            $("#checkboxes input").each(function () {
+                $(this).prop("checked", status);
+            });
+        }
+        $(document).ready(function () {
+            var checkAllBox = $("#checkall");
+            checkAllBox.prop('checked', false);
+            checkAllBox.click(function () {
+                var status = checkAllBox.prop('checked');
+                toggleChecked(status);
+            });
+        });
+        $('input[type="checkbox"]').change(function () {
+            if ($('input[type="checkbox"]:checked').length > 0) {
+                $('#DelButon').prop('disabled', false);
+            } else {
+                $('#DelButon').prop('disabled', true);
+            }
+        });
+    </script>
 }
