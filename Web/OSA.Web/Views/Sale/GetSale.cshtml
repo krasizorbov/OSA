@@ -3,39 +3,79 @@
     this.ViewData["Title"] = "Get Sale";
 }
 @{ int index = 0;}
-<div class="text-center">
-    <h3>List of Sales for @Model.Name</h3>
+@{ List<int> ids = new List<int>();}
+<div id="checkboxes" class="text-center">
+    <h3 style="text-align:left">List of Sales for @Model.Name</h3>
     <div class="col-md-12">
         <center>
-            <table border="0">
-                <tr>
-                    <th>ID</th>
-                    <th>Stock Name</th>
-                    <th>Total Price</th>
-                    <th>Profit Percent</th>
-                    <th>Average Price</th>
-                    <th>Book Value</th>
-                    <th>Total Quantity of the purchase</th>
-                    <th>Date</th>
-                </tr>
-                @foreach (var sale in Model.Sales)
-                {
+            <form asp-controller="Purchase" asp-action="Delete" method="post" class="form-inline" role="form">
+                <table border="0">
                     <tr>
-                        <td>@(index += 1)</td>
-                        <td>@sale.StockName</td>
-                        <td>@sale.TotalPrice</td>
-                        <td>@sale.ProfitPercent</td>
-                        <td>@Convert.ToDecimal(sale.AveragePrice).ToString("F")</td>
-                        <td>@sale.BookValue.ToString("F")</td>
-                        <td>@sale.TotalPurchaseQuantity.ToString("F")</td>
-                        <td>@String.Format("{0:d/M/yyyy}", sale.Date)</td>
+                        @if (Model.Sales.Count() != 0)
+                        {
+                            <th><input type="checkbox" id="checkall" /></th>
+                        }
+                        <th>ID</th>
+                        <th>Stock Name</th>
+                        <th>Total Price</th>
+                        <th>Profit Percent</th>
+                        <th>Average Price</th>
+                        <th>Book Value</th>
+                        <th>Total Quantity of the purchase</th>
+                        <th>Date</th>
                     </tr>
+                    @foreach (var sale in Model.Sales)
+                    {
+                        ids.Add(sale.Id);
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="ids" id="@sale.Id" value="@sale.Id" />
+                            </td>
+                            <td>@(index += 1)</td>
+                            <td>@sale.StockName</td>
+                            <td>@sale.TotalPrice</td>
+                            <td>@sale.ProfitPercent</td>
+                            <td>@Convert.ToDecimal(sale.AveragePrice).ToString("F")</td>
+                            <td>@sale.BookValue.ToString("F")</td>
+                            <td>@sale.TotalPurchaseQuantity.ToString("F")</td>
+                            <td>@String.Format("{0:d/M/yyyy}", sale.Date)</td>
+                        </tr>
+                    }
+                </table>
+                <div align="left" class="col-md-12">Total Price Sum: @Model.Sales.Sum(x => x.TotalPrice)</div>
+                @if (Model.Sales.Count() != 0)
+                {
+                    <input type="hidden" id="@ids">
+                    <button type="submit" class="btn btn-danger" id="DelButon" disabled value="Delete" onclick="return confirm('Are you sure you want to delete Sale(s)?')">
+                        <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
+                    </button>
                 }
-            </table>
-            <div align="left" class="col-md-8">Total Price Sum: @Model.Sales.Sum(x => x.TotalPrice)</div>
+            </form>
         </center>
     </div>
 </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function toggleChecked(status) {
+            $("#checkboxes input").each(function () {
+                $(this).prop("checked", status);
+            });
+        }
+        $(document).ready(function () {
+            var checkAllBox = $("#checkall");
+            checkAllBox.prop('checked', false);
+            checkAllBox.click(function () {
+                var status = checkAllBox.prop('checked');
+                toggleChecked(status);
+            });
+        });
+        $('input[type="checkbox"]').change(function () {
+            if ($('input[type="checkbox"]:checked').length > 0) {
+                $('#DelButon').prop('disabled', false);
+            } else {
+                $('#DelButon').prop('disabled', true);
+            }
+        });
+    </script>
 }
