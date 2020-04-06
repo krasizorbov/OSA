@@ -186,5 +186,27 @@
 
             return this.View(model);
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var expenseBook = await this.expenseBooksService.GetExpenseBookByIdAsync(id);
+
+            if (expenseBook == null)
+            {
+                return this.RedirectToPage("/NotFound");
+            }
+
+            var cashBookToDelete = await this.expenseBooksService.DeleteAsync(id);
+
+            if (cashBookToDelete == null)
+            {
+                return this.RedirectToPage("/NotFound");
+            }
+
+            this.TempData["message"] = GlobalConstants.SuccessfullyDeleted;
+            return this.Redirect("/");
+        }
     }
 }
