@@ -41,10 +41,27 @@
             await this.saleRepository.SaveChangesAsync();
         }
 
+        public async Task<List<Sale>> DeleteAsync(List<int> ids)
+        {
+            var sales = new List<Sale>();
+            foreach (var id in ids)
+            {
+                var sale = await this.saleRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+                if (sale != null)
+                {
+                    sales.Add(sale);
+                    this.saleRepository.Delete(sale);
+                }
+            }
+
+            await this.saleRepository.SaveChangesAsync();
+            return sales;
+        }
+
         public async Task<decimal> GetAveragePrice(DateTime startDate, string stockName, int companyId)
         {
             var averagePrice = await this.context.Purchases
-                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName)
+                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName && x.IsDeleted == false)
                 .Select(x => x.AveragePrice)
                 .FirstOrDefaultAsync();
 
@@ -53,7 +70,9 @@
 
         public async Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var sales = await this.saleRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
+            var sales = await this.saleRepository.All()
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
+                .ToListAsync();
 
             return sales;
         }
@@ -61,7 +80,7 @@
         public async Task<decimal> GetTotalPurchasedQuantity(DateTime startDate, string stockName, int companyId)
         {
             var totalQuantity = await this.context.Purchases
-                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName)
+                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.CompanyId == companyId && x.StockName == stockName && x.IsDeleted == false)
                 .Select(x => x.TotalQuantity)
                 .FirstOrDefaultAsync();
 
@@ -90,7 +109,7 @@
         public async Task<string> SaleExistAsync(DateTime startDate, string stockName, int companyId)
         {
             var name = await this.context.Sales
-                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.StockName == stockName && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate && x.Date <= startDate.AddMonths(1).AddDays(-1) && x.StockName == stockName && x.CompanyId == companyId && x.IsDeleted == false)
                 .Select(x => x.StockName)
                 .FirstOrDefaultAsync();
 
