@@ -42,7 +42,7 @@
                 @if (Model.Purchases.Count() != 0)
                 {
                     <input type="hidden" id="@ids">
-                    <button type="submit" class="btn btn-danger" id="DelButon"disabled value="Delete" onclick="return confirm('Are you sure you want to delete all purchases?')">
+                    <button type="submit" class="btn btn-danger" id="DelButon" disabled value="Delete" onclick="return confirm('Are you sure you want to delete Purchases?')">
                         <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
                     </button>
                 }
@@ -67,7 +67,6 @@
                 toggleChecked(status);
             });
         });
-
         $('input[type="checkbox"]').change(function () {
             if ($('input[type="checkbox"]:checked').length > 0) {
                 $('#DelButon').prop('disabled', false);

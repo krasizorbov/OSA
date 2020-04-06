@@ -56,7 +56,7 @@
             @if (Model.AvailableStocks.Count() != 0)
             {
                 <input type="hidden" id="@ids">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete available stocks?')">
+                <button type="submit" class="btn btn-danger" id="DelButon" disabled value="Delete" onclick="return confirm('Are you sure you want to delete Available Stocks?')">
                     <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
                 </button>
             }
@@ -78,6 +78,13 @@
                 var status = checkAllBox.prop('checked');
                 toggleChecked(status);
             });
+        });
+        $('input[type="checkbox"]').change(function () {
+            if ($('input[type="checkbox"]:checked').length > 0) {
+                $('#DelButon').prop('disabled', false);
+            } else {
+                $('#DelButon').prop('disabled', true);
+            }
         });
     </script>
 }
