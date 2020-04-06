@@ -29,5 +29,7 @@
         Task<IEnumerable<Purchase>> GetPurchasesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<decimal> GetAvailableStockForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, string name, int companyId);
+
+        Task<List<Purchase>> DeleteAsync(List<int> ids);
     }
 }
