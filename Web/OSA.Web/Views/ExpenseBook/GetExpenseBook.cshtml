@@ -18,6 +18,7 @@
                     <th>Profit</th>
                     <th>Total Profit</th>
                     <th>Date</th>
+                    <th>Delete</th>
                 </tr>
                 @foreach (var expenseBook in Model.ExpenseBooks)
                 {
@@ -31,6 +32,14 @@
                         <td>@expenseBook.Profit.ToString("F")</td>
                         <td>@expenseBook.TotalProfit.ToString("F")</td>
                         <td>@String.Format("{0:d/M/yyyy}", expenseBook.Date)</td>
+                        <td>
+                            <form asp-controller="ExpenseBook" asp-action="Delete" asp-route-id="@expenseBook.Id" method="post" class="form-inline" role="form">
+                                <input type="hidden" id="@expenseBook.Id">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete expense book?')">
+                                    <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 }
             </table>

@@ -38,7 +38,6 @@
                                 <td>
                                     <form asp-controller="CashBook" asp-action="Delete" asp-route-id="@cashBook.Id" method="post" class="form-inline" role="form">
                                         <input type="hidden" id="@cashBook.Id">
-                                        @*@Html.ActionLink("Delete", "CashBook", "Delete", routeValues: new { Id = cashBook.Id })*@
                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete cash book?')">
                                         <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete</button>
                                     </form>
