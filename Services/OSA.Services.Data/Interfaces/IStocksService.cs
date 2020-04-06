@@ -13,5 +13,7 @@
         Task<List<string>> GetStockNamesByCompanyIdAsync(int companyId);
 
         Task<IEnumerable<Stock>> GetStocksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+
+        Task<List<Stock>> DeleteAsync(List<int> ids);
     }
 }

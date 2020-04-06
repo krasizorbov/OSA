@@ -39,10 +39,27 @@
             await this.stockRepository.SaveChangesAsync();
         }
 
+        public async Task<List<Stock>> DeleteAsync(List<int> ids)
+        {
+            var stocks = new List<Stock>();
+            foreach (var id in ids)
+            {
+                var stock = await this.stockRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+                if (stock != null)
+                {
+                    stocks.Add(stock);
+                    this.stockRepository.Delete(stock);
+                }
+            }
+
+            await this.stockRepository.SaveChangesAsync();
+            return stocks;
+        }
+
         public async Task<List<string>> GetStockNamesByCompanyIdAsync(int companyId)
         {
             var stockNames = await this.context.Stocks
-               .Where(x => x.CompanyId == companyId)
+               .Where(x => x.CompanyId == companyId && x.IsDeleted == false)
                .Select(x => x.Name)
                .Distinct()
                .OrderBy(x => x)
@@ -53,7 +70,9 @@
 
         public async Task<IEnumerable<Stock>> GetStocksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var stocks = await this.stockRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
+            var stocks = await this.stockRepository.All()
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
+                .ToListAsync();
 
             return stocks;
         }
