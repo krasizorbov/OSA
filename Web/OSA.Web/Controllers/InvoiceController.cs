@@ -191,5 +191,27 @@
 
             return this.View(model);
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var invoice = await this.invoicesService.GetInvoiceByIdAsync(id);
+
+            if (invoice == null)
+            {
+                return this.NotFound();
+            }
+
+            var invoiceToDelete = await this.invoicesService.DeleteAsync(id);
+
+            if (invoiceToDelete == null)
+            {
+                return this.NotFound();
+            }
+
+            this.TempData["message"] = GlobalConstants.SuccessfullyDeleted;
+            return this.Redirect("/");
+        }
     }
 }
