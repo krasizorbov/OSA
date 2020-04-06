@@ -171,7 +171,7 @@
         {
             this.totalPrice = this.context.Stocks
             .Where(x => x.Date >= startDate && x.Date <= endDate && x.Name == stockName && x.CompanyId == id && x.IsDeleted == false)
-            .Sum(p => p.Price); // Total Price
+            .Sum(p => p.Price);
 
             return this.totalPrice;
         }

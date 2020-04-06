@@ -1,6 +1,7 @@
 ﻿namespace OSA.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Threading.Tasks;
 
@@ -77,7 +78,7 @@
             var stockNames = await this.purchasesService.GetStockNamesAsync(start_Date, end_Date, purchaseInputModel.CompanyId);
             var purchaseExist = await this.purchasesService.PurchaseExistAsync(start_Date, end_Date, purchaseInputModel.CompanyId);
 
-            if (stockNames.Count == 0) // Check This!!!
+            if (stockNames.Count == 0)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
                 var model = new CreatePurchaseInputModel
@@ -89,7 +90,7 @@
                 return this.View(model);
             }
 
-            if (purchaseExist.Count != 0) // Check This!!!
+            if (purchaseExist.Count != 0)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
                 var model = new CreatePurchaseInputModel
@@ -179,6 +180,21 @@
             };
 
             return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Delete(List<int> ids)
+        {
+            var purchasesToDelete = await this.purchasesService.DeleteAsync(ids);
+
+            if (purchasesToDelete.Count == 0)
+            {
+                return this.NotFound();
+            }
+
+            this.TempData["message"] = GlobalConstants.SuccessfullyDeleted;
+            return this.Redirect("/");
         }
     }
 }
