@@ -21,5 +21,9 @@
         Task<IEnumerable<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<AvailableStock> GetMonthlyAvailableStockByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+
+        Task<ExpenseBook> DeleteAsync(int id);
+
+        Task<ExpenseBook> GetExpenseBookByIdAsync(int id);
     }
 }

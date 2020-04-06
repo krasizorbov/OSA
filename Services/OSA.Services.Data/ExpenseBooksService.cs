@@ -46,10 +46,22 @@
             await this.expenseBooksRepository.SaveChangesAsync();
         }
 
+        public async Task<ExpenseBook> DeleteAsync(int id)
+        {
+            var cashBook = await this.expenseBooksRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (cashBook != null)
+            {
+                this.expenseBooksRepository.Delete(cashBook);
+                await this.expenseBooksRepository.SaveChangesAsync();
+            }
+
+            return cashBook;
+        }
+
         public async Task<ExpenseBook> ExpenseBookExistAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var expenseBook = await this.context.ExpenseBooks
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .Select(x => x)
                 .FirstOrDefaultAsync();
 
@@ -59,7 +71,7 @@
         public async Task<List<ProductionInvoice>> GetAllProductionInvoicesByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
             var productionInvoices = await this.context.ProductionInvoices
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id && x.IsDeleted == false)
                 .Select(x => x)
                 .ToListAsync();
 
@@ -69,7 +81,7 @@
         public async Task<List<Receipt>> GetAllReceiptsByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
             var receipts = await this.context.Receipts
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id && x.IsDeleted == false)
                 .Select(x => x)
                 .ToListAsync();
 
@@ -79,17 +91,23 @@
         public async Task<List<Sale>> GetAllSalesByMonthAsync(DateTime startDate, DateTime endDate, int id)
         {
             var sales = await this.context.Sales
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id && x.IsDeleted == false)
                 .Select(x => x)
                 .ToListAsync();
 
             return sales;
         }
 
+        public async Task<ExpenseBook> GetExpenseBookByIdAsync(int id)
+        {
+            var expenseBook = await this.expenseBooksRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+            return expenseBook;
+        }
+
         public async Task<IEnumerable<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var expenseBooks = await this.expenseBooksRepository.All()
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .ToListAsync();
 
             return expenseBooks;
@@ -98,7 +116,7 @@
         public async Task<AvailableStock> GetMonthlyAvailableStockByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var availableStock = await this.context.AvailableStocks
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
+                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .FirstOrDefaultAsync();
 
             return availableStock;
