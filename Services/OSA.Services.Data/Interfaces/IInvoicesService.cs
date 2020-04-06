@@ -18,5 +18,9 @@
         Task<IEnumerable<Invoice>> GetInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<string> GetInvoiceNumberByInvoiceIdAsync(int invoiceId);
+
+        Task<Invoice> DeleteAsync(int id);
+
+        Task<Invoice> GetInvoiceByIdAsync(int id);
     }
 }
