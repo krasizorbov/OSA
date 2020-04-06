@@ -3,52 +3,52 @@
     this.ViewData["Title"] = "Get Cash Book";
 }
 @{ int index = 0;}
-    
-        <div class="text-center">
-            <h3>Cash Book for @Model.Name</h3>
-            <div class="col-md-12">
-                <center>
-                    <table border="0">
-                        <tr>
-                            <th>ID</th>
-                            <th>Total Stock Cost</th>
-                            <th>Total Salary Cost</th>
-                            <th>Total External Cost</th>
-                            <th>Total Profit</th>
-                            <th>Total Cost</th>
-                            <th>Money Available</th>
-                            <th>Saldo</th>
-                            <th>Own Funds</th>
-                            <th>Date</th>
-                            <th>Delete</th>
-                        </tr>
-                        @foreach (var cashBook in Model.CashBooks)
-                        {
-                            <tr>
-                                <td>@(index += 1)</td>
-                                <td>@cashBook.TotalInvoicePricesCost.ToString("F")</td>
-                                <td>@cashBook.TotalSalaryCost.ToString("F")</td>
-                                <td>@cashBook.TotalStockExternalCost.ToString("F")</td>
-                                <td>@cashBook.TotalProfit.ToString("F")</td>
-                                <td>@cashBook.TotalCost.ToString("F")</td>
-                                <td>@cashBook.MoneyAvailable.ToString("F")</td>
-                                <td>@cashBook.Saldo.ToString("F")</td>
-                                <td>@cashBook.OwnFunds.ToString("F")</td>
-                                <td>@String.Format("{0:d/M/yyyy}", cashBook.Date)</td>
-                                <td>
-                                    <form asp-controller="CashBook" asp-action="Delete" asp-route-id="@cashBook.Id" method="post" class="form-inline" role="form">
-                                        <input type="hidden" id="@cashBook.Id">
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete cash book?')">
-                                        <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </center>
-            </div>
-        </div>
-    
+<div class="text-center">
+    <h3>Cash Book for @Model.Name</h3>
+    <div class="col-md-12">
+        <center>
+            <table border="0">
+                <tr>
+                    <th>ID</th>
+                    <th>Total Stock Cost</th>
+                    <th>Total Salary Cost</th>
+                    <th>Total External Cost</th>
+                    <th>Total Profit</th>
+                    <th>Total Cost</th>
+                    <th>Money Available</th>
+                    <th>Saldo</th>
+                    <th>Own Funds</th>
+                    <th>Date</th>
+                    <th>Delete</th>
+                </tr>
+                @foreach (var cashBook in Model.CashBooks)
+                {
+                    <tr>
+                        <td>@(index += 1)</td>
+                        <td>@cashBook.TotalInvoicePricesCost.ToString("F")</td>
+                        <td>@cashBook.TotalSalaryCost.ToString("F")</td>
+                        <td>@cashBook.TotalStockExternalCost.ToString("F")</td>
+                        <td>@cashBook.TotalProfit.ToString("F")</td>
+                        <td>@cashBook.TotalCost.ToString("F")</td>
+                        <td>@cashBook.MoneyAvailable.ToString("F")</td>
+                        <td>@cashBook.Saldo.ToString("F")</td>
+                        <td>@cashBook.OwnFunds.ToString("F")</td>
+                        <td>@String.Format("{0:d/M/yyyy}", cashBook.Date)</td>
+                        <td>
+                            <form asp-controller="CashBook" asp-action="Delete" asp-route-id="@cashBook.Id" method="post" class="form-inline" role="form">
+                                <input type="hidden" id="@cashBook.Id">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete cash book?')">
+                                    <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </center>
+    </div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

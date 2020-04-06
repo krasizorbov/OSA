@@ -3,7 +3,7 @@
 @{
     this.ViewData["Title"] = "Get Invoice";
 }
-@{int index = 0;} 
+@{int index = 0;}
 <div class="text-center">
     <h3>List of Invoices for @Model.Name</h3>
     <div class="col-md-12">
@@ -15,6 +15,7 @@
                     <th>Total Amount</th>
                     <th>Issue Date</th>
                     <th>Supplier Name</th>
+                    <th>Delete</th>
                 </tr>
                 @foreach (var invoice in Model.Invoices)
                 {
@@ -24,6 +25,14 @@
                         <td>@invoice.TotalAmount.ToString("F")</td>
                         <td>@String.Format("{0:d/M/yyyy}", invoice.Date)</td>
                         <td>@await this.suppliersService.GetSupplierNameBySupplierIdAsync(invoice.SupplierId)</td>
+                        <td>
+                            <form asp-controller="Invoice" asp-action="Delete" asp-route-id="@invoice.Id" method="post" class="form-inline" role="form">
+                                <input type="hidden" id="@invoice.Id">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete Invoice?')">
+                                    <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 }
             </table>
