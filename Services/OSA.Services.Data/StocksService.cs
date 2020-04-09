@@ -9,17 +9,14 @@
     using Microsoft.EntityFrameworkCore;
     using OSA.Common;
     using OSA.Data;
-    using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class StocksService : IStocksService
     {
-        private readonly IDeletableEntityRepository<Stock> stockRepository;
         private readonly ApplicationDbContext context;
 
-        public StocksService(IDeletableEntityRepository<Stock> stockRepository, ApplicationDbContext context)
+        public StocksService(ApplicationDbContext context)
         {
-            this.stockRepository = stockRepository;
             this.context = context;
         }
 
@@ -35,8 +32,8 @@
                 CompanyId = companyId,
             };
 
-            await this.stockRepository.AddAsync(stock);
-            await this.stockRepository.SaveChangesAsync();
+            await this.context.AddAsync(stock);
+            await this.context.SaveChangesAsync();
         }
 
         public async Task<List<Stock>> DeleteAsync(List<int> ids)
@@ -44,15 +41,16 @@
             var stocks = new List<Stock>();
             foreach (var id in ids)
             {
-                var stock = await this.stockRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+                var stock = await this.context.Stocks.Where(x => x.Id == id).FirstOrDefaultAsync();
                 if (stock != null)
                 {
                     stocks.Add(stock);
-                    this.stockRepository.Delete(stock);
+                    stock.IsDeleted = true;
+                    stock.DeletedOn = DateTime.UtcNow;
                 }
             }
 
-            await this.stockRepository.SaveChangesAsync();
+            await this.context.SaveChangesAsync();
             return stocks;
         }
 
@@ -68,9 +66,9 @@
             return stockNames;
         }
 
-        public async Task<IEnumerable<Stock>> GetStocksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<ICollection<Stock>> GetStocksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var stocks = await this.stockRepository.All()
+            var stocks = await this.context.Stocks
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .ToListAsync();
 
