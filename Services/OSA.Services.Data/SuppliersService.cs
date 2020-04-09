@@ -8,13 +8,11 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
     using OSA.Data;
-    using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class SuppliersService : ISuppliersService
     {
         public const string InvalidCompanyIdErrorMessage = "Company with the given ID doesn't exist!";
-        //private readonly IDeletableEntityRepository<Supplier> supplierRepository;
         private readonly ApplicationDbContext context;
 
         public SuppliersService(ApplicationDbContext context)
@@ -55,7 +53,7 @@
             return supplierName;
         }
 
-        public async Task<IEnumerable<Supplier>> GetSuppliersByCompanyIdAsync(int companyId)
+        public async Task<ICollection<Supplier>> GetSuppliersByCompanyIdAsync(int companyId)
         {
             var suppliers = await this.context.Suppliers.Where(x => x.CompanyId == companyId).ToListAsync();
 
