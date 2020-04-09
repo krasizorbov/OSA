@@ -15,7 +15,7 @@
 
         Task<string> InvoiceExistAsync(string invoiceNumber, int companyId);
 
-        Task<IEnumerable<Invoice>> GetInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<ICollection<Invoice>> GetInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<string> GetInvoiceNumberByInvoiceIdAsync(int invoiceId);
 

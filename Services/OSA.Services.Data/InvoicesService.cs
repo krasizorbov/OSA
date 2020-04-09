@@ -74,7 +74,7 @@
             return invoiceNumber;
         }
 
-        public async Task<IEnumerable<Invoice>> GetInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<ICollection<Invoice>> GetInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var invoices = await this.context.Invoices
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
