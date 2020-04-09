@@ -9,7 +9,5 @@
         string GetCurrentUserId();
 
         Task<ApplicationUser> GetCurrentUserAsync();
-
-        //Task<ApplicationUser> GetUserByIdAsync(string userId);
     }
 }

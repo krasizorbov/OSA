@@ -14,12 +14,11 @@
     public class SuppliersService : ISuppliersService
     {
         public const string InvalidCompanyIdErrorMessage = "Company with the given ID doesn't exist!";
-        private readonly IDeletableEntityRepository<Supplier> supplierRepository;
+        //private readonly IDeletableEntityRepository<Supplier> supplierRepository;
         private readonly ApplicationDbContext context;
 
-        public SuppliersService(IDeletableEntityRepository<Supplier> supplierRepository, ApplicationDbContext context)
+        public SuppliersService(ApplicationDbContext context)
         {
-            this.supplierRepository = supplierRepository;
             this.context = context;
         }
 
@@ -36,8 +35,8 @@
                 Bulstat = bulstat,
                 CompanyId = companyId,
             };
-            await this.supplierRepository.AddAsync(supplier);
-            await this.supplierRepository.SaveChangesAsync();
+            await this.context.AddAsync(supplier);
+            await this.context.SaveChangesAsync();
         }
 
         public async Task<ICollection<SelectListItem>> GetAllSuppliersByCompanyIdAsync(int companyId)
@@ -51,14 +50,14 @@
 
         public async Task<string> GetSupplierNameBySupplierIdAsync(int supplierId)
         {
-            var supplierName = await this.supplierRepository.All().Where(x => x.Id == supplierId).Select(x => x.Name).FirstOrDefaultAsync();
+            var supplierName = await this.context.Suppliers.Where(x => x.Id == supplierId).Select(x => x.Name).FirstOrDefaultAsync();
 
             return supplierName;
         }
 
         public async Task<IEnumerable<Supplier>> GetSuppliersByCompanyIdAsync(int companyId)
         {
-            var suppliers = await this.supplierRepository.All().Where(x => x.CompanyId == companyId).ToListAsync();
+            var suppliers = await this.context.Suppliers.Where(x => x.CompanyId == companyId).ToListAsync();
 
             return suppliers;
         }

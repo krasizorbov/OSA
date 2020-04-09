@@ -44,7 +44,7 @@
 
         public async Task<string> CompanyExistAsync(string companyName, string userId)
         {
-            var name = await this.context.Companies
+            var name = await this.companyRepository.All()
                 .Where(x => x.UserId == userId && x.Name == companyName)
                 .Select(x => x.Name)
                 .FirstOrDefaultAsync();
@@ -62,7 +62,7 @@
 
         public async Task<string> GetCompanyNameByIdAsync(int companyId)
         {
-            var name = await this.context.Companies.Where(x => x.Id == companyId).Select(x => x.Name).FirstOrDefaultAsync();
+            var name = await this.companyRepository.All().Where(x => x.Id == companyId).Select(x => x.Name).FirstOrDefaultAsync();
 
             return name;
         }
@@ -71,7 +71,7 @@
         {
             var userId = this.usersService.GetCurrentUserId();
 
-            var companyNames = await this.context.Companies
+            var companyNames = await this.companyRepository.All()
                 .Where(x => x.UserId == userId)
                 .Select(i => new SelectListItem() { Value = i.Id.ToString(), Text = i.Name })
                 .ToListAsync();

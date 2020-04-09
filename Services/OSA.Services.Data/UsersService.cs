@@ -39,17 +39,5 @@
 
             return currentUser;
         }
-
-        //public async Task<ApplicationUser> GetUserByIdAsync(string userId)
-        //{
-        //    if (!await this.context.AnyAsync(x => x.Id == userId))
-        //    {
-        //        throw new ArgumentException(GlobalConstants.InvalidUserIdErrorMessage);
-        //    }
-
-        //    var user = await this.userManager.FindByIdAsync(userId);
-
-        //    return user;
-        //}
     }
 }
