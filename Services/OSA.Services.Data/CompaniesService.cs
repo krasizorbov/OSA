@@ -49,7 +49,7 @@
             return name;
         }
 
-        public async Task<IEnumerable<Company>> GetCompaniesByUserIdAsync()
+        public async Task<ICollection<Company>> GetCompaniesByUserIdAsync()
         {
             var userId = this.usersService.GetCurrentUserId();
             var companies = await this.context.Companies.Where(x => x.UserId == userId).ToListAsync();
