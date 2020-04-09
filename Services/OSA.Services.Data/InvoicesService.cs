@@ -10,17 +10,14 @@
     using Microsoft.EntityFrameworkCore;
     using OSA.Common;
     using OSA.Data;
-    using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class InvoicesService : IInvoicesService
     {
-        private readonly IDeletableEntityRepository<Invoice> invoiceRepository;
         private readonly ApplicationDbContext context;
 
-        public InvoicesService(IDeletableEntityRepository<Invoice> invoiceRepository, ApplicationDbContext context)
+        public InvoicesService(ApplicationDbContext context)
         {
-            this.invoiceRepository = invoiceRepository;
             this.context = context;
         }
 
@@ -35,17 +32,17 @@
                 CompanyId = companyId,
             };
 
-            await this.invoiceRepository.AddAsync(invoice);
-            await this.invoiceRepository.SaveChangesAsync();
+            await this.context.AddAsync(invoice);
+            await this.context.SaveChangesAsync();
         }
 
         public async Task<Invoice> DeleteAsync(int id)
         {
-            var invoice = await this.invoiceRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+            var invoice = await this.context.Invoices.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (invoice != null)
             {
-                this.invoiceRepository.Delete(invoice);
-                await this.invoiceRepository.SaveChangesAsync();
+                invoice.IsDeleted = true;
+                await this.context.SaveChangesAsync();
             }
 
             return invoice;
@@ -62,13 +59,13 @@
 
         public async Task<Invoice> GetInvoiceByIdAsync(int id)
         {
-            var invoice = await this.invoiceRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+            var invoice = await this.context.Invoices.Where(x => x.Id == id).FirstOrDefaultAsync();
             return invoice;
         }
 
         public async Task<string> GetInvoiceNumberByInvoiceIdAsync(int invoiceId)
         {
-            var invoiceNumber = await this.invoiceRepository.All()
+            var invoiceNumber = await this.context.Invoices
                 .Where(x => x.Id == invoiceId && x.IsDeleted == false)
                 .Select(x => x.InvoiceNumber)
                 .FirstOrDefaultAsync();
@@ -78,7 +75,7 @@
 
         public async Task<IEnumerable<Invoice>> GetInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var invoices = await this.invoiceRepository.All()
+            var invoices = await this.context.Invoices
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .ToListAsync();
 
