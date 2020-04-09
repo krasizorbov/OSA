@@ -14,33 +14,27 @@
 
     public class CompaniesServiceTests
     {
-        private readonly CompaniesService cs;
-        private readonly Mock<IDeletableEntityRepository<Company>> companiesServiceMock = new Mock<IDeletableEntityRepository<Company>>();
-        private readonly Mock<IUsersService> usersServiceMock = new Mock<IUsersService>();
+        private ICompaniesService cs;
 
 
-        public CompaniesServiceTests()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-               .UseInMemoryDatabase(databaseName: "Test")
-               .Options;
-            var context = new ApplicationDbContext(options);
-            this.cs = new CompaniesService(this.companiesServiceMock.Object, this.usersServiceMock.Object, context);
-        }
 
         [Fact]
         public async Task CompanyExistAsyncReturnCompanyName()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-               .UseInMemoryDatabase(databaseName: "Test")
-               .Options;
-            var context = new ApplicationDbContext(options);
+            var context = InitializeContext.CreateContextForInMemory();
+            this.cs = new CompaniesService(context);
+
+           
+
+            await context.Companies.AddAsync(company);
+            await context.SaveChangesAsync();
+            var result = await this.ss.GetAllSuppliersByCompanyIdAsync(1);
+            Assert.Equal("1", result.Count().ToString());
+    
 
             string name = "ET Oazis";
             string id = Guid.NewGuid().ToString();
-            var mock = new Mock<ICompaniesService>();
 
-            mock.Setup(x => x.CompanyExistAsync(name, id)).Returns(Task.FromResult(name));
 
             var result = await this.cs.CompanyExistAsync(name, id);
             Assert.Equal(name, result);
