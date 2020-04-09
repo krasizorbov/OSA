@@ -5,18 +5,21 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using OSA.Common;
     using OSA.Data.Models;
     using Xunit;
 
     public class InvoicesServiceTests
     {
-        private IInvoicesService iss;
+        private const string StartDate = "01/01/2020";
+        private const string EndDate = "31/01/2020";
+        private IInvoicesService iis;
 
         [Fact]
         public async Task DeleteAsyncReturnsInvoice()
         {
             var context = InitializeContext.CreateContextForInMemory();
-            this.iss = new InvoicesService(context);
+            this.iis = new InvoicesService(context);
 
             var invoice = new Invoice
             {
@@ -31,7 +34,7 @@
 
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var result = await this.iss.DeleteAsync(1);
+            var result = await this.iis.DeleteAsync(1);
             Assert.Equal(invoice, result);
         }
 
@@ -39,7 +42,7 @@
         public async Task DeleteAsyncReturnsNull()
         {
             var context = InitializeContext.CreateContextForInMemory();
-            this.iss = new InvoicesService(context);
+            this.iis = new InvoicesService(context);
 
             var invoice = new Invoice
             {
@@ -54,7 +57,7 @@
 
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var result = await this.iss.DeleteAsync(2);
+            var result = await this.iis.DeleteAsync(2);
             Assert.True(result == null);
         }
 
@@ -62,7 +65,7 @@
         public async Task GetAllInvoicesByCompanyIdAsyncReturnsCorrectCount()
         {
             var context = InitializeContext.CreateContextForInMemory();
-            this.iss = new InvoicesService(context);
+            this.iis = new InvoicesService(context);
 
             var invoice = new Invoice
             {
@@ -77,7 +80,7 @@
 
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var result = await this.iss.GetAllInvoicesByCompanyIdAsync(1);
+            var result = await this.iis.GetAllInvoicesByCompanyIdAsync(1);
             Assert.Equal("1", result.Count().ToString());
         }
 
@@ -85,7 +88,7 @@
         public async Task GetInvoiceByIdAsyncReturnsInvoice()
         {
             var context = InitializeContext.CreateContextForInMemory();
-            this.iss = new InvoicesService(context);
+            this.iis = new InvoicesService(context);
 
             var invoice = new Invoice
             {
@@ -100,7 +103,7 @@
 
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var result = await this.iss.GetInvoiceByIdAsync(1);
+            var result = await this.iis.GetInvoiceByIdAsync(1);
             Assert.Equal(invoice, result);
         }
 
@@ -108,7 +111,7 @@
         public async Task GetInvoiceByIdAsyncReturnsNull()
         {
             var context = InitializeContext.CreateContextForInMemory();
-            this.iss = new InvoicesService(context);
+            this.iis = new InvoicesService(context);
 
             var invoice = new Invoice
             {
@@ -123,7 +126,7 @@
 
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var result = await this.iss.GetInvoiceByIdAsync(2);
+            var result = await this.iis.GetInvoiceByIdAsync(2);
             Assert.True(result == null);
         }
 
@@ -131,7 +134,7 @@
         public async Task GetInvoiceNumberByInvoiceIdAsyncReturnsInvoiceNumber()
         {
             var context = InitializeContext.CreateContextForInMemory();
-            this.iss = new InvoicesService(context);
+            this.iis = new InvoicesService(context);
 
             var invoice = new Invoice
             {
@@ -146,7 +149,7 @@
 
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var result = await this.iss.GetInvoiceNumberByInvoiceIdAsync(1);
+            var result = await this.iis.GetInvoiceNumberByInvoiceIdAsync(1);
             Assert.Equal(invoice.InvoiceNumber, result);
         }
 
@@ -154,7 +157,7 @@
         public async Task GetInvoiceNumberByInvoiceIdAsyncReturnsNull()
         {
             var context = InitializeContext.CreateContextForInMemory();
-            this.iss = new InvoicesService(context);
+            this.iis = new InvoicesService(context);
 
             var invoice = new Invoice
             {
@@ -169,7 +172,7 @@
 
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var result = await this.iss.GetInvoiceNumberByInvoiceIdAsync(2);
+            var result = await this.iis.GetInvoiceNumberByInvoiceIdAsync(2);
             Assert.True(result == null);
         }
 
@@ -177,9 +180,9 @@
         public async Task GetInvoicesByCompanyIdAsyncReturnsCorrectCount()
         {
             var context = InitializeContext.CreateContextForInMemory();
-            this.iss = new InvoicesService(context);
-            var startDate = DateTime.ParseExact("01/01/2020", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            var endDate = DateTime.ParseExact("31/01/2020", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            this.iis = new InvoicesService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var invoice = new Invoice
             {
                 Id = 1,
@@ -193,7 +196,7 @@
 
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var result = await this.iss.GetInvoicesByCompanyIdAsync(startDate, endDate, 1);
+            var result = await this.iis.GetInvoicesByCompanyIdAsync(startDate, endDate, 1);
             Assert.Equal("1", result.Count().ToString());
         }
 
@@ -201,7 +204,7 @@
         public async Task InvoiceExistAsyncReturnsInvoiceNumber()
         {
             var context = InitializeContext.CreateContextForInMemory();
-            this.iss = new InvoicesService(context);
+            this.iis = new InvoicesService(context);
 
             var invoice = new Invoice
             {
@@ -216,7 +219,7 @@
 
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var result = await this.iss.InvoiceExistAsync("1", 1);
+            var result = await this.iis.InvoiceExistAsync("1", 1);
             Assert.Equal(invoice.InvoiceNumber, result.ToString());
         }
 
@@ -224,7 +227,7 @@
         public async Task InvoiceExistAsyncReturnsNull()
         {
             var context = InitializeContext.CreateContextForInMemory();
-            this.iss = new InvoicesService(context);
+            this.iis = new InvoicesService(context);
 
             var invoice = new Invoice
             {
@@ -239,7 +242,7 @@
 
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var result = await this.iss.InvoiceExistAsync("2", 1);
+            var result = await this.iis.InvoiceExistAsync("2", 1);
             Assert.True(result == null);
         }
     }

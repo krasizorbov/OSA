@@ -6,11 +6,14 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using OSA.Common;
     using OSA.Data.Models;
     using Xunit;
 
     public class StocksServiceTests
     {
+        private const string StartDate = "01/01/2020";
+        private const string EndDate = "31/01/2020";
         private IStocksService ss;
 
         [Fact]
@@ -119,8 +122,8 @@
         {
             var context = InitializeContext.CreateContextForInMemory();
             this.ss = new StocksService(context);
-            var startDate = DateTime.ParseExact("01/01/2020", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            var endDate = DateTime.ParseExact("31/01/2020", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
             var stock1 = new Stock
             {
