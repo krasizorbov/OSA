@@ -42,6 +42,7 @@
             if (invoice != null)
             {
                 invoice.IsDeleted = true;
+                invoice.DeletedOn = DateTime.UtcNow;
                 await this.context.SaveChangesAsync();
             }
 
