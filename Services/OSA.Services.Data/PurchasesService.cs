@@ -192,7 +192,7 @@
             return stockNames;
         }
 
-        public async Task<IEnumerable<Purchase>> GetPurchasesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<ICollection<Purchase>> GetPurchasesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var purchases = await this.context.Purchases
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
