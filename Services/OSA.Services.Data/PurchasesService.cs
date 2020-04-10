@@ -211,6 +211,7 @@
                 {
                     purchases.Add(purchase);
                     purchase.IsDeleted = true;
+                    purchase.DeletedOn = DateTime.UtcNow;
                 }
             }
 
