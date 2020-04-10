@@ -9,12 +9,10 @@
     using Microsoft.EntityFrameworkCore;
     using OSA.Common;
     using OSA.Data;
-    using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class PurchasesService : IPurchasesService
     {
-        private readonly IDeletableEntityRepository<Purchase> purchaseRepository;
         private readonly ApplicationDbContext context;
         private List<string> stockNamesForCurrentMonth;
         private List<string> stockNamesForPreviousMonth;
@@ -24,9 +22,8 @@
         private decimal totalQuantity = 0;
         private decimal totalPrice = 0;
 
-        public PurchasesService(IDeletableEntityRepository<Purchase> purchaseRepository, ApplicationDbContext context)
+        public PurchasesService(ApplicationDbContext context)
         {
-            this.purchaseRepository = purchaseRepository;
             this.context = context;
             this.stockNamesList = new List<string>();
         }
@@ -63,7 +60,7 @@
                         CompanyId = companyId,
                     };
 
-                    await this.purchaseRepository.AddAsync(purchase);
+                    await this.context.AddAsync(purchase);
                 }
 
                 if (!this.stockNamesForCurrentMonth.Contains(name) && this.stockNamesForPreviousMonth.Contains(name))
@@ -85,7 +82,7 @@
                         CompanyId = companyId,
                     };
 
-                    await this.purchaseRepository.AddAsync(purchase);
+                    await this.context.AddAsync(purchase);
                 }
 
                 if (this.stockNamesForCurrentMonth.Contains(name) && !this.stockNamesForPreviousMonth.Contains(name))
@@ -103,10 +100,10 @@
                         CompanyId = companyId,
                     };
 
-                    await this.purchaseRepository.AddAsync(purchase);
+                    await this.context.AddAsync(purchase);
                 }
 
-                await this.purchaseRepository.SaveChangesAsync();
+                await this.context.SaveChangesAsync();
             }
         }
 
@@ -197,7 +194,7 @@
 
         public async Task<IEnumerable<Purchase>> GetPurchasesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var purchases = await this.purchaseRepository.All()
+            var purchases = await this.context.Purchases
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .ToListAsync();
 
@@ -209,15 +206,15 @@
             var purchases = new List<Purchase>();
             foreach (var id in ids)
             {
-                var purchase = await this.purchaseRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+                var purchase = await this.context.Purchases.Where(x => x.Id == id).FirstOrDefaultAsync();
                 if (purchase != null)
                 {
                     purchases.Add(purchase);
-                    this.purchaseRepository.Delete(purchase);
+                    purchase.IsDeleted = true;
                 }
             }
 
-            await this.purchaseRepository.SaveChangesAsync();
+            await this.context.SaveChangesAsync();
             return purchases;
         }
     }
