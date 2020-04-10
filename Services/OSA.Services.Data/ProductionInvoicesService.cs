@@ -9,17 +9,14 @@
     using Microsoft.EntityFrameworkCore;
     using OSA.Common;
     using OSA.Data;
-    using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class ProductionInvoicesService : IProductionInvoicesService
     {
-        private readonly IDeletableEntityRepository<ProductionInvoice> productionInvoicesRepository;
         private readonly ApplicationDbContext context;
 
-        public ProductionInvoicesService(IDeletableEntityRepository<ProductionInvoice> productionInvoicesRepository, ApplicationDbContext context)
+        public ProductionInvoicesService(ApplicationDbContext context)
         {
-            this.productionInvoicesRepository = productionInvoicesRepository;
             this.context = context;
         }
 
@@ -33,13 +30,13 @@
                 ExternalCost = externalCost,
                 CompanyId = companyId,
             };
-            await this.productionInvoicesRepository.AddAsync(productionInvoice);
-            await this.productionInvoicesRepository.SaveChangesAsync();
+            await this.context.AddAsync(productionInvoice);
+            await this.context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<ProductionInvoice>> GetProductionInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var productionInvoices = await this.productionInvoicesRepository.All()
+            var productionInvoices = await this.context.ProductionInvoices
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
                 .ToListAsync();
 

@@ -14,12 +14,10 @@
 
     public class SalesService : ISalesService
     {
-        private readonly IDeletableEntityRepository<Sale> saleRepository;
         private readonly ApplicationDbContext context;
 
-        public SalesService(IDeletableEntityRepository<Sale> saleRepository, ApplicationDbContext context)
+        public SalesService(ApplicationDbContext context)
         {
-            this.saleRepository = saleRepository;
             this.context = context;
         }
 
@@ -37,8 +35,8 @@
                 CompanyId = companyId,
             };
 
-            await this.saleRepository.AddAsync(sale);
-            await this.saleRepository.SaveChangesAsync();
+            await this.context.AddAsync(sale);
+            await this.context.SaveChangesAsync();
         }
 
         public async Task<List<Sale>> DeleteAsync(List<int> ids)
@@ -46,15 +44,16 @@
             var sales = new List<Sale>();
             foreach (var id in ids)
             {
-                var sale = await this.saleRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+                var sale = await this.context.Sales.Where(x => x.Id == id).FirstOrDefaultAsync();
                 if (sale != null)
                 {
                     sales.Add(sale);
-                    this.saleRepository.Delete(sale);
+                    sale.IsDeleted = true;
+                    sale.DeletedOn = DateTime.UtcNow;
                 }
             }
 
-            await this.saleRepository.SaveChangesAsync();
+            await this.context.SaveChangesAsync();
             return sales;
         }
 
@@ -70,7 +69,7 @@
 
         public async Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var sales = await this.saleRepository.All()
+            var sales = await this.context.Sales
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .ToListAsync();
 

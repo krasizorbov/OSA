@@ -9,20 +9,17 @@
     using Microsoft.EntityFrameworkCore;
     using OSA.Common;
     using OSA.Data;
-    using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class AvailableStocksService : IAvailableStocksService
     {
-        private readonly IDeletableEntityRepository<AvailableStock> availableStockRepository;
         private readonly ApplicationDbContext context;
         private List<string> purchasedStockNamesForCurrentMonth;
         private List<string> soldStockNamesForCurrentMonth;
         private List<string> stockNamesList;
 
-        public AvailableStocksService(IDeletableEntityRepository<AvailableStock> availableStockRepository, ApplicationDbContext context)
+        public AvailableStocksService(ApplicationDbContext context)
         {
-            this.availableStockRepository = availableStockRepository;
             this.context = context;
             this.stockNamesList = new List<string>();
         }
@@ -55,10 +52,10 @@
                         Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
-                    await this.availableStockRepository.AddAsync(availableStockFromPreviousMonth);
+                    await this.context.AddAsync(availableStockFromPreviousMonth);
                 }
 
-                await this.availableStockRepository.SaveChangesAsync();
+                await this.context.SaveChangesAsync();
             }
 
             foreach (var name in stockNames.OrderBy(x => x))
@@ -80,7 +77,7 @@
                         Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
-                    await this.availableStockRepository.AddAsync(availableStock);
+                    await this.context.AddAsync(availableStock);
                 }
                 else if (!this.purchasedStockNamesForCurrentMonth.Contains(name) && this.soldStockNamesForCurrentMonth.Contains(name)) // No satch stock in Purchases
                 {
@@ -98,7 +95,7 @@
                             Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                             CompanyId = companyId,
                         };
-                        await this.availableStockRepository.AddAsync(availableStock);
+                        await this.context.AddAsync(availableStock);
                     }
                 }
                 else if (this.purchasedStockNamesForCurrentMonth.Contains(name) && !this.soldStockNamesForCurrentMonth.Contains(name)) // No satch stock in Sales
@@ -114,10 +111,10 @@
                         Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
                         CompanyId = companyId,
                     };
-                    await this.availableStockRepository.AddAsync(availableStock);
+                    await this.context.AddAsync(availableStock);
                 }
 
-                await this.availableStockRepository.SaveChangesAsync();
+                await this.context.SaveChangesAsync();
             }
         }
 
@@ -136,21 +133,22 @@
             var availableStocks = new List<AvailableStock>();
             foreach (var id in ids)
             {
-                var availableStock = await this.availableStockRepository.All().Where(x => x.Id == id).FirstOrDefaultAsync();
+                var availableStock = await this.context.AvailableStocks.Where(x => x.Id == id).FirstOrDefaultAsync();
                 if (availableStock != null)
                 {
                     availableStocks.Add(availableStock);
-                    this.availableStockRepository.Delete(availableStock);
+                    availableStock.IsDeleted = true;
+                    availableStock.DeletedOn = DateTime.UtcNow;
                 }
             }
 
-            await this.availableStockRepository.SaveChangesAsync();
+            await this.context.SaveChangesAsync();
             return availableStocks;
         }
 
         public async Task<AvailableStock> GetAvailableStockForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, string name, int companyId)
         {
-            var availableStockName = await this.availableStockRepository.All()
+            var availableStockName = await this.context.AvailableStocks
                 .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == companyId && x.StockName == name && x.IsDeleted == false)
                 .FirstOrDefaultAsync();
 
@@ -159,7 +157,7 @@
 
         public async Task<IEnumerable<AvailableStock>> GetAvailableStocksForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var availableStocks = await this.availableStockRepository.All()
+            var availableStocks = await this.context.AvailableStocks
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)
                 .ToListAsync();
 
@@ -168,7 +166,7 @@
 
         public async Task<List<AvailableStock>> GetAvailableStocksForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var availableStocks = await this.availableStockRepository.All()
+            var availableStocks = await this.context.AvailableStocks
                 .Where(x => x.Date >= startDate.AddMonths(-1) && x.Date <= startDate.AddDays(-1) && x.CompanyId == companyId && x.IsDeleted == false)
                 .ToListAsync();
 

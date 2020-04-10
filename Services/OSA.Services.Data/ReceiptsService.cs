@@ -9,17 +9,14 @@
     using Microsoft.EntityFrameworkCore;
     using OSA.Common;
     using OSA.Data;
-    using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class ReceiptsService : IReceiptsService
     {
-        private readonly IDeletableEntityRepository<Receipt> receiptsRepository;
         private readonly ApplicationDbContext context;
 
-        public ReceiptsService(IDeletableEntityRepository<Receipt> receiptsRepository, ApplicationDbContext context)
+        public ReceiptsService(ApplicationDbContext context)
         {
-            this.receiptsRepository = receiptsRepository;
             this.context = context;
         }
 
@@ -32,13 +29,13 @@
                 Salary = salary,
                 CompanyId = companyId,
             };
-            await this.receiptsRepository.AddAsync(receipt);
-            await this.receiptsRepository.SaveChangesAsync();
+            await this.context.AddAsync(receipt);
+            await this.context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Receipt>> GetReceiptsByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
-            var receipts = await this.receiptsRepository.All().Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
+            var receipts = await this.context.Receipts.Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId).ToListAsync();
 
             return receipts;
         }
