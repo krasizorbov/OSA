@@ -272,5 +272,57 @@
             var result = await this.iss.IsBigger(sale.TotalPrice, sale.ProfitPercent, startDate, StockName, 1);
             Assert.Equal("False", result.ToString());
         }
+
+        [Fact]
+
+        public async Task SaleExistAsyncReturnsCorrectStockName()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iss = new SalesService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var sale = new Sale
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPrice = 20.00M,
+                ProfitPercent = 120,
+                AveragePrice = "1.5",
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Sales.AddAsync(sale);
+            await context.SaveChangesAsync();
+            var result = await this.iss.SaleExistAsync(startDate, StockName, 1);
+            Assert.Equal(StockName, result);
+        }
+
+        [Fact]
+
+        public async Task SaleExistAsyncReturnsNull()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iss = new SalesService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var sale = new Sale
+            {
+                Id = 1,
+                CreatedOn = startDate.AddDays(-10),
+                StockName = StockName,
+                TotalPrice = 20.00M,
+                ProfitPercent = 120,
+                AveragePrice = "1.5",
+                Date = startDate.AddDays(-10),
+                CompanyId = 1,
+            };
+
+            await context.Sales.AddAsync(sale);
+            await context.SaveChangesAsync();
+            var result = await this.iss.SaleExistAsync(startDate, StockName, 1);
+            Assert.True(result == null);
+        }
     }
 }

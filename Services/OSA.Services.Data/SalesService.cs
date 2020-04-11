@@ -9,7 +9,6 @@
     using Microsoft.EntityFrameworkCore;
     using OSA.Common;
     using OSA.Data;
-    using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class SalesService : ISalesService
