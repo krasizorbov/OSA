@@ -90,7 +90,7 @@
             return expenseBook;
         }
 
-        public async Task<IEnumerable<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<ICollection<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var expenseBooks = await this.context.ExpenseBooks
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)

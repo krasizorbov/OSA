@@ -16,7 +16,7 @@
 
         Task<ExpenseBook> ExpenseBookExistAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<IEnumerable<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<ICollection<ExpenseBook>> GetExpenseBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<AvailableStock> GetMonthlyAvailableStockByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
