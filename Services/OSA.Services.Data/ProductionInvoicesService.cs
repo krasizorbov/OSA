@@ -34,7 +34,7 @@
             await this.context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ProductionInvoice>> GetProductionInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<ICollection<ProductionInvoice>> GetProductionInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var productionInvoices = await this.context.ProductionInvoices
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId)
