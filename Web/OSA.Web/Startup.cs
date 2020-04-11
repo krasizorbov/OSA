@@ -69,7 +69,6 @@
             services.AddTransient<IPurchasesService, PurchasesService>();
             services.AddTransient<IAvailableStocksService, AvailableStocksService>();
             services.AddTransient<IProductionInvoicesService, ProductionInvoicesService>();
-            services.AddTransient<IReceiptsService, ReceiptsService>();
             services.AddTransient<IExpenseBooksService, ExpenseBooksService>();
             services.AddTransient<ICashBooksService, CashBooksService>();
             services.AddTransient<IDateTimeValidationService, DateTimeValidationService>();

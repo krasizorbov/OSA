@@ -12,8 +12,6 @@
 
         Task<List<ProductionInvoice>> GetAllProductionInvoicesByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<List<Receipt>> GetAllReceiptsByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
-
         Task<List<Sale>> GetAllSalesByMonthAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<ExpenseBook> ExpenseBookExistAsync(DateTime startDate, DateTime endDate, int companyId);

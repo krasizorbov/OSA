@@ -9,9 +9,6 @@
     public class ExpenseBook : BaseDeletableModel<int>
     {
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
-        public decimal TotalStockCost { get; set; } // This comes from Production Invoice
-
-        [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal TotalExternalCost { get; set; } // This comes from Production Invoice
 
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
@@ -30,10 +27,8 @@
 
         public Company Company { get; set; }
 
-        public decimal TotalCost => this.TotalStockCost + this.TotalSalaryCost + this.TotalExternalCost + this.TotalBookValue;
+        public decimal TotalCost => this.TotalSalaryCost + this.TotalExternalCost + this.TotalBookValue;
 
         public decimal TotalProfit => this.Profit - this.TotalCost;
-
-        public decimal TotalStockExternalCost => this.TotalStockCost + this.TotalExternalCost;
     }
 }

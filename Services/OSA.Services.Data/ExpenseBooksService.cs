@@ -26,14 +26,12 @@
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
 
             var productionInvoices = await this.GetAllProductionInvoicesByMonthAsync(start_Date, end_Date, companyId);
-            var receipts = await this.GetAllReceiptsByMonthAsync(start_Date, end_Date, companyId);
             var sales = await this.GetAllSalesByMonthAsync(start_Date, end_Date, companyId);
 
             var expenseBook = new ExpenseBook
             {
-                TotalStockCost = productionInvoices.Sum(x => x.StockCost),
                 TotalExternalCost = productionInvoices.Sum(x => x.ExternalCost),
-                TotalSalaryCost = receipts.Sum(x => x.Salary),
+                TotalSalaryCost = productionInvoices.Sum(x => x.Salary),
                 TotalBookValue = sales.Sum(x => x.BookValue),
                 Profit = sales.Sum(x => x.TotalPrice),
                 Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
@@ -74,16 +72,6 @@
                 .ToListAsync();
 
             return productionInvoices;
-        }
-
-        public async Task<List<Receipt>> GetAllReceiptsByMonthAsync(DateTime startDate, DateTime endDate, int id)
-        {
-            var receipts = await this.context.Receipts
-                .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == id && x.IsDeleted == false)
-                .Select(x => x)
-                .ToListAsync();
-
-            return receipts;
         }
 
         public async Task<List<Sale>> GetAllSalesByMonthAsync(DateTime startDate, DateTime endDate, int id)

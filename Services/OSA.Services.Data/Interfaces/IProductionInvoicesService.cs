@@ -8,7 +8,7 @@
 
     public interface IProductionInvoicesService
     {
-        Task AddAsync(string invoiceNumber, string date, decimal materialCost, decimal externalCost, int companyId);
+        Task AddAsync(string invoiceNumber, string date, decimal salary, decimal externalCost, int companyId);
 
         Task<string> InvoiceExistAsync(string invoiceNumber, int companyId);
 

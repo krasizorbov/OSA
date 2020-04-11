@@ -17,7 +17,6 @@
     {
         private const string ExpenseBookErrorMessage = "Expense book for the month already done!";
         private const string ProductionInvoiceErrorMessage = "Please register a production invoice before proceeding!";
-        private const string ReceiptErrorMessage = "Please register a receipt before proceeding!";
         private const string AvailableStockErrorMessage = "There is no Monthly Available Stock! Please register!";
 
         private readonly IExpenseBooksService expenseBooksService;
@@ -75,9 +74,8 @@
             var end_Date = DateTime.ParseExact(endDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var expenseBook = await this.expenseBooksService.ExpenseBookExistAsync(start_Date, end_Date, expenseBookInputModel.CompanyId);
             var productionInvoices = await this.expenseBooksService.GetAllProductionInvoicesByMonthAsync(start_Date, end_Date, expenseBookInputModel.CompanyId);
-            var receipts = await this.expenseBooksService.GetAllReceiptsByMonthAsync(start_Date, end_Date, expenseBookInputModel.CompanyId);
             var availableStock = await this.expenseBooksService.GetMonthlyAvailableStockByCompanyIdAsync(start_Date, end_Date, expenseBookInputModel.CompanyId);
-            if (expenseBook != null || productionInvoices.Count == 0 || receipts.Count == 0 || availableStock == null)
+            if (expenseBook != null || productionInvoices.Count == 0 || availableStock == null)
             {
                 var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
                 if (expenseBook != null)
@@ -88,11 +86,6 @@
                 if (productionInvoices.Count == 0)
                 {
                     this.SetFlash(FlashMessageType.Error, ProductionInvoiceErrorMessage);
-                }
-
-                if (receipts.Count == 0)
-                {
-                    this.SetFlash(FlashMessageType.Error, ReceiptErrorMessage);
                 }
 
                 if (availableStock == null)

@@ -15,7 +15,7 @@
         public DateTime Date { get; set; }
 
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
-        public decimal StockCost { get; set; }
+        public decimal Salary { get; set; }
 
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal ExternalCost { get; set; }

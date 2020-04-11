@@ -20,13 +20,13 @@
             this.context = context;
         }
 
-        public async Task AddAsync(string invoiceNumber, string date, decimal materialCost, decimal externalCost, int companyId)
+        public async Task AddAsync(string invoiceNumber, string date, decimal salary, decimal externalCost, int companyId)
         {
             var productionInvoice = new ProductionInvoice
             {
                 InvoiceNumber = invoiceNumber,
                 Date = DateTime.ParseExact(date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture),
-                StockCost = materialCost,
+                Salary = salary,
                 ExternalCost = externalCost,
                 CompanyId = companyId,
             };

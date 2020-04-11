@@ -11,7 +11,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Invoice Number</th>
-                    <th>Material Cost</th>
+                    <th>Salary</th>
                     <th>External Cost</th>
                     <th>Issue Date</th>
                 </tr>
@@ -20,7 +20,7 @@
                     <tr>
                         <td>@productionInvoice.Id</td>
                         <td>@productionInvoice.InvoiceNumber</td>
-                        <td>@productionInvoice.StockCost.ToString("F")</td>
+                        <td>@productionInvoice.Salary.ToString("F")</td>
                         <td>@productionInvoice.ExternalCost.ToString("F")</td>
                         <td>@String.Format("{0:d/M/yyyy}", productionInvoice.Date)</td>
                     </tr>

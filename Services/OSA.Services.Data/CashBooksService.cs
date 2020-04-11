@@ -9,7 +9,6 @@
     using Microsoft.EntityFrameworkCore;
     using OSA.Common;
     using OSA.Data;
-    using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
 
     public class CashBooksService : ICashBooksService
@@ -33,7 +32,7 @@
             {
                 TotalInvoicePricesCost = totalStockCost - saldo,
                 TotalSalaryCost = expenseBook.TotalSalaryCost,
-                TotalStockExternalCost = expenseBook.TotalStockExternalCost,
+                TotalStockExternalCost = expenseBook.TotalExternalCost,
                 TotalProfit = expenseBook.Profit,
                 Saldo = saldo,
                 OwnFunds = ownFunds,

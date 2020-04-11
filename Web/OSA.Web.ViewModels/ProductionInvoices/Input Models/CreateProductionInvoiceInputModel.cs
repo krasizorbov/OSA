@@ -30,9 +30,9 @@
         public string Date { get; set; }
 
         [Required]
-        [Display(Name = "Material Cost")]
+        [Display(Name = "Salary")]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
-        public decimal StockCost { get; set; }
+        public decimal Salary { get; set; }
 
         [Required]
         [Display(Name = "External Cost")]

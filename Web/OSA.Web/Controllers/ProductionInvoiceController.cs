@@ -84,7 +84,7 @@
             await this.productionInvoicesService.AddAsync(
                 productionInvoiceInputModel.InvoiceNumber,
                 productionInvoiceInputModel.Date,
-                productionInvoiceInputModel.StockCost,
+                productionInvoiceInputModel.Salary,
                 productionInvoiceInputModel.ExternalCost,
                 productionInvoiceInputModel.CompanyId);
             this.TempData["message"] = GlobalConstants.SuccessfullyRegistered;
