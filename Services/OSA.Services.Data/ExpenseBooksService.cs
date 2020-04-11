@@ -43,15 +43,15 @@
 
         public async Task<ExpenseBook> DeleteAsync(int id)
         {
-            var cashBook = await this.context.ExpenseBooks.Where(x => x.Id == id).FirstOrDefaultAsync();
-            if (cashBook != null)
+            var expenseBook = await this.context.ExpenseBooks.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (expenseBook != null)
             {
-                cashBook.IsDeleted = true;
-                cashBook.DeletedOn = DateTime.UtcNow;
+                expenseBook.IsDeleted = true;
+                expenseBook.DeletedOn = DateTime.UtcNow;
                 await this.context.SaveChangesAsync();
             }
 
-            return cashBook;
+            return expenseBook;
         }
 
         public async Task<ExpenseBook> ExpenseBookExistAsync(DateTime startDate, DateTime endDate, int companyId)
