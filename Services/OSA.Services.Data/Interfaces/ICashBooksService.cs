@@ -16,7 +16,7 @@
 
         Task<CashBook> CashBookExistAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<IEnumerable<CashBook>> GetCashBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<ICollection<CashBook>> GetCashBooksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<CashBook> DeleteAsync(int id);
 
