@@ -67,7 +67,7 @@
             return averagePrice;
         }
 
-        public async Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<ICollection<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var sales = await this.context.Sales
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)

@@ -12,7 +12,7 @@
 
         Task<string> SaleExistAsync(DateTime startDate, string stockName, int companyId);
 
-        Task<IEnumerable<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<ICollection<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<decimal> GetAveragePrice(DateTime startDate, string stockName, int companyId);
 
