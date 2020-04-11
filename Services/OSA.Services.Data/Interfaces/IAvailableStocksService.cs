@@ -22,7 +22,7 @@
 
         Task<List<string>> AvailableStockExistAsync(DateTime startDate, DateTime endDate, int companyId);
 
-        Task<IEnumerable<AvailableStock>> GetAvailableStocksForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+        Task<ICollection<AvailableStock>> GetAvailableStocksForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<List<AvailableStock>> GetAvailableStocksForPreviousMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 

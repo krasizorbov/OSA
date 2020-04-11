@@ -155,7 +155,7 @@
             return availableStockName;
         }
 
-        public async Task<IEnumerable<AvailableStock>> GetAvailableStocksForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
+        public async Task<ICollection<AvailableStock>> GetAvailableStocksForCurrentMonthByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var availableStocks = await this.context.AvailableStocks
                 .Where(x => x.Date >= startDate && x.Date <= endDate && x.CompanyId == companyId && x.IsDeleted == false)

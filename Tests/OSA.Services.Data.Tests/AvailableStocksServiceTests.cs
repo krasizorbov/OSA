@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     using OSA.Common;
@@ -43,6 +42,146 @@
             await context.AvailableStocks.AddAsync(availableStock);
             await context.SaveChangesAsync();
             var result = await this.iass.AvailableStockExistAsync(startDate, endDate, 1);
+            Assert.Equal("1", result.Count().ToString());
+        }
+
+        [Fact]
+        public async Task DeleteAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var availableStock = new AvailableStock
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPurchasedAmount = 20.00M,
+                TotalPurchasedPrice = 30.00M,
+                BookValue = 20.00M,
+                AveragePrice = "1.50",
+                TotalSoldPrice = 35.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.AvailableStocks.AddAsync(availableStock);
+            await context.SaveChangesAsync();
+            var availableStocksIds = new List<int> { 1 };
+            var result = await this.iass.DeleteAsync(availableStocksIds);
+            Assert.Equal("1", result.Count().ToString());
+        }
+
+        [Fact]
+        public async Task GetAvailableStockForPreviousMonthByCompanyIdAsyncReturnsAvailableStock()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var availableStock = new AvailableStock
+            {
+                Id = 1,
+                CreatedOn = startDate.AddDays(-10),
+                StockName = StockName,
+                TotalPurchasedAmount = 20.00M,
+                TotalPurchasedPrice = 30.00M,
+                BookValue = 20.00M,
+                AveragePrice = "1.50",
+                TotalSoldPrice = 35.00M,
+                Date = startDate.AddDays(-10),
+                CompanyId = 1,
+            };
+
+            await context.AvailableStocks.AddAsync(availableStock);
+            await context.SaveChangesAsync();
+            var result = await this.iass.GetAvailableStockForPreviousMonthByCompanyIdAsync(startDate, endDate, StockName, 1);
+            Assert.Equal(availableStock, result);
+        }
+
+        [Fact]
+        public async Task GetAvailableStockForPreviousMonthByCompanyIdAsyncReturnsNull()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var availableStock = new AvailableStock
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPurchasedAmount = 20.00M,
+                TotalPurchasedPrice = 30.00M,
+                BookValue = 20.00M,
+                AveragePrice = "1.50",
+                TotalSoldPrice = 35.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.AvailableStocks.AddAsync(availableStock);
+            await context.SaveChangesAsync();
+            var result = await this.iass.GetAvailableStockForPreviousMonthByCompanyIdAsync(startDate, endDate, StockName, 1);
+            Assert.True(result == null);
+        }
+
+        [Fact]
+        public async Task GetAvailableStocksForCurrentMonthByCompanyIdAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var availableStock = new AvailableStock
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPurchasedAmount = 20.00M,
+                TotalPurchasedPrice = 30.00M,
+                BookValue = 20.00M,
+                AveragePrice = "1.50",
+                TotalSoldPrice = 35.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.AvailableStocks.AddAsync(availableStock);
+            await context.SaveChangesAsync();
+            var result = await this.iass.GetAvailableStocksForCurrentMonthByCompanyIdAsync(startDate, endDate, 1);
+            Assert.Equal("1", result.Count().ToString());
+        }
+
+        [Fact]
+        public async Task GetAvailableStocksForPreviousMonthByCompanyIdAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var availableStock = new AvailableStock
+            {
+                Id = 1,
+                CreatedOn = startDate.AddDays(-10),
+                StockName = StockName,
+                TotalPurchasedAmount = 20.00M,
+                TotalPurchasedPrice = 30.00M,
+                BookValue = 20.00M,
+                AveragePrice = "1.50",
+                TotalSoldPrice = 35.00M,
+                Date = startDate.AddDays(-10),
+                CompanyId = 1,
+            };
+
+            await context.AvailableStocks.AddAsync(availableStock);
+            await context.SaveChangesAsync();
+            var result = await this.iass.GetAvailableStocksForPreviousMonthByCompanyIdAsync(startDate, endDate, 1);
             Assert.Equal("1", result.Count().ToString());
         }
     }
