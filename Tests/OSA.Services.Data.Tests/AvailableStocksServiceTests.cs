@@ -184,5 +184,82 @@
             var result = await this.iass.GetAvailableStocksForPreviousMonthByCompanyIdAsync(startDate, endDate, 1);
             Assert.Equal("1", result.Count().ToString());
         }
+
+        [Fact]
+        public async Task GetCurrentBookValueForStockNameAsyncReturnsCorrectValue()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var sale = new Sale
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPrice = 200.00M,
+                ProfitPercent = 120,
+                AveragePrice = "1.5",
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Sales.AddAsync(sale);
+            await context.SaveChangesAsync();
+            var result = await this.iass.GetCurrentBookValueForStockNameAsync(startDate, endDate, StockName, 1);
+            Assert.Equal("166.67", result.ToString("F"));
+        }
+
+        [Fact]
+        public async Task GetCurrentPurchasedStockNameAsyncReturnsCorrectPurchase()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var purchase = new Purchase
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalQuantity = 20.00M,
+                TotalPrice = 30.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Purchases.AddAsync(purchase);
+            await context.SaveChangesAsync();
+            var result = await this.iass.GetCurrentPurchasedStockNameAsync(startDate, endDate, StockName, 1);
+            Assert.Equal(purchase, result);
+        }
+
+        [Fact]
+        public async Task GetCurrentSoldStockNameAsyncReturnsCorrectSale()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var sale = new Sale
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPrice = 200.00M,
+                ProfitPercent = 120,
+                AveragePrice = "1.5",
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Sales.AddAsync(sale);
+            await context.SaveChangesAsync();
+            var result = await this.iass.GetCurrentSoldStockNameAsync(startDate, endDate, StockName, 1);
+            Assert.Equal(sale, result);
+        }
     }
 }
