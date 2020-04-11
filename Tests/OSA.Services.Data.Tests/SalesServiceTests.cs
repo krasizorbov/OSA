@@ -57,7 +57,6 @@
             Assert.Equal("2", result.Count().ToString());
         }
 
-
         [Fact]
 
         public async Task GetAveragePriceReturnsCorrectAveragePrice()
