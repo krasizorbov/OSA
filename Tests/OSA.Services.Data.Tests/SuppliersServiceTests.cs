@@ -148,5 +148,52 @@
             var result = await this.ss.SupplierExistAsync("Ivan Petrov", 1);
             Assert.True(result == null);
         }
+
+        [Fact]
+
+        public async Task AddAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ss = new SuppliersService(context);
+
+            var supplier = new Supplier
+            {
+                Id = 1,
+                CreatedOn = DateTime.UtcNow,
+                IsDeleted = false,
+                Name = "Petar Ivanov",
+                Bulstat = "123456789",
+                CompanyId = 1,
+            };
+
+            await context.Suppliers.AddAsync(supplier);
+            await context.SaveChangesAsync();
+            Assert.Equal("1", context.Suppliers.Count().ToString());
+        }
+
+        [Fact]
+
+        public async Task AddAsyncReturnsAnArgumentExeption()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ss = new SuppliersService(context);
+            var expectedErrorMessage = "Company with the given ID doesn't exist!";
+            var companyId = 123;
+            var supplier = new Supplier
+            {
+                Id = 1,
+                CreatedOn = DateTime.UtcNow,
+                IsDeleted = false,
+                Name = "Petar Ivanov",
+                Bulstat = "123456789",
+                CompanyId = 1,
+            };
+
+            await context.Suppliers.AddAsync(supplier);
+            await context.SaveChangesAsync();
+            var ex = await Assert.ThrowsAsync<ArgumentException>(() =>
+                this.ss.AddAsync(supplier.Name, supplier.Bulstat, companyId));
+            Assert.Equal(expectedErrorMessage, ex.Message);
+        }
     }
 }
