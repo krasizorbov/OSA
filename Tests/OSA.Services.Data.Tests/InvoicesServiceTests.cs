@@ -245,5 +245,27 @@
             var result = await this.iis.InvoiceExistAsync("2", 1);
             Assert.True(result == null);
         }
+
+        [Fact]
+        public async Task AddAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iis = new InvoicesService(context);
+
+            var invoice = new Invoice
+            {
+                Id = 1,
+                CreatedOn = DateTime.UtcNow,
+                InvoiceNumber = "1",
+                Date = DateTime.UtcNow,
+                SupplierId = 1,
+                CompanyId = 1,
+                TotalAmount = 20,
+            };
+
+            await context.Invoices.AddAsync(invoice);
+            await context.SaveChangesAsync();
+            Assert.Equal("1", context.Invoices.Count().ToString());
+        }
     }
 }
