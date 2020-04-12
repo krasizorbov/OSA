@@ -108,5 +108,52 @@
             var result = await this.cs.GetCompanyNameByIdAsync(2);
             Assert.True(result == null);
         }
+
+        [Fact]
+        public async Task AddAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.cs = new CompaniesService(this.us, context);
+            var userId = Guid.NewGuid().ToString();
+            var name = "ET Oazis";
+            var company = new Company
+            {
+                Id = 1,
+                CreatedOn = DateTime.UtcNow,
+                IsDeleted = false,
+                Name = name,
+                Bulstat = "123456789",
+                UserId = userId,
+            };
+
+            await context.Companies.AddAsync(company);
+            await context.SaveChangesAsync();
+            Assert.Equal("1", context.Companies.Count().ToString());
+        }
+
+        [Fact]
+        public async Task AddAsyncReturnsAnArgumentExeption()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.cs = new CompaniesService(this.us, context);
+            var expectedErrorMessage = "User with the given ID doesn't exist!";
+            var userId = Guid.NewGuid().ToString();
+            var name = "ET Oazis";
+            var company = new Company
+            {
+                Id = 1,
+                CreatedOn = DateTime.UtcNow,
+                IsDeleted = false,
+                Name = name,
+                Bulstat = "123456789",
+                UserId = "kdgaskadasuhwqqpojaknad",
+            };
+
+            await context.Companies.AddAsync(company);
+            await context.SaveChangesAsync();
+            var ex = await Assert.ThrowsAsync<ArgumentException>(() =>
+                this.cs.AddAsync(company.Name, company.Bulstat, company.UserId));
+            Assert.Equal(expectedErrorMessage, ex.Message);
+        }
     }
 }
