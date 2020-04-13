@@ -13,5 +13,9 @@
         Task<string> InvoiceExistAsync(string invoiceNumber, int companyId);
 
         Task<ICollection<ProductionInvoice>> GetProductionInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
+
+        Task<ProductionInvoice> DeleteAsync(int id);
+
+        Task<ProductionInvoice> GetProductionInvoiceByIdAsync(int id);
     }
 }

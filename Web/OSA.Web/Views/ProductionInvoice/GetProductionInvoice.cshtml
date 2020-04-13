@@ -2,7 +2,7 @@
 @{
     this.ViewData["Title"] = "Get Production Invoice";
 }
-
+@{ int index = 0;}
 <div class="text-center">
     <h3>List of Production Invoices for @Model.Name</h3>
     <div class="col-md-12">
@@ -18,11 +18,19 @@
                 @foreach (var productionInvoice in Model.ProductionInvoices)
                 {
                     <tr>
-                        <td>@productionInvoice.Id</td>
+                        <td>@(index += 1)</td>
                         <td>@productionInvoice.InvoiceNumber</td>
                         <td>@productionInvoice.Salary.ToString("F")</td>
                         <td>@productionInvoice.ExternalCost.ToString("F")</td>
                         <td>@String.Format("{0:d/M/yyyy}", productionInvoice.Date)</td>
+                        <td>
+                            <form asp-controller="ProductionInvoice" asp-action="Delete" asp-route-id="@productionInvoice.Id" method="post" class="form-inline" role="form">
+                                <input type="hidden" id="@productionInvoice.Id">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete Production Invoice?')">
+                                    <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 }
             </table>

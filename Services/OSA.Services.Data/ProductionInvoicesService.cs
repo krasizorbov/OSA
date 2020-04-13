@@ -34,6 +34,25 @@
             await this.context.SaveChangesAsync();
         }
 
+        public async Task<ProductionInvoice> DeleteAsync(int id)
+        {
+            var productionInvoice = await this.context.ProductionInvoices.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (productionInvoice != null)
+            {
+                productionInvoice.IsDeleted = true;
+                productionInvoice.DeletedOn = DateTime.UtcNow;
+                await this.context.SaveChangesAsync();
+            }
+
+            return productionInvoice;
+        }
+
+        public async Task<ProductionInvoice> GetProductionInvoiceByIdAsync(int id)
+        {
+            var productionInvoice = await this.context.ProductionInvoices.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return productionInvoice;
+        }
+
         public async Task<ICollection<ProductionInvoice>> GetProductionInvoicesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var productionInvoices = await this.context.ProductionInvoices
