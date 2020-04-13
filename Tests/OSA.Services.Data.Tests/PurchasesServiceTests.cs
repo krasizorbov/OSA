@@ -476,5 +476,30 @@
             var result = await this.ips.DeleteAsync(purchaseIds);
             Assert.Equal("2", result.Count().ToString());
         }
+
+        [Fact]
+
+        public async Task AddAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ips = new PurchasesService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var purchase = new Purchase
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalQuantity = 20.00M,
+                TotalPrice = 30.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Purchases.AddAsync(purchase);
+            await context.SaveChangesAsync();
+            Assert.Equal("1", context.Purchases.Count().ToString());
+        }
     }
 }
