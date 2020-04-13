@@ -284,5 +284,32 @@
             var result = this.icbs.TotalSumStockCost(startDate, endDate, 1);
             Assert.Equal("30.00", result.ToString());
         }
+
+        [Fact]
+        public async Task AddAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.icbs = new CashBooksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var cashBook = new CashBook
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                TotalInvoicePricesCost = 200.00M,
+                TotalSalaryCost = 200.00M,
+                TotalStockExternalCost = 50.00M,
+                TotalProfit = 100.00M,
+                Saldo = 100.00M,
+                OwnFunds = 0.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.CashBooks.AddAsync(cashBook);
+            await context.SaveChangesAsync();
+            Assert.Equal("1", context.CashBooks.Count().ToString());
+        }
     }
 }

@@ -300,5 +300,30 @@
             var result = await this.iebs.GetMonthlyAvailableStockByCompanyIdAsync(startDate, endDate, 1);
             Assert.True(result == null);
         }
+
+        [Fact]
+        public async Task AddAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iebs = new ExpenseBooksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var expenseBook = new ExpenseBook
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                TotalExternalCost = 20.00M,
+                TotalSalaryCost = 20.00M,
+                TotalBookValue = 20.00M,
+                Profit = 100.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.ExpenseBooks.AddAsync(expenseBook);
+            await context.SaveChangesAsync();
+            Assert.Equal("1", context.ExpenseBooks.Count().ToString());
+        }
     }
 }

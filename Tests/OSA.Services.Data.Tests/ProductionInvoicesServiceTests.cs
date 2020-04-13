@@ -87,5 +87,28 @@
             var result = await this.ipis.InvoiceExistAsync("2", 1);
             Assert.True(result == null);
         }
+
+        [Fact]
+        public async Task AddAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ipis = new ProductionInvoicesService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var productionInvoice = new ProductionInvoice
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                InvoiceNumber = "1",
+                ExternalCost = 20.00M,
+                Salary = 120.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.ProductionInvoices.AddAsync(productionInvoice);
+            await context.SaveChangesAsync();
+            Assert.Equal("1", context.ProductionInvoices.Count().ToString());
+        }
     }
 }
