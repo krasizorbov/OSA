@@ -338,5 +338,31 @@
             var result = await this.iass.GetSoldStockNamesByCompanyIdAsync(startDate, endDate, 1);
             Assert.Equal("1", result.Count().ToString());
         }
+
+        [Fact]
+        public async Task AddAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var availableStock = new AvailableStock
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPurchasedAmount = 20.00M,
+                TotalPurchasedPrice = 30.00M,
+                BookValue = 20.00M,
+                AveragePrice = "1.50",
+                TotalSoldPrice = 35.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.AvailableStocks.AddAsync(availableStock);
+            await context.SaveChangesAsync();
+            Assert.Equal("1", context.AvailableStocks.Count().ToString());
+        }
     }
 }

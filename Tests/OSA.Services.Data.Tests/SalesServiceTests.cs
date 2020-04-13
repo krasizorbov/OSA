@@ -323,5 +323,30 @@
             var result = await this.iss.SaleExistAsync(startDate, StockName, 1);
             Assert.True(result == null);
         }
+
+        [Fact]
+
+        public async Task AddAsyncReturnsCorrectCount()
+        {
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iss = new SalesService(context);
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+
+            var sale = new Sale
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPrice = 20.00M,
+                ProfitPercent = 120,
+                AveragePrice = "1.5",
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Sales.AddAsync(sale);
+            await context.SaveChangesAsync();
+            Assert.Equal("1", context.Sales.Count().ToString());
+        }
     }
 }
