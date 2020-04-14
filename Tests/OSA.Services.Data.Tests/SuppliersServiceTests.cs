@@ -251,12 +251,12 @@
 
         public async Task CreateSupplierInputModelReturnsModelStateError()
         {
-            var moqCompany = new Mock<ICompaniesService>();
-            var moqSupplier = new Mock<ISuppliersService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqSupplierService = new Mock<ISuppliersService>();
             var moqUser = new Mock<IUsersService>();
             var context = InitializeContext.CreateContextForInMemory();
             this.ss = new SuppliersService(context);
-            var controller = new SupplierController(moqSupplier.Object, moqCompany.Object);
+            var controller = new SupplierController(moqSupplierService.Object, moqCompanyService.Object);
             var userId = Guid.NewGuid().ToString();
             var moqUserId = moqUser.Setup(x => x.GetCurrentUserId()).Returns(userId);
             var company = new Company
@@ -279,7 +279,7 @@
             await context.Companies.AddAsync(company);
             await context.Suppliers.AddAsync(s);
             await context.SaveChangesAsync();
-            var moqSup = moqSupplier.Setup(x => x.SupplierExistAsync(s.Name, s.CompanyId)).Returns(Task.FromResult(s.Name));
+            var moqSupplier = moqSupplierService.Setup(x => x.SupplierExistAsync(s.Name, s.CompanyId)).Returns(Task.FromResult(s.Name));
             var supplier = new CreateSupplierInputModel
             {
                 Bulstat = "123456789",

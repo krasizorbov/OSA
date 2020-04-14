@@ -25,7 +25,7 @@
 
         [Authorize]
         public async Task<IActionResult> Add()
-        {
+         {
             var companyNames = await this.companiesService.GetAllCompaniesByUserIdAsync();
 
             if (companyNames.Count == 0)
