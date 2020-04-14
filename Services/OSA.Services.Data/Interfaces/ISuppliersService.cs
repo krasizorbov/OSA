@@ -14,7 +14,7 @@
 
         Task<string> SupplierExistAsync(string supplierName, int companyId);
 
-        Task<ICollection<Supplier>> GetSuppliersByCompanyIdAsync(int companyId);
+        Task<List<Supplier>> GetSuppliersByCompanyIdAsync(int companyId);
 
         Task<string> GetSupplierNameBySupplierIdAsync(int supplierId);
     }

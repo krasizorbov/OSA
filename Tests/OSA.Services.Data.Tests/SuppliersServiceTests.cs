@@ -1,7 +1,9 @@
 ﻿namespace OSA.Services.Data.Tests
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
@@ -12,6 +14,7 @@
     using OSA.Data.Models;
     using OSA.Web.Controllers;
     using OSA.Web.ViewModels.Suppliers.Input_Models;
+    using OSA.Web.ViewModels.Suppliers.View_Models;
     using Xunit;
 
     public class SuppliersServiceTests
@@ -292,6 +295,56 @@
             var view = controller.View(supplier) as ViewResult;
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task GetSupplierReturnsCorrectModel()
+        {
+            var moqCompany = new Mock<ICompaniesService>();
+            var moqSupplier = new Mock<ISuppliersService>();
+            var moqUser = new Mock<IUsersService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ss = new SuppliersService(context);
+            var controller = new SupplierController(moqSupplier.Object, moqCompany.Object);
+            var userId = Guid.NewGuid().ToString();
+            var moqUserId = moqUser.Setup(x => x.GetCurrentUserId()).Returns(userId);
+            var company = new Company
+            {
+                Id = 1,
+                CreatedOn = DateTime.UtcNow,
+                IsDeleted = false,
+                Name = "Ivan Petrov",
+                Bulstat = "123456789",
+                UserId = userId,
+            };
+
+            var s = new Supplier
+            {
+                Bulstat = "123456789",
+                Name = "Peter Ivanov",
+                CompanyId = 1,
+            };
+
+            await context.Companies.AddAsync(company);
+            await context.Suppliers.AddAsync(s);
+            await context.SaveChangesAsync();
+            var expected = new List<Supplier>
+            {
+                s,
+            };
+            var suppliers = moqSupplier.Setup(x => x.GetSuppliersByCompanyIdAsync(company.Id)).Returns(Task.FromResult(expected));
+            var supplier = new SupplierBindingViewModel
+            {
+                Name = "Ivan Petrov",
+                Suppliers = expected as IEnumerable<Supplier>,
+            };
+
+            var result = await controller.GetSupplier(company.Id, company.Name);
+            var view = controller.View(supplier) as ViewResult;
+            Assert.Equal(company.Name, supplier.Name);
+            //Assert.Equal(s.Bulstat, supplier.Suppliers.Select(x => x.Bulstat).FirstOrDefault());
+            //Assert.Equal(s.CompanyId.ToString(), supplier.Suppliers.Select(x => x.CompanyId).ToString());
         }
     }
 }

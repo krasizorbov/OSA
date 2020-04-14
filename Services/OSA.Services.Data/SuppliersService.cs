@@ -53,7 +53,7 @@
             return supplierName;
         }
 
-        public async Task<ICollection<Supplier>> GetSuppliersByCompanyIdAsync(int companyId)
+        public async Task<List<Supplier>> GetSuppliersByCompanyIdAsync(int companyId)
         {
             var suppliers = await this.context.Suppliers.Where(x => x.CompanyId == companyId).ToListAsync();
 
