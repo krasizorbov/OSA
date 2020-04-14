@@ -29,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\OSA.Data\OSA.Data.csproj" />
     <ProjectReference Include="..\..\Services\OSA.Services.Data\OSA.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Web\OSA.Web\OSA.Web.csproj" />
   </ItemGroup>
 
 </Project>

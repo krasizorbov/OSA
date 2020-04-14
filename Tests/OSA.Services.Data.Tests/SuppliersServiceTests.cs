@@ -1,10 +1,17 @@
 ﻿namespace OSA.Services.Data.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Moq;
     using OSA.Data.Models;
+    using OSA.Web.Controllers;
+    using OSA.Web.ViewModels.Suppliers.Input_Models;
     using Xunit;
 
     public class SuppliersServiceTests
@@ -194,6 +201,51 @@
             var ex = await Assert.ThrowsAsync<ArgumentException>(() =>
                 this.ss.AddAsync(supplier.Name, supplier.Bulstat, companyId));
             Assert.Equal(expectedErrorMessage, ex.Message);
+        }
+
+        [Fact]
+
+        public async Task CreateSupplierInputModelReturnsCorrectModel()
+        {
+            var moqCompany = new Mock<ICompaniesService>();
+            var moqSupplier = new Mock<ISuppliersService>();
+            var moqUser = new Mock<IUsersService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ss = new SuppliersService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been registered successfully!";
+            var controller = new SupplierController(moqSupplier.Object, moqCompany.Object)
+            {
+                TempData = tempData,
+            };
+            var userId = Guid.NewGuid().ToString();
+            var mogUserId = moqUser.Setup(x => x.GetCurrentUserId()).Returns(userId);
+            var company = new Company
+            {
+                Id = 1,
+                CreatedOn = DateTime.UtcNow,
+                IsDeleted = false,
+                Name = "Ivan petrov",
+                Bulstat = "123456789",
+                UserId = userId,
+            };
+
+            await context.Companies.AddAsync(company);
+            await context.SaveChangesAsync();
+            var supplier = new CreateSupplierInputModel
+            {
+                Bulstat = "123456789",
+                Name = "Peter Ivanov",
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+
+            var result = await controller.Add(supplier);
+            var view = controller.View(supplier) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+            
         }
     }
 }
