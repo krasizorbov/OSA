@@ -220,7 +220,7 @@
                 TempData = tempData,
             };
             var userId = Guid.NewGuid().ToString();
-            var mogUserId = moqUser.Setup(x => x.GetCurrentUserId()).Returns(userId);
+            var moqUserId = moqUser.Setup(x => x.GetCurrentUserId()).Returns(userId);
             var company = new Company
             {
                 Id = 1,
@@ -245,7 +245,53 @@
             var view = controller.View(supplier) as ViewResult;
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
-            
+        }
+
+        [Fact]
+
+        public async Task CreateSupplierInputModelReturnsModelStateError()
+        {
+            var moqCompany = new Mock<ICompaniesService>();
+            var moqSupplier = new Mock<ISuppliersService>();
+            var moqUser = new Mock<IUsersService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ss = new SuppliersService(context);
+            var controller = new SupplierController(moqSupplier.Object, moqCompany.Object);
+            var userId = Guid.NewGuid().ToString();
+            var moqUserId = moqUser.Setup(x => x.GetCurrentUserId()).Returns(userId);
+            var company = new Company
+            {
+                Id = 1,
+                CreatedOn = DateTime.UtcNow,
+                IsDeleted = false,
+                Name = "Ivan petrov",
+                Bulstat = "123456789",
+                UserId = userId,
+            };
+
+            var s = new Supplier
+            {
+                Bulstat = "123456789",
+                Name = "Peter Ivanov",
+                CompanyId = 1,
+            };
+
+            await context.Companies.AddAsync(company);
+            await context.Suppliers.AddAsync(s);
+            await context.SaveChangesAsync();
+            var moqSup = moqSupplier.Setup(x => x.SupplierExistAsync(s.Name, s.CompanyId)).Returns(Task.FromResult(s.Name));
+            var supplier = new CreateSupplierInputModel
+            {
+                Bulstat = "123456789",
+                Name = "Peter Ivanov",
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+
+            var result = await controller.Add(supplier);
+            var view = controller.View(supplier) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
         }
     }
 }
