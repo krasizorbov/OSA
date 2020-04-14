@@ -1,11 +1,10 @@
 ﻿namespace OSA.Services.Data.Tests
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -343,8 +342,6 @@
             var result = await controller.GetSupplier(company.Id, company.Name);
             var view = controller.View(supplier) as ViewResult;
             Assert.Equal(company.Name, supplier.Name);
-            //Assert.Equal(s.Bulstat, supplier.Suppliers.Select(x => x.Bulstat).FirstOrDefault());
-            //Assert.Equal(s.CompanyId.ToString(), supplier.Suppliers.Select(x => x.CompanyId).ToString());
         }
     }
 }
