@@ -1,7 +1,9 @@
 ﻿namespace OSA.Services.Data.Tests
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
@@ -16,6 +18,7 @@
     using OSA.Services.Data.Interfaces;
     using OSA.Web.Controllers;
     using OSA.Web.ViewModels.Invoices.Input_Models;
+    using OSA.Web.ViewModels.Invoices.View_Models;
     using Xunit;
 
     public class InvoicesServiceTests
@@ -448,6 +451,49 @@
             var view = controller.View(invoiceModel) as ViewResult;
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task GetInvoiceReturnsCorrectBindingModel()
+        {
+            var moqInvoiceService = new Mock<IInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqSupplierService = new Mock<ISuppliersService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iis = new InvoicesService(context);
+            var controller = new InvoiceController(moqInvoiceService.Object, moqCompanyService.Object, moqSupplierService.Object, moqDateTimeService.Object);
+
+            var invoice = new Invoice
+            {
+                Id = 1,
+                CreatedOn = DateTime.ParseExact(StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                InvoiceNumber = "1",
+                Date = DateTime.ParseExact(StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                SupplierId = 1,
+                CompanyId = 1,
+                TotalAmount = 20,
+            };
+
+            await context.Invoices.AddAsync(invoice);
+            await context.SaveChangesAsync();
+            var invoiceModel = new InvoiceBindingViewModel
+            {
+                Name = "Ivan Petrov",
+                Invoices = new List<Invoice> { invoice },
+            };
+
+            var result = await controller.GetInvoice(1, "Ivan Petrov", StartDate, EndDate);
+            var view = controller.View(invoiceModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.Equal("Ivan Petrov", invoiceModel.Name);
+            Assert.Equal("1", invoiceModel.Invoices.Select(x => x.Id).ElementAt(0).ToString());
+            Assert.Equal("1/1/2020 12:00:00 AM", invoiceModel.Invoices.Select(x => x.Date).ElementAt(0).ToString());
+            Assert.Equal("1", invoiceModel.Invoices.Select(x => x.InvoiceNumber).ElementAt(0).ToString());
+            Assert.Equal("1", invoiceModel.Invoices.Select(x => x.SupplierId).ElementAt(0).ToString());
+            Assert.Equal("1", invoiceModel.Invoices.Select(x => x.CompanyId).ElementAt(0).ToString());
+            Assert.Equal("20", invoiceModel.Invoices.Select(x => x.TotalAmount).ElementAt(0).ToString());
         }
     }
 }
