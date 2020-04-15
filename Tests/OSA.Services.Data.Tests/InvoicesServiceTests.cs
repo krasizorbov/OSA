@@ -1,12 +1,20 @@
 ﻿namespace OSA.Services.Data.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Moq;
     using OSA.Common;
     using OSA.Data.Models;
+    using OSA.Services.Data.Interfaces;
+    using OSA.Web.Controllers;
+    using OSA.Web.ViewModels.Invoices.Input_Models;
     using Xunit;
 
     public class InvoicesServiceTests
@@ -266,6 +274,50 @@
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
             Assert.Equal("1", context.Invoices.Count().ToString());
+        }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsCorrectModel()
+        {
+            var moqInvoiceService = new Mock<IInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqSupplierService = new Mock<ISuppliersService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iis = new InvoicesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been registered successfully!";
+            var controller = new InvoiceController(moqInvoiceService.Object, moqCompanyService.Object, moqSupplierService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var supplier = new Supplier
+            {
+                Id = 1,
+                CreatedOn = DateTime.ParseExact(StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                IsDeleted = false,
+                Name = "Petar Ivanov",
+                Bulstat = "123456789",
+                CompanyId = 1,
+            };
+
+            await context.Suppliers.AddAsync(supplier);
+            await context.SaveChangesAsync();
+            var invoiceModel = new CreateInvoiceInputModelTwo
+            {
+                InvoiceNumber = "123456789",
+                Date = StartDate,
+                TotalAmount = 20,
+                SupplierNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Peter Ivanov", } },
+            };
+
+            var result = await controller.AddPartTwo(invoiceModel, supplier.CompanyId, "01/01/2020");
+            var view = controller.View(invoiceModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
         }
     }
 }
