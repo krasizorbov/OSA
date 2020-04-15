@@ -14,6 +14,7 @@
     using OSA.Data.Models;
     using OSA.Services.Data.Interfaces;
     using OSA.Web.Controllers;
+    using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Purchases.Input_Models;
     using Xunit;
 
@@ -513,8 +514,6 @@
 
         public async Task AddReturnsCorrectModel()
         {
-            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var moqCompanyService = new Mock<ICompaniesService>();
             var moqPurchaseService = new Mock<IPurchasesService>();
             var moqDateTimeService = new Mock<IDateTimeValidationService>();
@@ -539,6 +538,76 @@
             var view = controller.View(purchase) as ViewResult;
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
+
+        [Fact]
+
+        public async Task AddReturnsModelStateDateTimeFormatError()
+        {
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqPurchaseService = new Mock<IPurchasesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ips = new PurchasesService(context);
+            var controller = new PurchaseController(moqPurchaseService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+
+            var purchase = new CreatePurchaseInputModel
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            var result = await controller.Add(purchase, StartDate, EndDate);
+            var view = controller.View(purchase) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task AddReturnsModelStatePurchaseExistError()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqPurchaseService = new Mock<IPurchasesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ips = new PurchasesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Purchases for the current month already done! Check your purchases for more details.";
+            var controller = new PurchaseController(moqPurchaseService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var purchase = new Purchase
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalQuantity = 20.00M,
+                TotalPrice = 30.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Purchases.AddAsync(purchase);
+            await context.SaveChangesAsync();
+            var purchaseModel = new CreatePurchaseInputModel
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var purchaseExist = moqPurchaseService.Setup(x => x.PurchaseExistAsync(startDate, endDate, 1))
+                .Returns(Task.FromResult(new List<string> { StockName}));
+            var result = await controller.Add(purchaseModel, StartDate, EndDate);
+            var view = controller.View(purchase) as ViewResult;
+            var actual = controller.TempData.Values.ElementAt(0).ToString();
+            Assert.Equal(expected, actual);
         }
     }
 }
