@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,7 +15,6 @@
     using OSA.Data.Models;
     using OSA.Services.Data.Interfaces;
     using OSA.Web.Controllers;
-    using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Purchases.Input_Models;
     using OSA.Web.ViewModels.Purchases.View_Models;
     using Xunit;
@@ -678,6 +678,45 @@
             Assert.Equal("20.00", purchaseModel.Purchases.Select(x => x.TotalQuantity).ElementAt(0).ToString());
             Assert.Equal("30.00", purchaseModel.Purchases.Select(x => x.TotalPrice).ElementAt(0).ToString());
             Assert.Equal("1", purchaseModel.Purchases.Select(x => x.CompanyId).ElementAt(0).ToString());
+        }
+
+        [Fact]
+
+        public async Task DeleteReturnsCorrectModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqPurchaseService = new Mock<IPurchasesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ips = new PurchasesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been deleted successfully!";
+            var controller = new PurchaseController(moqPurchaseService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var purchase = new Purchase
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalQuantity = 20.00M,
+                TotalPrice = 30.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Purchases.AddAsync(purchase);
+            await context.SaveChangesAsync();
+            var listIds = new List<int> { 1 };
+            moqPurchaseService.Setup(x => x.DeleteAsync(new List<int> { 1 })).Returns(Task.FromResult(new List<Purchase> { purchase }));
+            var result = await controller.Delete(listIds);
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
         }
     }
 }
