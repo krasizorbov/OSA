@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -394,7 +395,8 @@
             await context.Suppliers.AddAsync(supplier);
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var moqInvoice = moqInvoiceService.Setup(x => x.InvoiceExistAsync(invoice.InvoiceNumber, invoice.CompanyId)).Returns(Task.FromResult(invoice.InvoiceNumber));
+            var moqInvoice = moqInvoiceService.Setup(x => x.InvoiceExistAsync(invoice.InvoiceNumber, invoice.CompanyId))
+                .Returns(Task.FromResult(invoice.InvoiceNumber));
             var moqDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
             var invoiceModel = new CreateInvoiceInputModelTwo
             {
@@ -405,6 +407,44 @@
             };
 
             await controller.AddPartTwo(invoiceModel, supplier.CompanyId, invoiceModel.Date);
+            var view = controller.View(invoiceModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task GetCompanyReturnsModelStateErrorWrongDateFormat()
+        {
+            var moqInvoiceService = new Mock<IInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqSupplierService = new Mock<ISuppliersService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iis = new InvoicesService(context);
+            var controller = new InvoiceController(moqInvoiceService.Object, moqCompanyService.Object, moqSupplierService.Object, moqDateTimeService.Object);
+
+            var supplier = new Supplier
+            {
+                Id = 1,
+                CreatedOn = DateTime.ParseExact(StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                IsDeleted = false,
+                Name = "Petar Ivanov",
+                Bulstat = "123456789",
+                CompanyId = 1,
+            };
+
+            await context.Suppliers.AddAsync(supplier);
+            await context.SaveChangesAsync();
+            var invoiceModel = new ShowInvoiceByCompanyInputModel
+            {
+                StartDate = "13/01/2020",
+                EndDate = "01/31/2020",
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(invoiceModel.StartDate)).Returns(false);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(invoiceModel.EndDate)).Returns(false);
+            var result = await controller.GetCompany(invoiceModel, invoiceModel.StartDate, invoiceModel.EndDate);
             var view = controller.View(invoiceModel) as ViewResult;
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
