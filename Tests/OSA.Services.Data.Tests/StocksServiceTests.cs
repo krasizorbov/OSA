@@ -6,8 +6,16 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Moq;
     using OSA.Common;
     using OSA.Data.Models;
+    using OSA.Services.Data.Interfaces;
+    using OSA.Web.Controllers;
+    using OSA.Web.ViewModels.Stocks.Input_Models;
     using Xunit;
 
     public class StocksServiceTests
@@ -167,6 +175,39 @@
             await context.SaveChangesAsync();
             var result = await this.ss.GetStocksByCompanyIdAsync(startDate, endDate, 1);
             Assert.Equal("3", result.Count().ToString());
+        }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsCorrectModel()
+        {
+            var moqInvoiceService = new Mock<IInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ss = new StocksService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been registered successfully!";
+            var controller = new StockController(moqStockService.Object, moqCompanyService.Object, moqInvoiceService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var stockModel = new CreateStockInputModelTwo
+            {
+                Name = "sugar",
+                Price = 300.00M,
+                Quantity = 200.00M,
+                Date = StartDate,
+                Invoices = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "1", } },
+            };
+
+            var result = await controller.AddPartTwo(stockModel, 1, StartDate);
+            var view = controller.View(stockModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
         }
     }
 }
