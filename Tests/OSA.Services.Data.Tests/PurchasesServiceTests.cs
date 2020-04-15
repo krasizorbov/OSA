@@ -5,9 +5,16 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Moq;
     using OSA.Common;
     using OSA.Data.Models;
+    using OSA.Services.Data.Interfaces;
+    using OSA.Web.Controllers;
+    using OSA.Web.ViewModels.Purchases.Input_Models;
     using Xunit;
 
     public class PurchasesServiceTests
@@ -500,6 +507,38 @@
             await context.Purchases.AddAsync(purchase);
             await context.SaveChangesAsync();
             Assert.Equal("1", context.Purchases.Count().ToString());
+        }
+
+        [Fact]
+
+        public async Task AddReturnsCorrectModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqPurchaseService = new Mock<IPurchasesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ips = new PurchasesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been registered successfully!";
+            var controller = new PurchaseController(moqPurchaseService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var purchase = new CreatePurchaseInputModel
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+
+            var result = await controller.Add(purchase, StartDate, EndDate);
+            var view = controller.View(purchase) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
         }
     }
 }
