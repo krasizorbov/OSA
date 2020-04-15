@@ -338,9 +338,9 @@
             };
             await context.Stocks.AddAsync(stock);
             await context.SaveChangesAsync();
-            var listId = new List<int> { 1 };
+            var listIds = new List<int> { 1 };
             moqStockService.Setup(x => x.DeleteAsync(new List<int> { 1 })).Returns(Task.FromResult(new List<Stock> { stock }));
-            var result = await controller.Delete(listId);
+            var result = await controller.Delete(listIds);
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
