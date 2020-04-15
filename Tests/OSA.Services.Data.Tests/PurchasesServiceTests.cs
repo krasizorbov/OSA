@@ -609,5 +609,32 @@
             var actual = controller.TempData.Values.ElementAt(0).ToString();
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+
+        public async Task GetCompanyReturnsModelStateDateTimeFormatError()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqPurchaseService = new Mock<IPurchasesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ips = new PurchasesService(context);
+            var controller = new PurchaseController(moqPurchaseService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+
+            var purchaseModel = new ShowPurchaseByCompanyInputModel
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.StartDate)).Returns(false);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.EndDate)).Returns(false);
+            var result = await controller.GetCompany(purchaseModel, StartDate, EndDate);
+            var view = controller.View(purchaseModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
     }
 }
