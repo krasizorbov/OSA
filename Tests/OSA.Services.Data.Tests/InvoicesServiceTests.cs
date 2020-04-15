@@ -319,5 +319,95 @@
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsModelStateErrorWrongDateFormat()
+        {
+            var moqInvoiceService = new Mock<IInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqSupplierService = new Mock<ISuppliersService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iis = new InvoicesService(context);
+            var controller = new InvoiceController(moqInvoiceService.Object, moqCompanyService.Object, moqSupplierService.Object, moqDateTimeService.Object);
+
+            var supplier = new Supplier
+            {
+                Id = 1,
+                CreatedOn = DateTime.ParseExact(StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                IsDeleted = false,
+                Name = "Petar Ivanov",
+                Bulstat = "123456789",
+                CompanyId = 1,
+            };
+
+            await context.Suppliers.AddAsync(supplier);
+            await context.SaveChangesAsync();
+            var invoiceModel = new CreateInvoiceInputModelTwo
+            {
+                InvoiceNumber = "123456789",
+                Date = "01/31/2020",
+                TotalAmount = 20,
+                SupplierNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Peter Ivanov", } },
+            };
+            var moqDate = moqDateTimeService.Setup(x => x.IsValidDateTime(invoiceModel.Date)).Returns(false);
+            var result = await controller.AddPartTwo(invoiceModel, supplier.CompanyId, invoiceModel.Date);
+            var view = controller.View(invoiceModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsModelStateErrorInvoiceExists()
+        {
+            var moqInvoiceService = new Mock<IInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqSupplierService = new Mock<ISuppliersService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iis = new InvoicesService(context);
+            var controller = new InvoiceController(moqInvoiceService.Object, moqCompanyService.Object, moqSupplierService.Object, moqDateTimeService.Object);
+
+            var supplier = new Supplier
+            {
+                Id = 1,
+                CreatedOn = DateTime.ParseExact(StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                IsDeleted = false,
+                Name = "Petar Ivanov",
+                Bulstat = "123456789",
+                CompanyId = 1,
+            };
+
+            var invoice = new Invoice
+            {
+                Id = 1,
+                CreatedOn = DateTime.ParseExact(StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                InvoiceNumber = "1",
+                Date = DateTime.ParseExact(StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                SupplierId = 1,
+                CompanyId = 1,
+                TotalAmount = 20,
+            };
+
+            await context.Suppliers.AddAsync(supplier);
+            await context.Invoices.AddAsync(invoice);
+            await context.SaveChangesAsync();
+            var moqInvoice = moqInvoiceService.Setup(x => x.InvoiceExistAsync(invoice.InvoiceNumber, invoice.CompanyId)).Returns(Task.FromResult(invoice.InvoiceNumber));
+            var moqDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            var invoiceModel = new CreateInvoiceInputModelTwo
+            {
+                InvoiceNumber = "1",
+                Date = StartDate,
+                TotalAmount = 20,
+                SupplierNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Peter Ivanov", } },
+            };
+
+            await controller.AddPartTwo(invoiceModel, supplier.CompanyId, invoiceModel.Date);
+            var view = controller.View(invoiceModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
     }
 }
