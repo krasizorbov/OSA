@@ -209,5 +209,30 @@
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsModelStateDateTimeFormatError()
+        {
+            var moqInvoiceService = new Mock<IInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ss = new StocksService(context);
+            var controller = new StockController(moqStockService.Object, moqCompanyService.Object, moqInvoiceService.Object, moqDateTimeService.Object);
+            var stockModel = new ShowStockByCompanyInputModel
+            {
+                StartDate = "13/01/2020",
+                EndDate = "01/31/2020",
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(stockModel.StartDate)).Returns(false);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(stockModel.EndDate)).Returns(false);
+            var result = await controller.GetCompany(stockModel, StartDate, EndDate);
+            var view = controller.View(stockModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
     }
 }
