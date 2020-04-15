@@ -328,20 +328,18 @@
             await context.Companies.AddAsync(company);
             await context.Suppliers.AddAsync(s);
             await context.SaveChangesAsync();
-            var expected = new List<Supplier>
-            {
-                s,
-            };
-            var suppliers = moqSupplier.Setup(x => x.GetSuppliersByCompanyIdAsync(company.Id)).Returns(Task.FromResult(expected));
             var supplier = new SupplierBindingViewModel
             {
                 Name = "Ivan Petrov",
-                Suppliers = expected as IEnumerable<Supplier>,
+                Suppliers = new List<Supplier> { s },
             };
 
             var result = await controller.GetSupplier(company.Id, company.Name);
             var view = controller.View(supplier) as ViewResult;
             Assert.Equal(company.Name, supplier.Name);
+            Assert.Equal(s.Bulstat, supplier.Suppliers.Select(x => x.Bulstat).ElementAt(0).ToString());
+            Assert.Equal(s.Name, supplier.Suppliers.Select(x => x.Name).ElementAt(0).ToString());
+            Assert.Equal(s.CompanyId.ToString(), supplier.Suppliers.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
     }
 }
