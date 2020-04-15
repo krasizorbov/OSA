@@ -16,6 +16,7 @@
     using OSA.Services.Data.Interfaces;
     using OSA.Web.Controllers;
     using OSA.Web.ViewModels.Stocks.Input_Models;
+    using OSA.Web.ViewModels.Stocks.View_Models;
     using Xunit;
 
     public class StocksServiceTests
@@ -233,6 +234,49 @@
             var view = controller.View(stockModel) as ViewResult;
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task GetStockReturnsCorrectBindingModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqInvoiceService = new Mock<IInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ss = new StocksService(context);
+            var controller = new StockController(moqStockService.Object, moqCompanyService.Object, moqInvoiceService.Object, moqDateTimeService.Object);
+            var stock = new Stock
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                Name = "Sugar",
+                Quantity = 20.00M,
+                Price = 30.00M,
+                Date = startDate,
+                InvoiceId = 1,
+                CompanyId = 1,
+            };
+            await context.Stocks.AddAsync(stock);
+            await context.SaveChangesAsync();
+            var stockModel = new StockBindingViewModel
+            {
+                Name = "Ivan Petrov",
+                Stocks = new List<Stock> { stock },
+            };
+            var result = await controller.GetStock(1, "Sugar", StartDate, EndDate);
+            var view = controller.View(stockModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.Equal("Ivan Petrov", stockModel.Name);
+            Assert.Equal("1", stockModel.Stocks.Select(x => x.Id).ElementAt(0).ToString());
+            Assert.Equal("1/1/2020 12:00:00 AM", stockModel.Stocks.Select(x => x.Date).ElementAt(0).ToString());
+            Assert.Equal("30.00", stockModel.Stocks.Select(x => x.Price).ElementAt(0).ToString());
+            Assert.Equal("20.00", stockModel.Stocks.Select(x => x.Quantity).ElementAt(0).ToString());
+            Assert.Equal("1", stockModel.Stocks.Select(x => x.InvoiceId).ElementAt(0).ToString());
+            Assert.Equal("1", stockModel.Stocks.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
     }
 }
