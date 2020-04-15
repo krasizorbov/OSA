@@ -16,6 +16,7 @@
     using OSA.Web.Controllers;
     using OSA.Web.ValidationEnum;
     using OSA.Web.ViewModels.Purchases.Input_Models;
+    using OSA.Web.ViewModels.Purchases.View_Models;
     using Xunit;
 
     public class PurchasesServiceTests
@@ -635,6 +636,48 @@
             var view = controller.View(purchaseModel) as ViewResult;
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task GetStockReturnsCorrectBindingModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqPurchaseService = new Mock<IPurchasesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ips = new PurchasesService(context);
+            var controller = new PurchaseController(moqPurchaseService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+            var purchase = new Purchase
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalQuantity = 20.00M,
+                TotalPrice = 30.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Purchases.AddAsync(purchase);
+            await context.SaveChangesAsync();
+            var purchaseModel = new PurchaseBindingViewModel
+            {
+                Name = "Ivan Petrov",
+                Purchases = new List<Purchase> { purchase },
+            };
+            var result = await controller.GetPurchase(1, "Sugar", StartDate, EndDate);
+            var view = controller.View(purchaseModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.Equal("Ivan Petrov", purchaseModel.Name);
+            Assert.Equal("1", purchaseModel.Purchases.Select(x => x.Id).ElementAt(0).ToString());
+            Assert.Equal("1/1/2020 12:00:00 AM", purchaseModel.Purchases.Select(x => x.Date).ElementAt(0).ToString());
+            Assert.Equal("sugar", purchaseModel.Purchases.Select(x => x.StockName).ElementAt(0).ToString());
+            Assert.Equal("20.00", purchaseModel.Purchases.Select(x => x.TotalQuantity).ElementAt(0).ToString());
+            Assert.Equal("30.00", purchaseModel.Purchases.Select(x => x.TotalPrice).ElementAt(0).ToString());
+            Assert.Equal("1", purchaseModel.Purchases.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
     }
 }
