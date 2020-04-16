@@ -468,5 +468,82 @@
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
+
+        [Fact]
+
+        public async Task AddReturnsProductionInvoiceErrorMessage()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqExpenseBookService = new Mock<IExpenseBooksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iebs = new ExpenseBooksService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Please register a production invoice before proceeding!";
+            var controller = new ExpenseBookController(moqExpenseBookService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+            var expenseBook = new ExpenseBook
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                TotalExternalCost = 20.00M,
+                TotalSalaryCost = 20.00M,
+                TotalBookValue = 20.00M,
+                Profit = 100.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+            var productionInvoice = new ProductionInvoice
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                InvoiceNumber = "1",
+                ExternalCost = 20.00M,
+                Salary = 120.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+            var availableStock = new AvailableStock
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPurchasedAmount = 20.00M,
+                TotalPurchasedPrice = 30.00M,
+                BookValue = 20.00M,
+                AveragePrice = "1.50",
+                TotalSoldPrice = 35.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.AvailableStocks.AddAsync(availableStock);
+            await context.ProductionInvoices.AddAsync(productionInvoice);
+            await context.ExpenseBooks.AddAsync(expenseBook);
+            await context.SaveChangesAsync();
+            var expenseBookModel = new CreateExpenseBookInputModel
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
+            moqExpenseBookService.Setup(x => x.ExpenseBookExistAsync(startDate, endDate, 2)).Returns(Task.FromResult(expenseBook));
+            moqExpenseBookService.Setup(x => x.GetAllProductionInvoicesByMonthAsync(startDate, endDate, 1))
+                .Returns(Task.FromResult(new List<ProductionInvoice>()));
+            moqExpenseBookService.Setup(x => x.GetMonthlyAvailableStockByCompanyIdAsync(startDate, endDate, 2))
+                .Returns(Task.FromResult(availableStock));
+            var result = await controller.Add(expenseBookModel, StartDate, EndDate);
+            var view = controller.View(expenseBookModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
     }
 }
