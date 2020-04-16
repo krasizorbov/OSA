@@ -589,5 +589,48 @@
             Assert.Equal("1.50", availableStockModel.AvailableStocks.Select(x => x.AveragePrice).ElementAt(0).ToString());
             Assert.Equal("1", availableStockModel.AvailableStocks.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
+
+        [Fact]
+
+        public async Task DeleteReturnsCorrectModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqAvailableStockService = new Mock<IAvailableStocksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been deleted successfully!";
+            var controller = new AvailableStockController(moqAvailableStockService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var availableStock = new AvailableStock
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPurchasedAmount = 20.00M,
+                TotalPurchasedPrice = 30.00M,
+                BookValue = 20.00M,
+                AveragePrice = "1.50",
+                TotalSoldPrice = 35.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.AvailableStocks.AddAsync(availableStock);
+            await context.SaveChangesAsync();
+
+            var listIds = new List<int> { 1 };
+            moqAvailableStockService.Setup(x => x.DeleteAsync(new List<int> { 1 })).Returns(Task.FromResult(new List<AvailableStock> { availableStock }));
+            var result = await controller.Delete(listIds);
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
     }
 }
