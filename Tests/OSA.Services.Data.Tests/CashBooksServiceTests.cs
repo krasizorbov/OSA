@@ -538,5 +538,83 @@
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
+
+        [Fact]
+
+        public async Task AddReturnsStockErrorMessage()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqCashBookService = new Mock<ICashBooksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.icbs = new CashBooksService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Please register stock before proceeding!";
+            var controller = new CashBookController(moqCashBookService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+            var cashBook = new CashBook
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                TotalInvoicePricesCost = 200.00M,
+                TotalSalaryCost = 200.00M,
+                TotalStockExternalCost = 50.00M,
+                TotalProfit = 100.00M,
+                Saldo = 100.00M,
+                OwnFunds = 0.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+            var expenseBook = new ExpenseBook
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                TotalExternalCost = 20.00M,
+                TotalSalaryCost = 20.00M,
+                TotalBookValue = 20.00M,
+                Profit = 100.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+            var purchase = new Purchase
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalQuantity = 20.00M,
+                TotalPrice = 30.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Purchases.AddAsync(purchase);
+            await context.ExpenseBooks.AddAsync(expenseBook);
+            await context.CashBooks.AddAsync(cashBook);
+            await context.SaveChangesAsync();
+            var cashBookModel = new CreateCashBookInputModel
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                Saldo = 20.00M,
+                OwnFunds = 20.00M,
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
+            moqCashBookService.Setup(x => x.CashBookExistAsync(startDate, endDate, 2)).Returns(Task.FromResult(cashBook));
+            moqCashBookService.Setup(x => x.GetMonthlyExpenseBook(startDate, endDate, 1)).Returns(Task.FromResult(expenseBook));
+            moqCashBookService.Setup(x => x.TotalSumStockCost(startDate, endDate, 2)).Returns(purchase.TotalPrice);
+            var result = await controller.Add(cashBookModel, StartDate, EndDate);
+            var view = controller.View(cashBookModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
     }
 }
