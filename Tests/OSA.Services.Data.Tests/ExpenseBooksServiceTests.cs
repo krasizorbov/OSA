@@ -16,6 +16,7 @@
     using OSA.Services.Data.Interfaces;
     using OSA.Web.Controllers;
     using OSA.Web.ViewModels.ExpenseBooks.Input_Models;
+    using OSA.Web.ViewModels.ExpenseBooks.View_Models;
     using Xunit;
 
     public class ExpenseBooksServiceTests
@@ -647,6 +648,50 @@
             var view = controller.View(expenseBookModel) as ViewResult;
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task GetExpenseBookReturnsCorrectBindingModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqExpenseBookService = new Mock<IExpenseBooksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iebs = new ExpenseBooksService(context);
+            var controller = new ExpenseBookController(moqExpenseBookService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+
+            var expenseBook = new ExpenseBook
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                TotalExternalCost = 20.00M,
+                TotalSalaryCost = 20.00M,
+                TotalBookValue = 20.00M,
+                Profit = 100.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+            await context.ExpenseBooks.AddAsync(expenseBook);
+            await context.SaveChangesAsync();
+            var expenseBookModel = new ExpenseBookBindingViewModel
+            {
+                Name = "Ivan Petrov",
+                ExpenseBooks = new List<ExpenseBook> { expenseBook },
+            };
+            var result = await controller.GetExpenseBook(1, StockName, StartDate, EndDate);
+            var view = controller.View(expenseBookModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.Equal("Ivan Petrov", expenseBookModel.Name);
+            Assert.Equal("1", expenseBookModel.ExpenseBooks.Select(x => x.Id).ElementAt(0).ToString());
+            Assert.Equal("1/1/2020 12:00:00 AM", expenseBookModel.ExpenseBooks.Select(x => x.Date).ElementAt(0).ToString());
+            Assert.Equal("20.00", expenseBookModel.ExpenseBooks.Select(x => x.TotalExternalCost).ElementAt(0).ToString());
+            Assert.Equal("20.00", expenseBookModel.ExpenseBooks.Select(x => x.TotalSalaryCost).ElementAt(0).ToString());
+            Assert.Equal("20.00", expenseBookModel.ExpenseBooks.Select(x => x.TotalBookValue).ElementAt(0).ToString());
+            Assert.Equal("100.00", expenseBookModel.ExpenseBooks.Select(x => x.Profit).ElementAt(0).ToString());
+            Assert.Equal("1", expenseBookModel.ExpenseBooks.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
     }
 }
