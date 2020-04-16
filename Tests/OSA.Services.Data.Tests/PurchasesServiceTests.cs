@@ -583,10 +583,30 @@
             {
                 TempData = tempData,
             };
-
-            var purchase = new Purchase
+            var stock = new Stock
             {
                 Id = 1,
+                CreatedOn = startDate,
+                Name = StockName,
+                Quantity = 20.00M,
+                Price = 30.00M,
+                Date = startDate,
+                InvoiceId = 1,
+                CompanyId = 1,
+            };
+            var purchaseP = new Purchase
+            {
+                Id = 1,
+                CreatedOn = startDate.AddMonths(-1),
+                StockName = StockName,
+                TotalQuantity = 20.00M,
+                TotalPrice = 30.00M,
+                Date = startDate.AddMonths(-1),
+                CompanyId = 1,
+            };
+            var purchase = new Purchase
+            {
+                Id = 2,
                 CreatedOn = startDate,
                 StockName = StockName,
                 TotalQuantity = 20.00M,
@@ -594,17 +614,23 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
+            await context.Stocks.AddAsync(stock);
             await context.Purchases.AddAsync(purchase);
+            await context.Purchases.AddAsync(purchaseP);
             await context.SaveChangesAsync();
             var purchaseModel = new CreatePurchaseInputModel
             {
                 StartDate = StartDate,
                 EndDate = EndDate,
+                CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.StartDate)).Returns(true);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.EndDate)).Returns(true);
+            var moqstockNames = moqPurchaseService.Setup(x => x.GetStockNamesAsync(startDate, endDate, 1))
+                .Returns(Task.FromResult(new List<string> { StockName }));
             var purchaseExist = moqPurchaseService.Setup(x => x.PurchaseExistAsync(startDate, endDate, 1))
-                .Returns(Task.FromResult(new List<string> { StockName}));
+                .Returns(Task.FromResult(new List<string> { StockName }));
             var result = await controller.Add(purchaseModel, StartDate, EndDate);
             var view = controller.View(purchase) as ViewResult;
             var actual = controller.TempData.Values.ElementAt(0).ToString();
