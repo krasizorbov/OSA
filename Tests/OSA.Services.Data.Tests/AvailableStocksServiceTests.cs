@@ -512,5 +512,34 @@
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
+
+        [Fact]
+
+        public async Task GetCompanyReturnsModelStateDateTimeFormatError()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqAvailableStockService = new Mock<IAvailableStocksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var controller = new AvailableStockController(moqAvailableStockService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+
+            var availableStockModel = new ShowAvailableStockByCompanyInputModel
+            {
+                StartDate = "13/01/2020",
+                EndDate = "01/31/2020",
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(availableStockModel.StartDate)).Returns(false);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(availableStockModel.EndDate)).Returns(false);
+ 
+            var result = await controller.GetCompany(availableStockModel, StartDate, EndDate);
+            var view = controller.View(availableStockModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
     }
 }
