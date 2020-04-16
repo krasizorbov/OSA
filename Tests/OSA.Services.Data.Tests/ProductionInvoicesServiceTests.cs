@@ -151,5 +151,32 @@
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
+
+        [Fact]
+
+        public async Task AddReturnsModelStateDateTimeFormatError()
+        {
+            var moqProductionInvoiceService = new Mock<IProductionInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ipis = new ProductionInvoicesService(context);
+            var controller = new ProductionInvoiceController(moqProductionInvoiceService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+
+            var productionInvoiceModel = new CreateProductionInvoiceInputModel
+            {
+                InvoiceNumber = "1234",
+                ExternalCost = 200.00M,
+                Salary = 600.00M,
+                Date = StartDate,
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            var result = await controller.Add(productionInvoiceModel, StartDate);
+            var view = controller.View(productionInvoiceModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
     }
 }
