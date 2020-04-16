@@ -365,5 +365,31 @@
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
+
+        [Fact]
+
+        public async Task AddReturnsModelStateDateTimeFormatError()
+        {
+            var moqExpenseBookService = new Mock<IExpenseBooksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iebs = new ExpenseBooksService(context);
+            var controller = new ExpenseBookController(moqExpenseBookService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+
+            var expenseBookModel = new CreateExpenseBookInputModel
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/01/2020")).Returns(false);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            var result = await controller.Add(expenseBookModel, StartDate, EndDate);
+            var view = controller.View(expenseBookModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
     }
 }
