@@ -212,5 +212,32 @@
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
+
+        [Fact]
+
+        public async Task GetCompanyReturnsModelStateDateTimeFormatError()
+        {
+            var moqProductionInvoiceService = new Mock<IProductionInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ipis = new ProductionInvoicesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "1234  already exists! Please enter a new invoice number.";
+            var controller = new ProductionInvoiceController(moqProductionInvoiceService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+            var productionInvoiceModel = new ShowProductionInvoiceByCompanyInputModel
+            {
+                StartDate = "13/01/2020",
+                EndDate = "01/31/2020",
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(productionInvoiceModel.StartDate)).Returns(false);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(productionInvoiceModel.EndDate)).Returns(false);
+            var result = await controller.GetCompany(productionInvoiceModel, StartDate, EndDate);
+            var view = controller.View(productionInvoiceModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
     }
 }
