@@ -692,5 +692,46 @@
             Assert.Equal("0.00", cashBookModel.CashBooks.Select(x => x.OwnFunds).ElementAt(0).ToString());
             Assert.Equal("1", cashBookModel.CashBooks.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
+
+        [Fact]
+
+        public async Task DeleteReturnsCorrectModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqCashBookService = new Mock<ICashBooksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.icbs = new CashBooksService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been deleted successfully!";
+            var controller = new CashBookController(moqCashBookService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var cashBook = new CashBook
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                TotalInvoicePricesCost = 200.00M,
+                TotalSalaryCost = 200.00M,
+                TotalStockExternalCost = 50.00M,
+                TotalProfit = 100.00M,
+                Saldo = 100.00M,
+                OwnFunds = 0.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+            await context.CashBooks.AddAsync(cashBook);
+            await context.SaveChangesAsync();
+            moqCashBookService.Setup(x => x.DeleteAsync(1)).Returns(Task.FromResult(cashBook));
+            var result = await controller.Delete(1);
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
     }
 }
