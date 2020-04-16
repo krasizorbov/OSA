@@ -15,6 +15,7 @@
     using OSA.Services.Data.Interfaces;
     using OSA.Web.Controllers;
     using OSA.Web.ViewModels.Sales.Input_Models;
+    using OSA.Web.ViewModels.Sales.View_Models;
     using Xunit;
 
     public class SalesServiceTests
@@ -518,6 +519,49 @@
             var view = controller.View(saleModel) as ViewResult;
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task GetStockReturnsCorrectBindingModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqSaleService = new Mock<ISalesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iss = new SalesService(context);
+            var controller = new SaleController(moqSaleService.Object, moqCompanyService.Object, moqStockService.Object, moqDateTimeService.Object);
+            var sale = new Sale
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPrice = 20.00M,
+                ProfitPercent = 120,
+                AveragePrice = "1.5",
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Sales.AddAsync(sale);
+            await context.SaveChangesAsync();
+            var saleModel = new SaleBindingViewModel
+            {
+                Name = "Ivan Petrov",
+                Sales = new List<Sale> { sale },
+            };
+            var result = await controller.GetSale(1, "sugar", StartDate, EndDate);
+            var view = controller.View(saleModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.Equal("Ivan Petrov", saleModel.Name);
+            Assert.Equal("1", saleModel.Sales.Select(x => x.Id).ElementAt(0).ToString());
+            Assert.Equal("1/1/2020 12:00:00 AM", saleModel.Sales.Select(x => x.Date).ElementAt(0).ToString());
+            Assert.Equal("20.00", saleModel.Sales.Select(x => x.TotalPrice).ElementAt(0).ToString());
+            Assert.Equal("120", saleModel.Sales.Select(x => x.ProfitPercent).ElementAt(0).ToString());
+            Assert.Equal("1.5", saleModel.Sales.Select(x => x.AveragePrice).ElementAt(0).ToString());
+            Assert.Equal("1", saleModel.Sales.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
     }
 }
