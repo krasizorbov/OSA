@@ -430,5 +430,46 @@
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
         }
+
+        [Fact]
+
+        public async Task AddReturnsAvailableStockExistError()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqAvailableStockService = new Mock<IAvailableStocksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Available stock for the month already done!";
+            var controller = new AvailableStockController(moqAvailableStockService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var availableStockModel = new CreateAvailableStockInputModel
+            {
+                StockName = StockName,
+                StartDate = StartDate,
+                EndDate = EndDate,
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
+            var moqStockNames = moqAvailableStockService.Setup(x => x.AvailableStockExistAsync(startDate, endDate, 1))
+                .Returns(Task.FromResult(new List<string> { StockName }));
+            var moqPurchased = moqAvailableStockService.Setup(x => x.GetPurchasedStockNamesByCompanyIdAsync(startDate, endDate, 1))
+                .Returns(Task.FromResult(new List<string> { StockName }));
+            var moqSold = moqAvailableStockService.Setup(x => x.GetSoldStockNamesByCompanyIdAsync(startDate, endDate, 1))
+                .Returns(Task.FromResult(new List<string> { StockName }));
+            var result = await controller.Add(availableStockModel, StartDate, EndDate);
+            var view = controller.View(availableStockModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
     }
 }
