@@ -1,12 +1,20 @@
 ﻿namespace OSA.Services.Data.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Moq;
     using OSA.Common;
     using OSA.Data.Models;
+    using OSA.Services.Data.Interfaces;
+    using OSA.Web.Controllers;
+    using OSA.Web.ViewModels.CashBooks.Input_Models;
     using Xunit;
 
     public class CashBooksServiceTests
@@ -310,6 +318,40 @@
             await context.CashBooks.AddAsync(cashBook);
             await context.SaveChangesAsync();
             Assert.Equal("1", context.CashBooks.Count().ToString());
+        }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsCorrectModel()
+        {
+            var moqCashBookService = new Mock<ICashBooksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.icbs = new CashBooksService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been registered successfully!";
+            var controller = new CashBookController(moqCashBookService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var cashBookModel = new CreateCashBookInputModel
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                Saldo = 20.00M,
+                OwnFunds = 20.00M,
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+
+            var result = await controller.Add(cashBookModel, StartDate, EndDate);
+            var view = controller.View(cashBookModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
         }
     }
 }
