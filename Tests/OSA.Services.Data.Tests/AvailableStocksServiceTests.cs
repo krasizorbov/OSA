@@ -403,5 +403,32 @@
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
+
+        [Fact]
+
+        public async Task AddReturnsModelStateDateTimeFormatError()
+        {
+            var moqAvailableStockService = new Mock<IAvailableStocksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var controller = new AvailableStockController(moqAvailableStockService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+
+            var availableStockModel = new CreateAvailableStockInputModel
+            {
+                StockName = StockName,
+                StartDate = StartDate,
+                EndDate = EndDate,
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/01/2020")).Returns(false);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            var result = await controller.Add(availableStockModel, StartDate, EndDate);
+            var view = controller.View(availableStockModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
     }
 }
