@@ -385,8 +385,8 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/01/2020")).Returns(false);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("13/01/2020")).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
             var result = await controller.Add(expenseBookModel, StartDate, EndDate);
             var view = controller.View(expenseBookModel) as ViewResult;
             var actual = controller.ModelState;
@@ -457,8 +457,8 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
             moqExpenseBookService.Setup(x => x.ExpenseBookExistAsync(startDate, endDate, 1)).Returns(Task.FromResult(expenseBook));
             moqExpenseBookService.Setup(x => x.GetAllProductionInvoicesByMonthAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<ProductionInvoice> { productionInvoice }));
@@ -534,8 +534,8 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
             moqExpenseBookService.Setup(x => x.ExpenseBookExistAsync(startDate, endDate, 2)).Returns(Task.FromResult(expenseBook));
             moqExpenseBookService.Setup(x => x.GetAllProductionInvoicesByMonthAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<ProductionInvoice>()));
@@ -611,8 +611,8 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
             moqExpenseBookService.Setup(x => x.ExpenseBookExistAsync(startDate, endDate, 2)).Returns(Task.FromResult(expenseBook));
             moqExpenseBookService.Setup(x => x.GetAllProductionInvoicesByMonthAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<ProductionInvoice> { productionInvoice }));
@@ -642,8 +642,8 @@
                 EndDate = "01/31/2020",
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(expenseBookModel.StartDate)).Returns(false);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(expenseBookModel.EndDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(expenseBookModel.StartDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(expenseBookModel.EndDate)).Returns(false);
             var result = await controller.GetCompany(expenseBookModel, StartDate, EndDate);
             var view = controller.View(expenseBookModel) as ViewResult;
             var actual = controller.ModelState;

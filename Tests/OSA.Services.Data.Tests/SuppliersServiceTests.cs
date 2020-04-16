@@ -25,7 +25,6 @@
         {
             var context = InitializeContext.CreateContextForInMemory();
             this.ss = new SuppliersService(context);
-
             var supplier = new Supplier
             {
                 Id = 1,
@@ -35,7 +34,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.SaveChangesAsync();
             var result = await this.ss.GetAllSuppliersByCompanyIdAsync(1);
@@ -48,7 +46,6 @@
         {
             var context = InitializeContext.CreateContextForInMemory();
             this.ss = new SuppliersService(context);
-
             var supplier = new Supplier
             {
                 Id = 1,
@@ -58,7 +55,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.SaveChangesAsync();
             var result = await this.ss.GetSupplierNameBySupplierIdAsync(1);
@@ -72,7 +68,6 @@
         {
             var context = InitializeContext.CreateContextForInMemory();
             this.ss = new SuppliersService(context);
-
             var supplier = new Supplier
             {
                 Id = 1,
@@ -82,7 +77,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.SaveChangesAsync();
             var result = await this.ss.GetSupplierNameBySupplierIdAsync(1);
@@ -95,7 +89,6 @@
         {
             var context = InitializeContext.CreateContextForInMemory();
             this.ss = new SuppliersService(context);
-
             var supplier = new Supplier
             {
                 Id = 1,
@@ -105,7 +98,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.SaveChangesAsync();
             var result = await this.ss.GetSuppliersByCompanyIdAsync(1);
@@ -118,7 +110,6 @@
         {
             var context = InitializeContext.CreateContextForInMemory();
             this.ss = new SuppliersService(context);
-
             var supplier = new Supplier
             {
                 Id = 1,
@@ -128,7 +119,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.SaveChangesAsync();
             var result = await this.ss.SupplierExistAsync("Ivan Petrov", 1);
@@ -141,7 +131,6 @@
         {
             var context = InitializeContext.CreateContextForInMemory();
             this.ss = new SuppliersService(context);
-
             var supplier = new Supplier
             {
                 Id = 1,
@@ -151,7 +140,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.SaveChangesAsync();
             var result = await this.ss.SupplierExistAsync("Ivan Petrov", 1);
@@ -164,7 +152,6 @@
         {
             var context = InitializeContext.CreateContextForInMemory();
             this.ss = new SuppliersService(context);
-
             var supplier = new Supplier
             {
                 Id = 1,
@@ -174,7 +161,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.SaveChangesAsync();
             Assert.Equal("1", context.Suppliers.Count().ToString());
@@ -197,7 +183,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.SaveChangesAsync();
             var ex = await Assert.ThrowsAsync<ArgumentException>(() =>
@@ -232,7 +217,6 @@
                 Bulstat = "123456789",
                 UserId = userId,
             };
-
             await context.Companies.AddAsync(company);
             await context.SaveChangesAsync();
             var supplier = new CreateSupplierInputModel
@@ -242,7 +226,6 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-
             var result = await controller.Add(supplier);
             var view = controller.View(supplier) as ViewResult;
             var actual = controller.TempData;
@@ -270,14 +253,12 @@
                 Bulstat = "123456789",
                 UserId = userId,
             };
-
             var s = new Supplier
             {
                 Bulstat = "123456789",
                 Name = "Peter Ivanov",
                 CompanyId = 1,
             };
-
             await context.Companies.AddAsync(company);
             await context.Suppliers.AddAsync(s);
             await context.SaveChangesAsync();
@@ -289,7 +270,6 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-
             var result = await controller.Add(supplier);
             var view = controller.View(supplier) as ViewResult;
             var actual = controller.ModelState;
@@ -317,14 +297,12 @@
                 Bulstat = "123456789",
                 UserId = userId,
             };
-
             var s = new Supplier
             {
                 Bulstat = "123456789",
                 Name = "Peter Ivanov",
                 CompanyId = 1,
             };
-
             await context.Companies.AddAsync(company);
             await context.Suppliers.AddAsync(s);
             await context.SaveChangesAsync();
@@ -333,7 +311,6 @@
                 Name = "Ivan Petrov",
                 Suppliers = new List<Supplier> { s },
             };
-
             var result = await controller.GetSupplier(company.Id, company.Name);
             var view = controller.View(supplier) as ViewResult;
             Assert.Equal(company.Name, supplier.Name);

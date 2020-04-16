@@ -273,7 +273,6 @@
             this.ips = new PurchasesService(context);
             var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
             var stock1 = new Stock
             {
                 Id = 1,
@@ -285,7 +284,6 @@
                 InvoiceId = 1,
                 CompanyId = 1,
             };
-
             var stock2 = new Stock
             {
                 Id = 2,
@@ -297,7 +295,6 @@
                 InvoiceId = 1,
                 CompanyId = 1,
             };
-
             var stock3 = new Stock
             {
                 Id = 3,
@@ -309,7 +306,6 @@
                 InvoiceId = 1,
                 CompanyId = 1,
             };
-
             await context.Stocks.AddAsync(stock1);
             await context.Stocks.AddAsync(stock2);
             await context.Stocks.AddAsync(stock3);
@@ -325,7 +321,6 @@
             this.ips = new PurchasesService(context);
             var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
             var stock1 = new Stock
             {
                 Id = 1,
@@ -337,7 +332,6 @@
                 InvoiceId = 1,
                 CompanyId = 1,
             };
-
             var stock2 = new Stock
             {
                 Id = 2,
@@ -349,7 +343,6 @@
                 InvoiceId = 1,
                 CompanyId = 1,
             };
-
             var stock3 = new Stock
             {
                 Id = 3,
@@ -361,7 +354,6 @@
                 InvoiceId = 1,
                 CompanyId = 1,
             };
-
             await context.Stocks.AddAsync(stock1);
             await context.Stocks.AddAsync(stock2);
             await context.Stocks.AddAsync(stock3);
@@ -378,7 +370,6 @@
             this.ips = new PurchasesService(context);
             var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
             var purchase = new Purchase
             {
                 Id = 1,
@@ -389,7 +380,6 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
             await context.Purchases.AddAsync(purchase);
             await context.SaveChangesAsync();
             var result = await this.ips.PurchaseExistAsync(startDate, endDate, 1);
@@ -404,7 +394,6 @@
             this.ips = new PurchasesService(context);
             var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
             var purchase = new Purchase
             {
                 Id = 1,
@@ -415,7 +404,6 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
             await context.Purchases.AddAsync(purchase);
             await context.SaveChangesAsync();
             var result = await this.ips.PurchaseExistAsync(startDate, endDate, 1);
@@ -430,7 +418,6 @@
             this.ips = new PurchasesService(context);
             var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
             var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
             var purchase = new Purchase
             {
                 Id = 1,
@@ -441,7 +428,6 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
             await context.Purchases.AddAsync(purchase);
             await context.SaveChangesAsync();
             var result = await this.ips.GetPurchasesByCompanyIdAsync(startDate, endDate, 1);
@@ -455,7 +441,6 @@
             var context = InitializeContext.CreateContextForInMemory();
             this.ips = new PurchasesService(context);
             var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
             var purchase1 = new Purchase
             {
                 Id = 1,
@@ -466,7 +451,6 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
             var purchase2 = new Purchase
             {
                 Id = 2,
@@ -477,7 +461,6 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
             await context.Purchases.AddAsync(purchase1);
             await context.Purchases.AddAsync(purchase2);
             await context.SaveChangesAsync();
@@ -493,8 +476,6 @@
             var context = InitializeContext.CreateContextForInMemory();
             this.ips = new PurchasesService(context);
             var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
             var purchase = new Purchase
             {
                 Id = 1,
@@ -505,7 +486,6 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
             await context.Purchases.AddAsync(purchase);
             await context.SaveChangesAsync();
             Assert.Equal("1", context.Purchases.Count().ToString());
@@ -527,14 +507,12 @@
             {
                 TempData = tempData,
             };
-
             var purchase = new CreatePurchaseInputModel
             {
                 StartDate = StartDate,
                 EndDate = EndDate,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-
             var result = await controller.Add(purchase, StartDate, EndDate);
             var view = controller.View(purchase) as ViewResult;
             var actual = controller.TempData;
@@ -558,7 +536,7 @@
                 EndDate = EndDate,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
             var result = await controller.Add(purchase, StartDate, EndDate);
             var view = controller.View(purchase) as ViewResult;
             var actual = controller.ModelState;
@@ -625,11 +603,11 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.StartDate)).Returns(true);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.EndDate)).Returns(true);
-            var moqstockNames = moqPurchaseService.Setup(x => x.GetStockNamesAsync(startDate, endDate, 1))
+            moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.StartDate)).Returns(true);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.EndDate)).Returns(true);
+            moqPurchaseService.Setup(x => x.GetStockNamesAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<string> { StockName }));
-            var purchaseExist = moqPurchaseService.Setup(x => x.PurchaseExistAsync(startDate, endDate, 1))
+            moqPurchaseService.Setup(x => x.PurchaseExistAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<string> { StockName }));
             var result = await controller.Add(purchaseModel, StartDate, EndDate);
             var view = controller.View(purchase) as ViewResult;
@@ -649,15 +627,14 @@
             var context = InitializeContext.CreateContextForInMemory();
             this.ips = new PurchasesService(context);
             var controller = new PurchaseController(moqPurchaseService.Object, moqCompanyService.Object, moqDateTimeService.Object);
-
             var purchaseModel = new ShowPurchaseByCompanyInputModel
             {
                 StartDate = StartDate,
                 EndDate = EndDate,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.StartDate)).Returns(false);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.EndDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.StartDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(purchaseModel.EndDate)).Returns(false);
             var result = await controller.GetCompany(purchaseModel, StartDate, EndDate);
             var view = controller.View(purchaseModel) as ViewResult;
             var actual = controller.ModelState;
@@ -724,7 +701,6 @@
             {
                 TempData = tempData,
             };
-
             var purchase = new Purchase
             {
                 Id = 1,
@@ -735,7 +711,6 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
             await context.Purchases.AddAsync(purchase);
             await context.SaveChangesAsync();
             var listIds = new List<int> { 1 };

@@ -425,8 +425,8 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/01/2020")).Returns(false);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("13/01/2020")).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
             var result = await controller.Add(availableStockModel, StartDate, EndDate);
             var view = controller.View(availableStockModel) as ViewResult;
             var actual = controller.ModelState;
@@ -460,13 +460,13 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
-            var moqStockNames = moqAvailableStockService.Setup(x => x.AvailableStockExistAsync(startDate, endDate, 1))
+            moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
+            moqAvailableStockService.Setup(x => x.AvailableStockExistAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<string> { StockName }));
-            var moqPurchased = moqAvailableStockService.Setup(x => x.GetPurchasedStockNamesByCompanyIdAsync(startDate, endDate, 1))
+            moqAvailableStockService.Setup(x => x.GetPurchasedStockNamesByCompanyIdAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<string> { StockName }));
-            var moqSold = moqAvailableStockService.Setup(x => x.GetSoldStockNamesByCompanyIdAsync(startDate, endDate, 1))
+            moqAvailableStockService.Setup(x => x.GetSoldStockNamesByCompanyIdAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<string> { StockName }));
             var result = await controller.Add(availableStockModel, StartDate, EndDate);
             var view = controller.View(availableStockModel) as ViewResult;
@@ -501,13 +501,13 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
-            var moqStockNames = moqAvailableStockService.Setup(x => x.AvailableStockExistAsync(startDate, endDate, 1))
+            moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("31/01/2020")).Returns(true);
+            moqAvailableStockService.Setup(x => x.AvailableStockExistAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<string>()));
-            var moqPurchased = moqAvailableStockService.Setup(x => x.GetPurchasedStockNamesByCompanyIdAsync(startDate, endDate, 1))
+            moqAvailableStockService.Setup(x => x.GetPurchasedStockNamesByCompanyIdAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<string>()));
-            var moqSold = moqAvailableStockService.Setup(x => x.GetSoldStockNamesByCompanyIdAsync(startDate, endDate, 1))
+            moqAvailableStockService.Setup(x => x.GetSoldStockNamesByCompanyIdAsync(startDate, endDate, 1))
                 .Returns(Task.FromResult(new List<string>()));
             var result = await controller.Add(availableStockModel, StartDate, EndDate);
             var view = controller.View(availableStockModel) as ViewResult;
@@ -535,9 +535,8 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(availableStockModel.StartDate)).Returns(false);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(availableStockModel.EndDate)).Returns(false);
- 
+            moqDateTimeService.Setup(x => x.IsValidDateTime(availableStockModel.StartDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(availableStockModel.EndDate)).Returns(false);
             var result = await controller.GetCompany(availableStockModel, StartDate, EndDate);
             var view = controller.View(availableStockModel) as ViewResult;
             var actual = controller.ModelState;
@@ -556,7 +555,6 @@
             var context = InitializeContext.CreateContextForInMemory();
             this.iass = new AvailableStocksService(context);
             var controller = new AvailableStockController(moqAvailableStockService.Object, moqCompanyService.Object, moqDateTimeService.Object);
-
             var availableStock = new AvailableStock
             {
                 Id = 1,
@@ -570,10 +568,8 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
             await context.AvailableStocks.AddAsync(availableStock);
             await context.SaveChangesAsync();
-
             var availableStockModel = new AvailableStockBindingViewModel
             {
                 Name = "Ivan Petrov",
@@ -609,7 +605,6 @@
             {
                 TempData = tempData,
             };
-
             var availableStock = new AvailableStock
             {
                 Id = 1,
@@ -623,7 +618,6 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
             await context.AvailableStocks.AddAsync(availableStock);
             await context.SaveChangesAsync();
 

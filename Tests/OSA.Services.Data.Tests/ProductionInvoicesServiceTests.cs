@@ -174,7 +174,7 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
             var result = await controller.Add(productionInvoiceModel, StartDate);
             var view = controller.View(productionInvoiceModel) as ViewResult;
             var actual = controller.ModelState;
@@ -207,8 +207,8 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
-            var moqInvoiceExists = moqProductionInvoiceService.Setup(x => x.InvoiceExistAsync("1234", 1)).Returns(Task.FromResult("1234"));
+            moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            moqProductionInvoiceService.Setup(x => x.InvoiceExistAsync("1234", 1)).Returns(Task.FromResult("1234"));
             var result = await controller.Add(productionInvoiceModel, StartDate);
             var view = controller.View(productionInvoiceModel) as ViewResult;
             var actual = controller.TempData;
@@ -234,8 +234,8 @@
                 EndDate = "01/31/2020",
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(productionInvoiceModel.StartDate)).Returns(false);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(productionInvoiceModel.EndDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(productionInvoiceModel.StartDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(productionInvoiceModel.EndDate)).Returns(false);
             var result = await controller.GetCompany(productionInvoiceModel, StartDate, EndDate);
             var view = controller.View(productionInvoiceModel) as ViewResult;
             var actual = controller.ModelState;

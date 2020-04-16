@@ -295,7 +295,6 @@
             {
                 TempData = tempData,
             };
-
             var supplier = new Supplier
             {
                 Id = 1,
@@ -305,7 +304,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.SaveChangesAsync();
             var invoiceModel = new CreateInvoiceInputModelTwo
@@ -333,7 +331,6 @@
             var context = InitializeContext.CreateContextForInMemory();
             this.iis = new InvoicesService(context);
             var controller = new InvoiceController(moqInvoiceService.Object, moqCompanyService.Object, moqSupplierService.Object, moqDateTimeService.Object);
-
             var supplier = new Supplier
             {
                 Id = 1,
@@ -343,7 +340,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.SaveChangesAsync();
             var invoiceModel = new CreateInvoiceInputModelTwo
@@ -353,7 +349,7 @@
                 TotalAmount = 20,
                 SupplierNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Peter Ivanov", } },
             };
-            var moqDate = moqDateTimeService.Setup(x => x.IsValidDateTime(invoiceModel.Date)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(invoiceModel.Date)).Returns(false);
             var result = await controller.AddPartTwo(invoiceModel, supplier.CompanyId, invoiceModel.Date);
             var view = controller.View(invoiceModel) as ViewResult;
             var actual = controller.ModelState;
@@ -381,7 +377,6 @@
                 Bulstat = "123456789",
                 CompanyId = 1,
             };
-
             var invoice = new Invoice
             {
                 Id = 1,
@@ -392,11 +387,10 @@
                 CompanyId = 1,
                 TotalAmount = 20,
             };
-
             await context.Suppliers.AddAsync(supplier);
             await context.Invoices.AddAsync(invoice);
             await context.SaveChangesAsync();
-            var moqInvoice = moqInvoiceService.Setup(x => x.InvoiceExistAsync(invoice.InvoiceNumber, invoice.CompanyId))
+            moqInvoiceService.Setup(x => x.InvoiceExistAsync(invoice.InvoiceNumber, invoice.CompanyId))
                 .Returns(Task.FromResult(invoice.InvoiceNumber));
             var moqDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
             var invoiceModel = new CreateInvoiceInputModelTwo
@@ -443,8 +437,8 @@
                 EndDate = "01/31/2020",
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(invoiceModel.StartDate)).Returns(false);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(invoiceModel.EndDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(invoiceModel.StartDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(invoiceModel.EndDate)).Returns(false);
             var result = await controller.GetCompany(invoiceModel, invoiceModel.StartDate, invoiceModel.EndDate);
             var view = controller.View(invoiceModel) as ViewResult;
             var actual = controller.ModelState;

@@ -301,8 +301,6 @@
             var context = InitializeContext.CreateContextForInMemory();
             this.icbs = new CashBooksService(context);
             var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
-
             var cashBook = new CashBook
             {
                 Id = 1,
@@ -316,7 +314,6 @@
                 Date = startDate,
                 CompanyId = 1,
             };
-
             await context.CashBooks.AddAsync(cashBook);
             await context.SaveChangesAsync();
             Assert.Equal("1", context.CashBooks.Count().ToString());
@@ -339,7 +336,6 @@
             {
                 TempData = tempData,
             };
-
             var cashBookModel = new CreateCashBookInputModel
             {
                 StartDate = StartDate,
@@ -349,7 +345,6 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-
             var result = await controller.Add(cashBookModel, StartDate, EndDate);
             var view = controller.View(cashBookModel) as ViewResult;
             var actual = controller.TempData;

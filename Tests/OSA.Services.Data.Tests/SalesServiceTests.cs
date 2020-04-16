@@ -409,7 +409,7 @@
                 StartDate = StartDate,
                 StockNames = new List<string> { "sugar" },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
             var result = await controller.AddPartTwo(saleModel, StartDate, StockName, 1);
             var view = controller.View(saleModel) as ViewResult;
             var actual = controller.ModelState;
@@ -442,8 +442,8 @@
                 StartDate = StartDate,
                 StockNames = new List<string> { "sugar" },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
-            var moqSaleExist = moqSaleService.Setup(x => x.SaleExistAsync(startDate, "sugar", 1)).Returns(Task.FromResult("sugar"));
+            moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            moqSaleService.Setup(x => x.SaleExistAsync(startDate, "sugar", 1)).Returns(Task.FromResult("sugar"));
             var result = await controller.AddPartTwo(saleModel, StartDate, StockName, 1);
             var view = controller.View(saleModel) as ViewResult;
             var actual = controller.TempData;
@@ -487,9 +487,9 @@
                 StartDate = StartDate,
                 StockNames = new List<string> { "sugar" },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
-            var moqSaleExist = moqSaleService.Setup(x => x.SaleExistAsync(startDate, string.Empty, 1)).Returns(Task.FromResult("sugar"));
-            var moqIsBigger = moqSaleService.Setup(x => x.IsBigger(200.00M, 120, startDate, "sugar", 1)).Returns(Task.FromResult(true));
+            moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            moqSaleService.Setup(x => x.SaleExistAsync(startDate, string.Empty, 1)).Returns(Task.FromResult("sugar"));
+            moqSaleService.Setup(x => x.IsBigger(200.00M, 120, startDate, "sugar", 1)).Returns(Task.FromResult(true));
             var result = await controller.AddPartTwo(saleModel, StartDate, StockName, 1);
             var view = controller.View(saleModel) as ViewResult;
             var actual = controller.TempData;
@@ -514,8 +514,8 @@
                 EndDate = EndDate,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime(saleModel.StartDate)).Returns(false);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime(saleModel.EndDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(saleModel.StartDate)).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime(saleModel.EndDate)).Returns(false);
             var result = await controller.GetCompany(saleModel, StartDate, EndDate);
             var view = controller.View(saleModel) as ViewResult;
             var actual = controller.ModelState;
