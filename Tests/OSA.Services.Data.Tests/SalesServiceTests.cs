@@ -563,5 +563,44 @@
             Assert.Equal("1.5", saleModel.Sales.Select(x => x.AveragePrice).ElementAt(0).ToString());
             Assert.Equal("1", saleModel.Sales.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
+
+        [Fact]
+
+        public async Task DeleteReturnsCorrectModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqSaleService = new Mock<ISalesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iss = new SalesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been deleted successfully!";
+            var controller = new SaleController(moqSaleService.Object, moqCompanyService.Object, moqStockService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+            var sale = new Sale
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPrice = 20.00M,
+                ProfitPercent = 120,
+                AveragePrice = "1.5",
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.Sales.AddAsync(sale);
+            await context.SaveChangesAsync();
+            var listIds = new List<int> { 1 };
+            moqSaleService.Setup(x => x.DeleteAsync(new List<int> { 1 })).Returns(Task.FromResult(new List<Sale> { sale }));
+            var result = await controller.Delete(listIds);
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
     }
 }
