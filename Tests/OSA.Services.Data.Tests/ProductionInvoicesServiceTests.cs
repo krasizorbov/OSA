@@ -284,5 +284,43 @@
             Assert.Equal("120.00", productionInvoiceModel.ProductionInvoices.Select(x => x.Salary).ElementAt(0).ToString());
             Assert.Equal("1", productionInvoiceModel.ProductionInvoices.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
+
+        [Fact]
+
+        public async Task DeleteReturnsCorrectModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqProductionInvoiceService = new Mock<IProductionInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ipis = new ProductionInvoicesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been deleted successfully!";
+            var controller = new ProductionInvoiceController(moqProductionInvoiceService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+            var productionInvoice = new ProductionInvoice
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                InvoiceNumber = "1",
+                ExternalCost = 20.00M,
+                Salary = 120.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.ProductionInvoices.AddAsync(productionInvoice);
+            await context.SaveChangesAsync();
+
+            moqProductionInvoiceService.Setup(x => x.DeleteAsync(1)).Returns(Task.FromResult(productionInvoice));
+            var result = await controller.Delete(1);
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
     }
 }
