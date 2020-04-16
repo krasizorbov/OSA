@@ -353,5 +353,34 @@
             var actual = controller.TempData;
             Assert.Equal(expected, actual.Values.ElementAt(0));
         }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsModelStateDateTimeFormatError()
+        {
+            var moqCashBookService = new Mock<ICashBooksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.icbs = new CashBooksService(context);
+            var controller = new CashBookController(moqCashBookService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+
+            var cashBookModel = new CreateCashBookInputModel
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+                Saldo = 20.00M,
+                OwnFunds = 20.00M,
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/01/2020")).Returns(false);
+            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            var result = await controller.Add(cashBookModel, StartDate, EndDate);
+            var view = controller.View(cashBookModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
+        }
     }
 }
