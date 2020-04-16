@@ -5,9 +5,16 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Moq;
     using OSA.Common;
     using OSA.Data.Models;
+    using OSA.Services.Data.Interfaces;
+    using OSA.Web.Controllers;
+    using OSA.Web.ViewModels.Sales.Input_Models;
     using Xunit;
 
     public class SalesServiceTests
@@ -347,6 +354,64 @@
             await context.Sales.AddAsync(sale);
             await context.SaveChangesAsync();
             Assert.Equal("1", context.Sales.Count().ToString());
+        }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsCorrectModel()
+        {
+            var moqSaleService = new Mock<ISalesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iss = new SalesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been registered successfully!";
+            var controller = new SaleController(moqSaleService.Object, moqCompanyService.Object, moqStockService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var saleModel = new CreateSaleInputModelTwo
+            {
+                TotalPrice = 20.00M,
+                ProfitPercent = 120,
+                StartDate = StartDate,
+                StockNames = new List<string> { "sugar" },
+            };
+
+            var result = await controller.AddPartTwo(saleModel, StartDate, StockName, 1);
+            var view = controller.View(saleModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsModelStateDateTimeFormatError()
+        {
+            var moqSaleService = new Mock<ISalesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iss = new SalesService(context);
+            var controller = new SaleController(moqSaleService.Object, moqCompanyService.Object, moqStockService.Object, moqDateTimeService.Object);
+
+            var saleModel = new CreateSaleInputModelTwo
+            {
+                TotalPrice = 20.00M,
+                ProfitPercent = 120,
+                StartDate = StartDate,
+                StockNames = new List<string> { "sugar" },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            var result = await controller.AddPartTwo(saleModel, StartDate, StockName, 1);
+            var view = controller.View(saleModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
         }
     }
 }
