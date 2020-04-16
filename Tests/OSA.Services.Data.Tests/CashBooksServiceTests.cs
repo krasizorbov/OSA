@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -376,8 +377,8 @@
                 CompanyId = 1,
                 CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
             };
-            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/01/2020")).Returns(false);
-            var moqEndDate = moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("13/01/2020")).Returns(false);
+            moqDateTimeService.Setup(x => x.IsValidDateTime("13/31/2020")).Returns(false);
             var result = await controller.Add(cashBookModel, StartDate, EndDate);
             var view = controller.View(cashBookModel) as ViewResult;
             var actual = controller.ModelState;
