@@ -1,12 +1,20 @@
 ﻿namespace OSA.Services.Data.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Moq;
     using OSA.Common;
     using OSA.Data.Models;
+    using OSA.Services.Data.Interfaces;
+    using OSA.Web.Controllers;
+    using OSA.Web.ViewModels.ProductionInvoices.Input_Models;
     using Xunit;
 
     public class ProductionInvoicesServiceTests
@@ -109,6 +117,39 @@
             await context.ProductionInvoices.AddAsync(productionInvoice);
             await context.SaveChangesAsync();
             Assert.Equal("1", context.ProductionInvoices.Count().ToString());
+        }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsCorrectModel()
+        {
+            var moqProductionInvoiceService = new Mock<IProductionInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ipis = new ProductionInvoicesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been registered successfully!";
+            var controller = new ProductionInvoiceController(moqProductionInvoiceService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var productionInvoiceModel = new CreateProductionInvoiceInputModel
+            {
+                InvoiceNumber = "1234",
+                ExternalCost = 200.00M,
+                Salary = 600.00M,
+                Date = StartDate,
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+
+            var result = await controller.Add(productionInvoiceModel, StartDate);
+            var view = controller.View(productionInvoiceModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
         }
     }
 }
