@@ -15,6 +15,7 @@
     using OSA.Services.Data.Interfaces;
     using OSA.Web.Controllers;
     using OSA.Web.ViewModels.AvailableStocks.Input_Models;
+    using OSA.Web.ViewModels.AvailableStocks.View_Models;
     using Xunit;
 
     public class AvailableStocksServiceTests
@@ -540,6 +541,53 @@
             var view = controller.View(availableStockModel) as ViewResult;
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task GetAvailableStockReturnsCorrectBindingModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqAvailableStockService = new Mock<IAvailableStocksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iass = new AvailableStocksService(context);
+            var controller = new AvailableStockController(moqAvailableStockService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+
+            var availableStock = new AvailableStock
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalPurchasedAmount = 20.00M,
+                TotalPurchasedPrice = 30.00M,
+                BookValue = 20.00M,
+                AveragePrice = "1.50",
+                TotalSoldPrice = 35.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.AvailableStocks.AddAsync(availableStock);
+            await context.SaveChangesAsync();
+
+            var availableStockModel = new AvailableStockBindingViewModel
+            {
+                Name = "Ivan Petrov",
+                AvailableStocks = new List<AvailableStock> { availableStock },
+            };
+            var result = await controller.GetAvailableStock(1, StockName, StartDate, EndDate);
+            var view = controller.View(availableStock) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.Equal("Ivan Petrov", availableStockModel.Name);
+            Assert.Equal("1", availableStockModel.AvailableStocks.Select(x => x.Id).ElementAt(0).ToString());
+            Assert.Equal("1/1/2020 12:00:00 AM", availableStockModel.AvailableStocks.Select(x => x.Date).ElementAt(0).ToString());
+            Assert.Equal("30.00", availableStockModel.AvailableStocks.Select(x => x.TotalPurchasedPrice).ElementAt(0).ToString());
+            Assert.Equal("20.00", availableStockModel.AvailableStocks.Select(x => x.TotalPurchasedAmount).ElementAt(0).ToString());
+            Assert.Equal("1.50", availableStockModel.AvailableStocks.Select(x => x.AveragePrice).ElementAt(0).ToString());
+            Assert.Equal("1", availableStockModel.AvailableStocks.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
     }
 }
