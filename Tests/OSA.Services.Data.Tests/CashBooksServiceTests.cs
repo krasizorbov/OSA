@@ -15,6 +15,7 @@
     using OSA.Services.Data.Interfaces;
     using OSA.Web.Controllers;
     using OSA.Web.ViewModels.CashBooks.Input_Models;
+    using OSA.Web.ViewModels.CashBooks.View_Models;
     using Xunit;
 
     public class CashBooksServiceTests
@@ -642,6 +643,54 @@
             var view = controller.View(cashBookModel) as ViewResult;
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task GetCashBookReturnsCorrectBindingModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqCashBookService = new Mock<ICashBooksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.icbs = new CashBooksService(context);
+            var controller = new CashBookController(moqCashBookService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+            var cashBook = new CashBook
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                TotalInvoicePricesCost = 200.00M,
+                TotalSalaryCost = 200.00M,
+                TotalStockExternalCost = 50.00M,
+                TotalProfit = 100.00M,
+                Saldo = 100.00M,
+                OwnFunds = 0.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+            await context.CashBooks.AddAsync(cashBook);
+            await context.SaveChangesAsync();
+            var cashBookModel = new CashBookBindingViewModel
+            {
+                Name = "Ivan Petrov",
+                CashBooks = new List<CashBook> { cashBook },
+            };
+            var result = await controller.GetCashBook(1, StockName, StartDate, EndDate);
+            var view = controller.View(cashBookModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.Equal("Ivan Petrov", cashBookModel.Name);
+            Assert.Equal("1", cashBookModel.CashBooks.Select(x => x.Id).ElementAt(0).ToString());
+            Assert.Equal("1/1/2020 12:00:00 AM", cashBookModel.CashBooks.Select(x => x.Date).ElementAt(0).ToString());
+            Assert.Equal("200.00", cashBookModel.CashBooks.Select(x => x.TotalInvoicePricesCost).ElementAt(0).ToString());
+            Assert.Equal("200.00", cashBookModel.CashBooks.Select(x => x.TotalSalaryCost).ElementAt(0).ToString());
+            Assert.Equal("50.00", cashBookModel.CashBooks.Select(x => x.TotalStockExternalCost).ElementAt(0).ToString());
+            Assert.Equal("100.00", cashBookModel.CashBooks.Select(x => x.TotalProfit).ElementAt(0).ToString());
+            Assert.Equal("100.00", cashBookModel.CashBooks.Select(x => x.Saldo).ElementAt(0).ToString());
+            Assert.Equal("0.00", cashBookModel.CashBooks.Select(x => x.OwnFunds).ElementAt(0).ToString());
+            Assert.Equal("1", cashBookModel.CashBooks.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
     }
 }
