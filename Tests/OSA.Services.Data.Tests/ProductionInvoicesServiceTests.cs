@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,6 +16,7 @@
     using OSA.Services.Data.Interfaces;
     using OSA.Web.Controllers;
     using OSA.Web.ViewModels.ProductionInvoices.Input_Models;
+    using OSA.Web.ViewModels.ProductionInvoices.View_Models;
     using Xunit;
 
     public class ProductionInvoicesServiceTests
@@ -238,6 +240,49 @@
             var view = controller.View(productionInvoiceModel) as ViewResult;
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
+        }
+
+        [Fact]
+
+        public async Task GetStockReturnsCorrectBindingModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqProductionInvoiceService = new Mock<IProductionInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ipis = new ProductionInvoicesService(context);
+            var controller = new ProductionInvoiceController(moqProductionInvoiceService.Object, moqCompanyService.Object, moqDateTimeService.Object);
+            var productionInvoice = new ProductionInvoice
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                InvoiceNumber = "1",
+                ExternalCost = 20.00M,
+                Salary = 120.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+
+            await context.ProductionInvoices.AddAsync(productionInvoice);
+            await context.SaveChangesAsync();
+
+            var productionInvoiceModel = new ProductionInvoiceBindingViewModel
+            {
+                Name = "Ivan Petrov",
+                ProductionInvoices = new List<ProductionInvoice> { productionInvoice },
+            };
+            var result = await controller.GetProductionInvoice(1, "Sugar", StartDate, EndDate);
+            var view = controller.View(productionInvoiceModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.Equal("Ivan Petrov", productionInvoiceModel.Name);
+            Assert.Equal("1", productionInvoiceModel.ProductionInvoices.Select(x => x.Id).ElementAt(0).ToString());
+            Assert.Equal("1/1/2020 12:00:00 AM", productionInvoiceModel.ProductionInvoices.Select(x => x.Date).ElementAt(0).ToString());
+            Assert.Equal("1", productionInvoiceModel.ProductionInvoices.Select(x => x.InvoiceNumber).ElementAt(0).ToString());
+            Assert.Equal("20.00", productionInvoiceModel.ProductionInvoices.Select(x => x.ExternalCost).ElementAt(0).ToString());
+            Assert.Equal("120.00", productionInvoiceModel.ProductionInvoices.Select(x => x.Salary).ElementAt(0).ToString());
+            Assert.Equal("1", productionInvoiceModel.ProductionInvoices.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
     }
 }
