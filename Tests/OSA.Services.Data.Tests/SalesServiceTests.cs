@@ -413,5 +413,85 @@
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
         }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsSaleExistError()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqSaleService = new Mock<ISalesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iss = new SalesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Monthly sale for the current stock is already done!";
+            var controller = new SaleController(moqSaleService.Object, moqCompanyService.Object, moqStockService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var saleModel = new CreateSaleInputModelTwo
+            {
+                TotalPrice = 20.00M,
+                ProfitPercent = 120,
+                StartDate = StartDate,
+                StockNames = new List<string> { "sugar" },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            var moqSaleExist = moqSaleService.Setup(x => x.SaleExistAsync(startDate, "sugar", 1)).Returns(Task.FromResult("sugar"));
+            var result = await controller.AddPartTwo(saleModel, StartDate, StockName, 1);
+            var view = controller.View(saleModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
+
+        [Fact]
+
+        public async Task AddPartTwoReturnsSaleIsBiggerError()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqSaleService = new Mock<ISalesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqStockService = new Mock<IStocksService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iss = new SalesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Monthly sale for the current stock is already done!";
+            var controller = new SaleController(moqSaleService.Object, moqCompanyService.Object, moqStockService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+            var purchase = new Purchase
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                StockName = StockName,
+                TotalQuantity = 20.00M,
+                TotalPrice = 30.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+            await context.Purchases.AddAsync(purchase);
+            await context.SaveChangesAsync();
+            var saleModel = new CreateSaleInputModelTwo
+            {
+                TotalPrice = 200.00M,
+                ProfitPercent = 120,
+                StartDate = StartDate,
+                StockNames = new List<string> { "sugar" },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            var moqSaleExist = moqSaleService.Setup(x => x.SaleExistAsync(startDate, string.Empty, 1)).Returns(Task.FromResult("sugar"));
+            var moqIsBigger = moqSaleService.Setup(x => x.IsBigger(200.00M, 120, startDate, "sugar", 1)).Returns(Task.FromResult(true));
+            var result = await controller.AddPartTwo(saleModel, StartDate, StockName, 1);
+            var view = controller.View(saleModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
     }
 }
