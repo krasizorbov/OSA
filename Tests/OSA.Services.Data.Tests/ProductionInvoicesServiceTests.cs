@@ -178,5 +178,39 @@
             var actual = controller.ModelState;
             Assert.True(actual.IsValid == false);
         }
+
+        [Fact]
+
+        public async Task AddReturnsproductionInvoiceExistError()
+        {
+            var moqProductionInvoiceService = new Mock<IProductionInvoicesService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.ipis = new ProductionInvoicesService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "1234  already exists! Please enter a new invoice number.";
+            var controller = new ProductionInvoiceController(moqProductionInvoiceService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var productionInvoiceModel = new CreateProductionInvoiceInputModel
+            {
+                InvoiceNumber = "1234",
+                ExternalCost = 200.00M,
+                Salary = 600.00M,
+                Date = StartDate,
+                CompanyId = 1,
+                CompanyNames = new List<SelectListItem> { new SelectListItem { Value = "1", Text = "Ivan Petrov", } },
+            };
+            var moqStartDate = moqDateTimeService.Setup(x => x.IsValidDateTime("01/01/2020")).Returns(true);
+            var moqInvoiceExists = moqProductionInvoiceService.Setup(x => x.InvoiceExistAsync("1234", 1)).Returns(Task.FromResult("1234"));
+            var result = await controller.Add(productionInvoiceModel, StartDate);
+            var view = controller.View(productionInvoiceModel) as ViewResult;
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
     }
 }
