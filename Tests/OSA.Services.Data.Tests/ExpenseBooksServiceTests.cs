@@ -693,5 +693,43 @@
             Assert.Equal("100.00", expenseBookModel.ExpenseBooks.Select(x => x.Profit).ElementAt(0).ToString());
             Assert.Equal("1", expenseBookModel.ExpenseBooks.Select(x => x.CompanyId).ElementAt(0).ToString());
         }
+
+        [Fact]
+
+        public async Task DeleteReturnsCorrectModel()
+        {
+            var startDate = DateTime.ParseExact(StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(EndDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            var moqExpenseBookService = new Mock<IExpenseBooksService>();
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqDateTimeService = new Mock<IDateTimeValidationService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.iebs = new ExpenseBooksService(context);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            var expected = tempData["message"] = "Data has been deleted successfully!";
+            var controller = new ExpenseBookController(moqExpenseBookService.Object, moqCompanyService.Object, moqDateTimeService.Object)
+            {
+                TempData = tempData,
+            };
+
+            var expenseBook = new ExpenseBook
+            {
+                Id = 1,
+                CreatedOn = startDate,
+                TotalExternalCost = 20.00M,
+                TotalSalaryCost = 20.00M,
+                TotalBookValue = 20.00M,
+                Profit = 100.00M,
+                Date = startDate,
+                CompanyId = 1,
+            };
+            await context.ExpenseBooks.AddAsync(expenseBook);
+            await context.SaveChangesAsync();
+            moqExpenseBookService.Setup(x => x.DeleteAsync(1)).Returns(Task.FromResult(expenseBook));
+            var result = await controller.Delete(1);
+            var actual = controller.TempData;
+            Assert.Equal(expected, actual.Values.ElementAt(0));
+        }
     }
 }
