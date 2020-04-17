@@ -61,6 +61,13 @@
         [Authorize]
         public async Task<IActionResult> AddPartTwo(int id)
         {
+            var companyIdExists = this.stocksService.CompanyIdExists(id);
+            if (!companyIdExists)
+            {
+                this.Response.StatusCode = 404;
+                return this.View("NotFound", id);
+            }
+
             var invoices = await this.invoicesService.GetAllInvoicesByCompanyIdAsync(id);
 
             if (invoices.Count == 0)

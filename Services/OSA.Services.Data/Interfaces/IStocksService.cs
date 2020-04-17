@@ -15,5 +15,7 @@
         Task<ICollection<Stock>> GetStocksByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId);
 
         Task<List<Stock>> DeleteAsync(List<int> ids);
+
+        bool CompanyIdExists(int id);
     }
 }

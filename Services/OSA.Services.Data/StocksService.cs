@@ -36,6 +36,15 @@
             await this.context.SaveChangesAsync();
         }
 
+        public bool CompanyIdExists(int id)
+        {
+            if (this.context.Companies.Any(x => x.Id == id))
+            {
+                return true;
+            }
+
+            return false;
+        }
         public async Task<List<Stock>> DeleteAsync(List<int> ids)
         {
             var stocks = new List<Stock>();
