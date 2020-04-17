@@ -10,6 +10,7 @@
     using OSA.Services.Data;
     using OSA.Services.Data.Interfaces;
     using OSA.Web.ValidationEnum;
+    using OSA.Web.ViewModels;
     using OSA.Web.ViewModels.Invoices.Input_Models;
     using OSA.Web.ViewModels.Invoices.View_Models;
 
@@ -62,6 +63,13 @@
         [Authorize]
         public async Task<IActionResult> AddPartTwo(int id)
         {
+            var companyIdExists = this.invoicesService.CompanyIdExists(id);
+            if (!companyIdExists)
+            {
+                this.Response.StatusCode = 404;
+                return this.View("NotFound", id);
+            }
+
             var supplierNames = await this.suppliersService.GetAllSuppliersByCompanyIdAsync(id);
 
             if (supplierNames.Count == 0)

@@ -22,5 +22,7 @@
         Task<Invoice> DeleteAsync(int id);
 
         Task<Invoice> GetInvoiceByIdAsync(int id);
+
+        bool CompanyIdExists(int id);
     }
 }

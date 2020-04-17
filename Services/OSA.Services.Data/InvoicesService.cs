@@ -36,6 +36,16 @@
             await this.context.SaveChangesAsync();
         }
 
+        public bool CompanyIdExists(int id)
+        {
+            if (this.context.Companies.Any(x => x.Id == id))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<Invoice> DeleteAsync(int id)
         {
             var invoice = await this.context.Invoices.Where(x => x.Id == id).FirstOrDefaultAsync();

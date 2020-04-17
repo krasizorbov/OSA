@@ -1,0 +1,15 @@
+﻿@model int
+@{
+    this.ViewData["Title"] = "NotFound";
+}
+
+<div class="alert alert-danger mt-1 mb-1">
+    <h1 class="text-danger">Error.</h1>
+    <h2 class="text-danger">An error occurred while processing your request.</h2>
+    <h3>Company with ID = @Model cannot be found!</h3>
+</div>
+@*<a asp-action="AddPartTwo" asp-controller="Invoice" class=" btn btn-outline-success">Back</a>*@
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
