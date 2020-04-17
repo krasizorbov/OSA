@@ -65,7 +65,7 @@
             if (!companyIdExists)
             {
                 this.Response.StatusCode = 404;
-                return this.View("NotFound", id);
+                return this.View("Error", id);
             }
 
             var invoices = await this.invoicesService.GetAllInvoicesByCompanyIdAsync(id);
