@@ -45,6 +45,7 @@
 
             return false;
         }
+
         public async Task<List<Stock>> DeleteAsync(List<int> ids)
         {
             var stocks = new List<Stock>();

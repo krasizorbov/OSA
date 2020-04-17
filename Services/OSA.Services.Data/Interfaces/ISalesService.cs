@@ -21,5 +21,7 @@
         Task<bool> IsBigger(decimal totalPrice, int profitPercent, DateTime startDate, string stockName, int companyId);
 
         Task<List<Sale>> DeleteAsync(List<int> ids);
+
+        bool CompanyIdExists(int id);
     }
 }

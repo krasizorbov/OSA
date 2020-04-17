@@ -38,6 +38,16 @@
             await this.context.SaveChangesAsync();
         }
 
+        public bool CompanyIdExists(int id)
+        {
+            if (this.context.Companies.Any(x => x.Id == id))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<List<Sale>> DeleteAsync(List<int> ids)
         {
             var sales = new List<Sale>();
