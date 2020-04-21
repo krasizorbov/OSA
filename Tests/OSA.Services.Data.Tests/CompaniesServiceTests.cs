@@ -1,15 +1,14 @@
 ﻿namespace OSA.Services.Data.Tests
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Mvc;
     using Moq;
-    using OSA.Data;
-    using OSA.Data.Common.Repositories;
     using OSA.Data.Models;
+    using OSA.Web.Controllers;
+    using OSA.Web.ViewModels.Companies.Input_Models;
     using Xunit;
 
     public class CompaniesServiceTests
@@ -154,6 +153,42 @@
             var ex = await Assert.ThrowsAsync<ArgumentException>(() =>
                 this.cs.AddAsync(company.Name, company.Bulstat, company.UserId));
             Assert.Equal(expectedErrorMessage, ex.Message);
+        }
+
+        [Fact]
+
+        public async Task CreateCompanyExistsError()
+        {
+            var moqCompanyService = new Mock<ICompaniesService>();
+            var moqUserService = new Mock<IUsersService>();
+            var context = InitializeContext.CreateContextForInMemory();
+            this.cs = new CompaniesService(this.us, context);
+            var controller = new CompanyController(moqCompanyService.Object, moqUserService.Object);
+            var userId = Guid.NewGuid().ToString();
+            var moqUserId = moqUserService.Setup(x => x.GetCurrentUserId()).Returns(userId);
+            var company = new Company
+            {
+                Id = 1,
+                CreatedOn = DateTime.UtcNow,
+                IsDeleted = false,
+                Name = "Ivan petrov",
+                Bulstat = "123456789",
+                UserId = userId,
+            };
+
+            await context.Companies.AddAsync(company);
+            await context.SaveChangesAsync();
+
+            var companyModel = new CreateCompanyInputModel
+            {
+                Bulstat = "123456789",
+                Name = "Ivan Petrov",
+            };
+            moqCompanyService.Setup(x => x.CompanyExistAsync(companyModel.Name, userId)).Returns(Task.FromResult(companyModel.Bulstat));
+            var result = await controller.Add(companyModel);
+            var view = controller.View(companyModel) as ViewResult;
+            var actual = controller.ModelState;
+            Assert.True(actual.IsValid == false);
         }
     }
 }
