@@ -30,7 +30,6 @@
 
         [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(CreateCompanyInputModel companyInputModel)
         {
             var userId = this.userService.GetCurrentUserId();

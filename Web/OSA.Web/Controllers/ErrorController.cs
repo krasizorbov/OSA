@@ -16,6 +16,11 @@
                     this.ViewBag.Path = statusCodeResult.OriginalPath;
                     this.ViewBag.QS = statusCodeResult.OriginalQueryString;
                     break;
+                case 500:
+                    this.ViewBag.ErrorMessage = "Internal Server Error";
+                    this.ViewBag.Path = statusCodeResult.OriginalPath;
+                    this.ViewBag.QS = statusCodeResult.OriginalQueryString;
+                    break;
             }
 
             return this.View("NotFound");

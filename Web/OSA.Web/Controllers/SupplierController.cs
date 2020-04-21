@@ -42,7 +42,6 @@
 
         [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(CreateSupplierInputModel supplierInputModel)
         {
             var supplierExist = await this.suppliersService.SupplierExistAsync(supplierInputModel.Name, supplierInputModel.CompanyId);
