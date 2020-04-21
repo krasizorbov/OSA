@@ -2,8 +2,10 @@
 {
     using System.ComponentModel.DataAnnotations;
 
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
     using OSA.Common;
 
+    [BindRequired]
     public class CreateCompanyInputModel
     {
         private const string BulstatFormat = "[0-9]*";
