@@ -21,6 +21,7 @@
                     <th>Total Price</th>
                     <th>Issue Date</th>
                     <th>Invoice Number</th>
+                    <th>Edit Stock</th>
                 </tr>
                 @foreach (var stock in Model.Stocks)
                 {
@@ -35,10 +36,13 @@
                         <td>@stock.Price</td>
                         <td>@String.Format("{0:d/M/yyyy}", stock.Date)</td>
                         <td>@await this.invoicesService.GetInvoiceNumberByInvoiceIdAsync(stock.InvoiceId)</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="Stock" asp-route-Id="@stock.Id" class="btn btn-primary m-1">Edit</a>
+                        </td>
                     </tr>
                 }
             </table>
-            @*</center>*@
+            <div align="left" class="col-md-6"><strong>Total Price Sum: </strong>@Model.Stocks.Sum(x => x.Price)</div>
             <br />
         </div>
         @if (Model.Stocks.Count() != 0)

@@ -1,0 +1,42 @@
+﻿@model OSA.Web.ViewModels.Stocks.Input_Models.EditStockViewModel
+@{
+    this.ViewData["Title"] = "Edit Stock";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Stock" asp-action="Edit" method="post">
+            <h1>Edit Stock</h1>
+            <partial name="_FlashMessageTypePartial" />
+            <input hidden asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity"></label>
+                <input asp-for="Quantity" class="form-control">
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price"></label>
+                <input asp-for="Price" class="form-control">
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" id="picker" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+            <input type="button" value="BACK" class="btn btn-primary"
+                   onclick="location.href='javascript:history.go(-1)'" />
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

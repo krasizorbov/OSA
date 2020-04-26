@@ -202,5 +202,43 @@
             this.TempData["message"] = GlobalConstants.SuccessfullyDeleted;
             return this.Redirect("/");
         }
+
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var stock = await this.stocksService.GetStockById(id);
+
+            var model = new EditStockViewModel
+            {
+                Id = stock.Id,
+                Name = stock.Name,
+                Price = stock.Price,
+                Quantity = stock.Quantity,
+                Date = string.Format("{0:dd/MM/yyyy}", stock.Date),
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditStockViewModel editModel)
+        {
+            var isValidDateTime = this.dateTimeValidationService.IsValidDateTime(editModel.Date);
+
+            if (!this.ModelState.IsValid || !isValidDateTime)
+            {
+                if (!isValidDateTime)
+                {
+                    this.ModelState.AddModelError(nameof(editModel.Date), editModel.Date + GlobalConstants.InvalidDateTime);
+                }
+
+                return this.View();
+            }
+
+            var date = DateTime.ParseExact(editModel.Date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            await this.stocksService.UpdateStock(editModel.Id, editModel.Name, editModel.Price, editModel.Quantity, date);
+            this.TempData["message"] = GlobalConstants.SuccessfullyUpdated;
+            return this.Redirect("/");
+        }
     }
 }

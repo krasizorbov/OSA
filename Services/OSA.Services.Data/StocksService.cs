@@ -64,6 +64,12 @@
             return stocks;
         }
 
+        public async Task<Stock> GetStockById(int id)
+        {
+            var stock = await this.context.Stocks.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return stock;
+        }
+
         public async Task<List<string>> GetStockNamesByCompanyIdAsync(int companyId)
         {
             var stockNames = await this.context.Stocks
@@ -83,6 +89,16 @@
                 .ToListAsync();
 
             return stocks;
+        }
+
+        public async Task UpdateStock(int id, string name, decimal price, decimal quantity, DateTime date)
+        {
+            var stock = await this.GetStockById(id);
+            stock.Name = name;
+            stock.Price = price;
+            stock.Quantity = quantity;
+            stock.Date = date;
+            await this.context.SaveChangesAsync();
         }
     }
 }

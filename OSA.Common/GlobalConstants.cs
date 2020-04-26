@@ -56,6 +56,8 @@
 
         public const string SuccessfullyDeleted = "Data has been deleted successfully!";
 
+        public const string SuccessfullyUpdated = "Data has been updated successfully!";
+
         public const string AvailableStockRegisterErrorMessage = "Nothing has been registered! No available stock for previous month found!";
     }
 }

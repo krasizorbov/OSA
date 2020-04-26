@@ -17,5 +17,9 @@
         Task<List<Stock>> DeleteAsync(List<int> ids);
 
         bool CompanyIdExists(int id);
+
+        Task<Stock> GetStockById(int id);
+
+        Task UpdateStock(int id, string name, decimal price, decimal quantity, DateTime date);
     }
 }
