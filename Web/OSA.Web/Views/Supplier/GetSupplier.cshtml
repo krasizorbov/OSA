@@ -4,14 +4,15 @@
 }
 
 <div class="text-center">
-    <h3>List of Suppliers for @Model.Name</h3>
+    <h3>Списък на доставчици за @Model.Name</h3>
     <div class="col-md-12">
         <center>
             <table border="0">
                 <tr>
                     <th>ID</th>
-                    <th>Supplier Name</th>
-                    <th>Bulstat</th>
+                    <th>Име на доставчик</th>
+                    <th>Булстат</th>
+                    <th>Редактирай</th>
                 </tr>
                 @foreach (var supplier in Model.Suppliers)
                 {
@@ -19,6 +20,9 @@
                         <td>@supplier.Id</td>
                         <td>@supplier.Name</td>
                         <td>@supplier.Bulstat</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="Supplier" asp-route-Id="@supplier.Id" class="btn btn-primary m-1">Edit</a>
+                        </td>
                     </tr>
                 }
             </table>

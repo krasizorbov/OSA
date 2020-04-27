@@ -46,6 +46,12 @@
             return supplierNames;
         }
 
+        public async Task<Supplier> GetSupplierById(int id)
+        {
+            var supplier = await this.context.Suppliers.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return supplier;
+        }
+
         public async Task<string> GetSupplierNameBySupplierIdAsync(int supplierId)
         {
             var supplierName = await this.context.Suppliers.Where(x => x.Id == supplierId).Select(x => x.Name).FirstOrDefaultAsync();
@@ -68,6 +74,14 @@
                 .FirstOrDefaultAsync();
 
             return name;
+        }
+
+        public async Task UpdateSupplier(int id, string name, string bulstat)
+        {
+            var supplier = await this.GetSupplierById(id);
+            supplier.Name = name;
+            supplier.Bulstat = bulstat;
+            await this.context.SaveChangesAsync();
         }
     }
 }

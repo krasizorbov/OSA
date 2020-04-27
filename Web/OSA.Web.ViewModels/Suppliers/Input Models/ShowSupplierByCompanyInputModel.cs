@@ -8,8 +8,10 @@
 
     public class ShowSupplierByCompanyInputModel
     {
+        private const string DisplayCompany = "Фирма";
+
         [BindRequired]
-        [Display(Name = "Company")]
+        [Display(Name = DisplayCompany)]
         public int CompanyId { get; set; }
 
         public IEnumerable<SelectListItem> CompanyNames { get; set; }

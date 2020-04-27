@@ -1,13 +1,13 @@
-﻿@model OSA.Web.ViewModels.Companies.Input_Models.EditCompanyViewModel
+﻿@model OSA.Web.ViewModels.Suppliers.Input_Models.EditSupplierViewModel
 @{
-    this.ViewData["Title"] = "Edit Company";
+    this.ViewData["Title"] = "Edit Supplier";
 }
 
 <div class="row">
     <div class="col-md-4">
         <form method="post">
-            <h3>Редактирай Фирма</h3>
-            <input hidden asp-for="Id" />
+            <h3>Редактирай Доставчик</h3>
+            <partial name="_FlashMessageTypePartial" />
             <div class="form-group">
                 <label asp-for="Name"></label>
                 <input asp-for="Name" class="form-control">

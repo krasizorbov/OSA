@@ -17,5 +17,9 @@
         Task<List<Supplier>> GetSuppliersByCompanyIdAsync(int companyId);
 
         Task<string> GetSupplierNameBySupplierIdAsync(int supplierId);
+
+        Task<Supplier> GetSupplierById(int id);
+
+        Task UpdateSupplier(int id, string name, string bulstat);
     }
 }

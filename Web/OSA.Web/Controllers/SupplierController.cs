@@ -115,5 +115,33 @@
 
             return this.View(model);
         }
+
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var supplier = await this.suppliersService.GetSupplierById(id);
+
+            var model = new EditSupplierViewModel
+            {
+                Id = supplier.Id,
+                Name = supplier.Name,
+                Bulstat = supplier.Bulstat,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditSupplierViewModel editModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            await this.suppliersService.UpdateSupplier(editModel.Id, editModel.Name, editModel.Bulstat);
+            this.TempData["message"] = GlobalConstants.SuccessfullyUpdated;
+            return this.Redirect("/");
+        }
     }
 }
