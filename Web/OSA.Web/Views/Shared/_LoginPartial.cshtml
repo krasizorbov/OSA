@@ -9,69 +9,69 @@
     {
         <li class="nav-item dropdown">
             <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Company
+                Фирми
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" asp-area="" asp-controller="Company" asp-action="Add">Register A Company</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Supplier" asp-action="Add">Register A Supplier</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Company" asp-action="Get">Show List Of All Companies</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Supplier" asp-action="GetCompany">Show List Of All Suppliers</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Company" asp-action="Add">Регистрация на фирма</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Supplier" asp-action="Add">Регистрация на доставчик</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Company" asp-action="Get">Списък на фирми</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Supplier" asp-action="GetCompany">Списък на доставчици</a>
             </div>
         </li>
 
         <li class="nav-item dropdown">
             <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Invoice
+                Фактури
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" asp-area="" asp-controller="Invoice" asp-action="AddPartOne">Register A Supplier Invoice</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Invoice" asp-action="GetCompany">Show Invoices By Company</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Invoice" asp-action="AddPartOne">Осчетоводи фактура</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Invoice" asp-action="GetCompany">Списък на фактурите</a>
             </div>
         </li>
 
         <li class="nav-item dropdown">
             <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Stock
+                Стоки
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" asp-area="" asp-controller="Stock" asp-action="AddPartOne">Register A Stock</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Purchase" asp-action="Add">Register Monthly Purchases</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Sale" asp-action="AddPartOne">Register A Monthly Sale</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Stock" asp-action="GetCompany">Show Stocks By Company</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Purchase" asp-action="GetCompany">Show Monthly Purchases</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Sale" asp-action="GetCompany">Show Monthly Sales</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Stock" asp-action="AddPartOne">Регистрация на стока</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Purchase" asp-action="Add">Регистрация на месечни покупки</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Sale" asp-action="AddPartOne">Регистрация на месечна продажба</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Stock" asp-action="GetCompany">Списък на стоки</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Purchase" asp-action="GetCompany">Списък на покупки</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Sale" asp-action="GetCompany">Списък на продажби</a>
             </div>
         </li>
 
         <li class="nav-item dropdown">
             <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Availability
+                Наличност
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" asp-area="" asp-controller="AvailableStock" asp-action="Add">Calculate Monthly Avalable Stock</a>
-                <a class="dropdown-item" asp-area="" asp-controller="AvailableStock" asp-action="GetCompany">Show all Available Stock By Company</a>
+                <a class="dropdown-item" asp-area="" asp-controller="AvailableStock" asp-action="Add">Добавяне на месечна наличност</a>
+                <a class="dropdown-item" asp-area="" asp-controller="AvailableStock" asp-action="GetCompany">Списък на наличноста</a>
             </div>
         </li>
 
         <li class="nav-item dropdown">
             <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Expense Book
+                Разходна Книга
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" asp-area="" asp-controller="ProductionInvoice" asp-action="Add">Register a Production Invoice</a>
-                <a class="dropdown-item" asp-area="" asp-controller="ExpenseBook" asp-action="Add">Calculate Monthly Expense Book</a>
-                <a class="dropdown-item" asp-area="" asp-controller="ProductionInvoice" asp-action="GetCompany">Show all Production Invoices</a>
-                <a class="dropdown-item" asp-area="" asp-controller="ExpenseBook" asp-action="GetCompany">Show Monthly Expense Book</a>
+                <a class="dropdown-item" asp-area="" asp-controller="ProductionInvoice" asp-action="Add">Регистрация на касов ордър</a>
+                <a class="dropdown-item" asp-area="" asp-controller="ExpenseBook" asp-action="Add">Добавяне на месечна разходна книга</a>
+                <a class="dropdown-item" asp-area="" asp-controller="ProductionInvoice" asp-action="GetCompany">Списък на разходен ордър</a>
+                <a class="dropdown-item" asp-area="" asp-controller="ExpenseBook" asp-action="GetCompany">Списък на разходната книга</a>
             </div>
         </li>
 
         <li class="nav-item dropdown">
             <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Cash Book
+                Касова Книга
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" asp-area="" asp-controller="CashBook" asp-action="Add">Calculate Monthly Cash Book</a>
-                <a class="dropdown-item" asp-area="" asp-controller="CashBook" asp-action="GetCompany">Display Monthly Cash Book</a>
+                <a class="dropdown-item" asp-area="" asp-controller="CashBook" asp-action="Add">Добавяне на месечна касова книга</a>
+                <a class="dropdown-item" asp-area="" asp-controller="CashBook" asp-action="GetCompany">Списък на касовата книга</a>
             </div>
         </li>
 
