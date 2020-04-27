@@ -1,0 +1,30 @@
+﻿@model OSA.Web.ViewModels.Companies.Input_Models.EditCompanyViewModel
+@{
+    this.ViewData["Title"] = "Edit Company";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <h3>Create A Company</h3>
+            <input hidden asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bulstat"></label>
+                <input asp-for="Bulstat" class="form-control">
+                <span asp-validation-for="Bulstat" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <input type="button" value="BACK" class="btn btn-primary"
+                   onclick="location.href='javascript:history.go(-1)'" />
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -66,5 +66,33 @@
 
             return this.View(model);
         }
+
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var company = await this.companiesService.GetCompanyById(id);
+
+            var model = new EditCompanyViewModel
+            {
+                Id = company.Id,
+                Name = company.Name,
+                Bulstat = company.Bulstat,
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditCompanyViewModel editModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            await this.companiesService.UpdateCompany(editModel.Id, editModel.Name, editModel.Bulstat);
+            this.TempData["message"] = GlobalConstants.SuccessfullyUpdated;
+            return this.Redirect("/");
+        }
     }
 }

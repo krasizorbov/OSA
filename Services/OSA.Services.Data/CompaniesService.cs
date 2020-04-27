@@ -57,11 +57,25 @@
             return companies;
         }
 
+        public async Task<Company> GetCompanyById(int id)
+        {
+            var company = await this.context.Companies.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return company;
+        }
+
         public async Task<string> GetCompanyNameByIdAsync(int companyId)
         {
             var name = await this.context.Companies.Where(x => x.Id == companyId).Select(x => x.Name).FirstOrDefaultAsync();
 
             return name;
+        }
+
+        public async Task UpdateCompany(int id, string name, string bulstat)
+        {
+            var company = await this.GetCompanyById(id);
+            company.Name = name;
+            company.Bulstat = bulstat;
+            await this.context.SaveChangesAsync();
         }
 
         async Task<ICollection<SelectListItem>> ICompaniesService.GetAllCompaniesByUserIdAsync()

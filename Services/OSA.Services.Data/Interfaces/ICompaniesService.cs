@@ -17,5 +17,9 @@
         Task<ICollection<Company>> GetCompaniesByUserIdAsync();
 
         Task<string> GetCompanyNameByIdAsync(int companyId);
+
+        Task<Company> GetCompanyById(int id);
+
+        Task UpdateCompany(int id, string name, string bulstat);
     }
 }

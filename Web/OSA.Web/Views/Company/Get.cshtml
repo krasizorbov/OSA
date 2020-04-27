@@ -12,6 +12,7 @@
                     <th>ID</th>
                     <th>Company Name</th>
                     <th>Bulstat</th>
+                    <th>Edit Company</th>
                 </tr>
                 @foreach (var company in Model.Companies)
                 {
@@ -19,6 +20,9 @@
                         <td>@company.Id</td>
                         <td>@company.Name</td>
                         <td>@company.Bulstat</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="Company" asp-route-Id="@company.Id" class="btn btn-primary m-1">Edit</a>
+                        </td>
                     </tr>
                 }
             </table>
