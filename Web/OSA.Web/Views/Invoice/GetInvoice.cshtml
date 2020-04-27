@@ -5,18 +5,18 @@
 }
 @{int index = 0;}
 <div class="text-center">
-    <h3>List of Invoices for @Model.Name</h3>
+    <h3>Списък с фактури на @Model.Name</h3>
     <div class="col-md-12">
         <center>
             <table border="0">
                 <tr>
                     <th>ID</th>
-                    <th>Invoice Number</th>
-                    <th>Total Amount</th>
-                    <th>Issue Date</th>
-                    <th>Supplier Name</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th>Номер на Фактура</th>
+                    <th>Парична стойност</th>
+                    <th>Дата на издаване</th>
+                    <th>Име на доставчик</th>
+                    <th>Редактирай</th>
+                    <th>Изтрий</th>
                 </tr>
                 @foreach (var invoice in Model.Invoices)
                 {
@@ -32,7 +32,7 @@
                         <td>
                             <form asp-controller="Invoice" asp-action="Delete" asp-route-id="@invoice.Id" method="post" class="form-inline" role="form">
                                 <input type="hidden" id="@invoice.Id">
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete Invoice?')">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Искате ли да изтриете фактурата?')">
                                     <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
                                 </button>
                             </form>
@@ -40,7 +40,7 @@
                     </tr>
                 }
             </table>
-            <div align="left" class="col-md-6"><strong>Total Invoice Price Sum: </strong>@Model.Invoices.Sum(x => x.TotalAmount)</div>
+            <div align="left" class="col-md-8"><strong>Тотал : </strong>@Model.Invoices.Sum(x => x.TotalAmount)</div>
         </center>
     </div>
 </div>

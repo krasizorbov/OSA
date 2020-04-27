@@ -10,25 +10,34 @@
     public class CreateInvoiceInputModelTwo
     {
         private const string InvoiceNumberFormat = "0*[0-9]*";
+        private const string DisplayNumber = "Номер на Фактура";
+        private const string RequiredNumber = "Номера на фактурата е задължителен!";
+        private const string DisplayDate = "Дата на издаване на фактурата - (дд/ММ/гггг)";
+        private const string RequiredDate = "Датата е задължителна!";
+        private const string DisplayAmount = "Парична стойност";
+        private const string RequiredAmount = "Сумата е задължителна!";
+        private const string DisplaySupplier = "Доставчик";
+        private const string RequiredSupplier = "Доставчика е задължителен!";
 
-        [Required]
-        [Display(Name = "Invoice Number")]
+        [Display(Name = DisplayNumber)]
+        [Required(ErrorMessage = RequiredNumber)]
         [MaxLength(GlobalConstants.InvoiceNumberMaxLength)]
         [RegularExpression(InvoiceNumberFormat, ErrorMessage = GlobalConstants.ValidInvoiceNumber)]
         public string InvoiceNumber { get; set; }
 
-        [Required]
-        [Display(Name = "Invoice Issue Date - (dd/mm/yyyy)")]
+        [Display(Name = DisplayDate)]
+        [Required(ErrorMessage = RequiredDate)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
 
-        [Required]
-        [Display(Name = "Total Amount")]
+        [Display(Name = DisplayAmount)]
+        [Required(ErrorMessage = RequiredAmount)]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal TotalAmount { get; set; }
 
         [BindRequired]
-        [Display(Name = "Supplier")]
+        [Display(Name = DisplaySupplier)]
+        [Required(ErrorMessage = RequiredSupplier)]
         public int SupplierId { get; set; }
 
         public IEnumerable<SelectListItem> SupplierNames { get; set; }

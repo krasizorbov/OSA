@@ -28,36 +28,34 @@
 
         public const int ReceiptNumberMaxLength = 15;
 
-        public const string InvalidBulstat = "A Valid Bulstat Contains Only Numbers!";
+        public const string InvalidBulstat = "Невалиден Булстат!";
 
-        public const string ValidInvoiceNumber = "A Valid Invoice Contains Only Numbers!";
+        public const string ValidInvoiceNumber = "Невалиден Номер на Фактура!";
 
-        public const string ValidReceiptNumber = "A Valid Receipt Contains Only Numbers!";
+        public const string InvalidDateTimeFormat = "Невалиден Формат на Датата!";
 
-        public const string InvalidDateTimeFormat = "This is not a valid date!";
-
-        public const string InvalidDateTime = " This is not a valid date!";
+        public const string InvalidDateTime = " Невалидна Дата!";
 
         public const string DateTimeRegexFormat = @"[0-9]{2}\/(0*[1-9]|1[0-2])\/[0-9]{4}";
 
-        public const string CompanyErrorMessage = "Please register a company before proceeding!";
+        public const string CompanyErrorMessage = "Моля регистрирайте фирма преди да продължите!";
 
-        public const string SupplierErrorMessage = "Please register a supplier before proceeding!";
+        public const string SupplierErrorMessage = "Моля регистрирайте доставчик преди да продължите!";
 
-        public const string InvoiceErrorMessage = "Please register an invoice before proceeding!";
+        public const string InvoiceErrorMessage = "Моля регистрирайте фактура преди да продължите!";
 
-        public const string StockErrorMessage = "Please register a stock before proceeding!";
+        public const string StockErrorMessage = "Моля регистрирайте стока преди да продължите!";
 
-        public const string PurchaseErrorMessage = "Please register a purchase before proceeding!";
+        public const string PurchaseErrorMessage = "Моля регистрирайте покупка преди да продължите!";
 
         public const string DateFormat = "dd/MM/yyyy";
 
-        public const string SuccessfullyRegistered = "Data has been registered successfully!";
+        public const string SuccessfullyRegistered = "Данните са регистрирани УСПЕШНО!";
 
-        public const string SuccessfullyDeleted = "Data has been deleted successfully!";
+        public const string SuccessfullyDeleted = "Данните са изтрити УСПЕШНО!";
 
-        public const string SuccessfullyUpdated = "Data has been updated successfully!";
+        public const string SuccessfullyUpdated = "Данните са актуализирани УСПЕШНО!";
 
-        public const string AvailableStockRegisterErrorMessage = "Nothing has been registered! No available stock for previous month found!";
+        public const string AvailableStockRegisterErrorMessage = "Данните не са регистрирани! Няма наличност за предния месец!";
     }
 }
