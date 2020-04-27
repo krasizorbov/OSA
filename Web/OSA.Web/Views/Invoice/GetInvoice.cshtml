@@ -15,6 +15,7 @@
                     <th>Total Amount</th>
                     <th>Issue Date</th>
                     <th>Supplier Name</th>
+                    <th>Edit</th>
                     <th>Delete</th>
                 </tr>
                 @foreach (var invoice in Model.Invoices)
@@ -23,8 +24,11 @@
                         <td>@(index += 1)</td>
                         <td>@invoice.InvoiceNumber</td>
                         <td>@invoice.TotalAmount.ToString("F")</td>
-                        <td>@String.Format("{0:d/M/yyyy}", invoice.Date)</td>
+                        <td>@String.Format("{0:dd/MM/yyyy}", invoice.Date)</td>
                         <td>@await this.suppliersService.GetSupplierNameBySupplierIdAsync(invoice.SupplierId)</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="Invoice" asp-route-Id="@invoice.Id" class="btn btn-primary m-1">Edit</a>
+                        </td>
                         <td>
                             <form asp-controller="Invoice" asp-action="Delete" asp-route-id="@invoice.Id" method="post" class="form-inline" role="form">
                                 <input type="hidden" id="@invoice.Id">

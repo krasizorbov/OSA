@@ -33,7 +33,7 @@
                         <td>@stock.Name</td>
                         <td>@stock.Quantity</td>
                         <td>@stock.Price</td>
-                        <td>@String.Format("{0:d/M/yyyy}", stock.Date)</td>
+                        <td>@String.Format("{0:dd/MM/yyyy}", stock.Date)</td>
                         <td>@await this.invoicesService.GetInvoiceNumberByInvoiceIdAsync(stock.InvoiceId)</td>
                         <td>
                             <a asp-action="Edit" asp-controller="Stock" asp-route-Id="@stock.Id" class="btn btn-primary m-1">Edit</a>

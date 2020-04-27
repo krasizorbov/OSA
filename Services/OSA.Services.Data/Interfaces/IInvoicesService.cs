@@ -24,5 +24,7 @@
         Task<Invoice> GetInvoiceByIdAsync(int id);
 
         bool CompanyIdExists(int id);
+
+        Task UpdateInvoice(int id, string number, decimal totalAmount, DateTime date);
     }
 }

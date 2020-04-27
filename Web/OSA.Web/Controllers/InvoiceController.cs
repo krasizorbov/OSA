@@ -220,5 +220,42 @@
             this.TempData["message"] = GlobalConstants.SuccessfullyDeleted;
             return this.Redirect("/");
         }
+
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var invoice = await this.invoicesService.GetInvoiceByIdAsync(id);
+
+            var model = new EditInvoiceViewModel
+            {
+                Id = invoice.Id,
+                InvoiceNumber = invoice.InvoiceNumber,
+                TotalAmount = invoice.TotalAmount,
+                Date = string.Format("{0:dd/MM/yyyy}", invoice.Date),
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditInvoiceViewModel editModel)
+        {
+            var isValidDateTime = this.dateTimeValidationService.IsValidDateTime(editModel.Date);
+
+            if (!this.ModelState.IsValid || !isValidDateTime)
+            {
+                if (!isValidDateTime)
+                {
+                    this.ModelState.AddModelError(nameof(editModel.Date), editModel.Date + GlobalConstants.InvalidDateTime);
+                }
+
+                return this.View();
+            }
+
+            var date = DateTime.ParseExact(editModel.Date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            await this.invoicesService.UpdateInvoice(editModel.Id, editModel.InvoiceNumber, editModel.TotalAmount, date);
+            this.TempData["message"] = GlobalConstants.SuccessfullyUpdated;
+            return this.Redirect("/");
+        }
     }
 }

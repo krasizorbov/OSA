@@ -102,5 +102,14 @@
 
             return number;
         }
+
+        public async Task UpdateInvoice(int id, string number, decimal totalAmount, DateTime date)
+        {
+            var invoice = await this.GetInvoiceByIdAsync(id);
+            invoice.InvoiceNumber = number;
+            invoice.TotalAmount = totalAmount;
+            invoice.Date = date;
+            await this.context.SaveChangesAsync();
+        }
     }
 }
