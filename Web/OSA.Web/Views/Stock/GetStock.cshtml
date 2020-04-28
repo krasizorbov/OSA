@@ -16,8 +16,8 @@
                     }
                     <th>ID</th>
                     <th>Име</th>
-                    <th>Тотално Количество</th>
-                    <th>Тотална Цена</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
                     <th>Дата</th>
                     <th>Номер на Фактура</th>
                     <th>Редактирай</th>
@@ -41,7 +41,7 @@
                     </tr>
                 }
             </table>
-            <div align="left" class="col-md-6"><strong>Total: </strong>@Model.Stocks.Sum(x => x.Price)</div>
+            <div align="left" class="col-md-6"><strong>Тотал на цените: @Model.Stocks.Sum(x => x.Price)</strong></div>
             <br />
         </div>
         @if (Model.Stocks.Count() != 0)

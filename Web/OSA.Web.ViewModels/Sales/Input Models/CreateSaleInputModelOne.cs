@@ -8,8 +8,12 @@
 
     public class CreateSaleInputModelOne
     {
+        private const string DisplayCompany = "Фирма";
+        private const string RequiredCompany = "Фирмата е задължителна";
+
         [BindRequired]
-        [Display(Name = "Company")]
+        [Display(Name = DisplayCompany)]
+        [Required(ErrorMessage = RequiredCompany)]
         public int CompanyId { get; set; }
 
         public IEnumerable<SelectListItem> CompanyNames { get; set; }
