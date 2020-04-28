@@ -5,7 +5,7 @@
 }
 @{ List<int> ids = new List<int>();}
 <div id="checkboxes" class="text-center">
-    <h3 style="text-align:left">List of Stocks for @Model.Name</h3>
+    <h3 style="text-align:left">Списък на стоки за @Model.Name</h3>
     <form asp-controller="Stock" asp-action="Delete" method="post" class="form-inline" role="form">
         <div class="col-md-12">
             <table border="0">
@@ -15,12 +15,12 @@
                         <th><input type="checkbox" id="checkall" /></th>
                     }
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Total Quantity</th>
-                    <th>Total Price</th>
-                    <th>Issue Date</th>
-                    <th>Invoice Number</th>
-                    <th>Edit Stock</th>
+                    <th>Име</th>
+                    <th>Тотално Количество</th>
+                    <th>Тотална Цена</th>
+                    <th>Дата</th>
+                    <th>Номер на Фактура</th>
+                    <th>Редактирай</th>
                 </tr>
                 @foreach (var stock in Model.Stocks)
                 {
@@ -41,13 +41,13 @@
                     </tr>
                 }
             </table>
-            <div align="left" class="col-md-6"><strong>Total Price Sum: </strong>@Model.Stocks.Sum(x => x.Price)</div>
+            <div align="left" class="col-md-6"><strong>Total: </strong>@Model.Stocks.Sum(x => x.Price)</div>
             <br />
         </div>
         @if (Model.Stocks.Count() != 0)
         {
             <input type="hidden" id="@ids">
-            <button type="submit" class="btn btn-danger" id="DelButon" disabled value="Delete" onclick="return confirm('Are you sure you want to delete Stock(s)?')">
+            <button type="submit" class="btn btn-danger" id="DelButon" disabled value="Delete" onclick="return confirm('Сигурни ли сте че искате да изтриете стоката?')">
                 <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: 50px"></span> Delete
             </button>
         }

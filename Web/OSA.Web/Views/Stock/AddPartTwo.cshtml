@@ -6,13 +6,12 @@
 <div class="row">
     <div class="col-md-4">
         <form method="post">
-            <h1>Create A Stock</h1>
-            <h3>Step 2:</h3>
+            <h3>Регистрация На Стока</h3>
             <partial name="_FlashMessageTypePartial" />
             <div class="form-group">
                 <label asp-for="InvoiceId"></label>
                 <select id="dropdowntipo" asp-for="InvoiceId" class="form-control">
-                    <option value="0" hidden disabled selected>Select Invoice Number</option>
+                    <option value="0" hidden disabled selected>Избери номер на фактура</option>
                     @foreach (var name in Model.Invoices)
                     {
                         <option value="@name.Value">@name.Text</option>

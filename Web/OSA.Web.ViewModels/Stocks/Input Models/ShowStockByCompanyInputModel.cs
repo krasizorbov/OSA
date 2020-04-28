@@ -9,19 +9,25 @@
 
     public class ShowStockByCompanyInputModel
     {
+        private const string DisplayCompany = "Фирма";
+        private const string DisplayStartDate = "Първи ден от месеца - (дд/ММ/гггг)";
+        private const string RequiredStartDate = "Датата е задължителна";
+        private const string DisplayEndDate = "Последен ден от месеца - (дд/ММ/гггг)";
+        private const string RequiredEndDate = "Датата е задължителна";
+
         [BindRequired]
-        [Display(Name = "Company")]
+        [Display(Name = DisplayCompany)]
         public int CompanyId { get; set; }
 
         public IEnumerable<SelectListItem> CompanyNames { get; set; }
 
-        [Required]
-        [Display(Name = "Start Date - (dd/mm/yyyy)")]
+        [Display(Name = DisplayStartDate)]
+        [Required(ErrorMessage = RequiredStartDate)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string StartDate { get; set; }
 
-        [Required]
-        [Display(Name = "End Date - (dd/mm/yyyy)")]
+        [Display(Name = DisplayEndDate)]
+        [Required(ErrorMessage = RequiredEndDate)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string EndDate { get; set; }
     }
