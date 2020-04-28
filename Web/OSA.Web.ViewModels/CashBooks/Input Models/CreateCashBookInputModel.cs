@@ -9,29 +9,33 @@
 
     public class CreateCashBookInputModel
     {
+        private const string DisplaySaldo = "Салдо";
+        private const string DisplayOwnFunds = "Лични Средства";
+
         [BindRequired]
-        [Display(Name = "Company")]
+        [Display(Name = GlobalConstants.DisplayCompany)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         public int CompanyId { get; set; }
 
         public IEnumerable<SelectListItem> CompanyNames { get; set; }
 
-        [Required]
-        [Display(Name = "Saldo")]
+        [Display(Name = DisplaySaldo)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal Saldo { get; set; }
 
-        [Required]
-        [Display(Name = "Own Funds")]
+        [Display(Name = DisplayOwnFunds)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal OwnFunds { get; set; }
 
-        [Required]
-        [Display(Name = "Start date of the month - (dd/mm/yyyy)")]
+        [Display(Name = GlobalConstants.DisplayStartDate)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string StartDate { get; set; }
 
-        [Required]
-        [Display(Name = "End date of the month - (dd/mm/yyyy)")]
+        [Display(Name = GlobalConstants.DisplayEndDate)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string EndDate { get; set; }
     }
