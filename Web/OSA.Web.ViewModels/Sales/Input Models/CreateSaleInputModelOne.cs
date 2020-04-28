@@ -5,15 +5,13 @@
 
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using OSA.Common;
 
     public class CreateSaleInputModelOne
     {
-        private const string DisplayCompany = "Фирма";
-        private const string RequiredCompany = "Фирмата е задължителна";
-
         [BindRequired]
-        [Display(Name = DisplayCompany)]
-        [Required(ErrorMessage = RequiredCompany)]
+        [Display(Name = GlobalConstants.DisplayCompany)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         public int CompanyId { get; set; }
 
         public IEnumerable<SelectListItem> CompanyNames { get; set; }

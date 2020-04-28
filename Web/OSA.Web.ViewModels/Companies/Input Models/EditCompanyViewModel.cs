@@ -7,21 +7,17 @@
     public class EditCompanyViewModel
     {
         private const string BulstatFormat = "[0-9]*";
-        private const string DisplayCompany = "Фирма";
-        private const string DisplayBulstat = "Булстат";
-        private const string RequiredName = "Фирмата е задължителна!";
-        private const string RequiredBulstat = "Булстата е задължителен!";
 
         [Required]
         public int Id { get; set; }
 
-        [Display(Name = DisplayCompany)]
-        [Required(ErrorMessage = RequiredName)]
+        [Display(Name = GlobalConstants.DisplayCompany)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [MaxLength(GlobalConstants.CompanyNameMaxLength)]
         public string Name { get; set; }
 
-        [Display(Name = DisplayBulstat)]
-        [Required(ErrorMessage = RequiredBulstat)]
+        [Display(Name = GlobalConstants.DisplayBulstat)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [MinLength(GlobalConstants.BulstatMinLength)]
         [MaxLength(GlobalConstants.BulstatMaxLength)]
         [RegularExpression(BulstatFormat, ErrorMessage = GlobalConstants.InvalidBulstat)]

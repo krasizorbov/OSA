@@ -10,20 +10,21 @@
     public class CreateAvailableStockInputModel
     {
         [BindRequired]
-        [Display(Name = "Company")]
+        [Display(Name = GlobalConstants.DisplayCompany)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         public int CompanyId { get; set; }
 
         public IEnumerable<SelectListItem> CompanyNames { get; set; }
 
         public string StockName { get; set; }
 
-        [Required]
-        [Display(Name = "Start date of the month - (dd/mm/yyyy)")]
+        [Display(Name = GlobalConstants.DisplayStartDate)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string StartDate { get; set; }
 
-        [Required]
-        [Display(Name = "End date of the month - (dd/mm/yyyy)")]
+        [Display(Name = GlobalConstants.DisplayEndDate)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string EndDate { get; set; }
     }

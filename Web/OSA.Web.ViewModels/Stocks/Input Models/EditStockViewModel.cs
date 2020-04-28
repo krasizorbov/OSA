@@ -8,34 +8,30 @@
     public class EditStockViewModel
     {
         private const string DisplayStock = "Стока";
-        private const string RequiredStock = "Стоката е задължителна";
         private const string DisplayTotalQuntity = "Количество";
-        private const string RequiredTotalQuantity = "Количеството е задължително";
         private const string DisplayTotalPrice = "Цена";
-        private const string RequiredTotalPrice = "Цената е задължителна";
         private const string DisplayDate = "Дата - (дд/ММ/гггг)";
-        private const string RequiredDate = "Датата е задължителна";
 
         [Required]
         public int Id { get; set; }
 
         [Display(Name = DisplayStock)]
-        [Required(ErrorMessage = RequiredStock)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [MaxLength(GlobalConstants.StockNameMaxLength)]
         public string Name { get; set; }
 
         [Display(Name = DisplayTotalQuntity)]
-        [Required(ErrorMessage = RequiredTotalQuantity)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal Quantity { get; set; }
 
         [Display(Name = DisplayTotalPrice)]
-        [Required(ErrorMessage = RequiredTotalPrice)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal Price { get; set; }
 
         [Display(Name = DisplayDate)]
-        [Required(ErrorMessage = RequiredDate)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
     }

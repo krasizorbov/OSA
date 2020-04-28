@@ -57,5 +57,17 @@
         public const string SuccessfullyUpdated = "Данните са актуализирани УСПЕШНО!";
 
         public const string AvailableStockRegisterErrorMessage = "Данните не са регистрирани! Няма наличност за предния месец!";
+
+        public const string FieldIsRequired = "Полето е задължително!";
+
+        public const string DisplayCompany = "Фирма!";
+
+        public const string DisplayStartDate = "Първи ден от месеца - (дд/ММ/гггг)";
+
+        public const string DisplayEndDate = "Последен ден от месеца - (дд/ММ/гггг)";
+
+        public const string DisplayBulstat = "Булстат";
+
+        public const string DisplayStock = "Стока";
     }
 }

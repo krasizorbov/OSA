@@ -9,25 +9,19 @@
 
     public class ShowPurchaseByCompanyInputModel
     {
-        private const string DisplayCompany = "Фирма";
-        private const string DisplayStartDate = "Първи ден от месеца - (дд/ММ/гггг)";
-        private const string RequiredStartDate = "Датата е задължителна";
-        private const string DisplayEndDate = "Последен ден от месеца - (дд/ММ/гггг)";
-        private const string RequiredEndDate = "Датата е задължителна";
-
         [BindRequired]
-        [Display(Name = DisplayCompany)]
+        [Display(Name = GlobalConstants.DisplayCompany)]
         public int CompanyId { get; set; }
 
         public IEnumerable<SelectListItem> CompanyNames { get; set; }
 
-        [Display(Name = DisplayStartDate)]
-        [Required(ErrorMessage = RequiredStartDate)]
+        [Display(Name = GlobalConstants.DisplayStartDate)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string StartDate { get; set; }
 
-        [Display(Name = DisplayEndDate)]
-        [Required(ErrorMessage = RequiredEndDate)]
+        [Display(Name = GlobalConstants.DisplayEndDate)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string EndDate { get; set; }
     }

@@ -5,7 +5,7 @@
 @{ int index = 0;}
 @{ List<int> ids = new List<int>();}
 <div id="checkboxes" class="text-center">
-    <h3>List of Available Stocks for @Model.Name</h3>
+    <h3>Списък на наличноста за @Model.Name</h3>
     <div class="col-md-12">
         <form asp-controller="AvailableStock" asp-action="Delete" method="post" class="form-inline" role="form">
             <center>
@@ -16,16 +16,16 @@
                             <th><input type="checkbox" id="checkall" /></th>
                         }
                         <th>ID</th>
-                        <th>Stock Name</th>
-                        <th>Total Purchased Quantity</th>
-                        <th>Total Purchased Price</th>
-                        <th>Total Sold Quantity</th>
-                        <th>Total Sold Price</th>
-                        <th>Book Value</th>
-                        <th>Average Price</th>
-                        <th>Available Quantity</th>
-                        <th>Available Money</th>
-                        <th>Date</th>
+                        <th>Име на стока</th>
+                        <th>Тотал на закупено количество</th>
+                        <th>Тотал на закупена цена</th>
+                        <th>Тотал на продадено количество</th>
+                        <th>Тотал на продажна цена</th>
+                        <th>Отчетна стойност</th>
+                        <th>Средна цена</th>
+                        <th>Налично количество</th>
+                        <th>Налични пари</th>
+                        <th>Дата</th>
                     </tr>
                     @foreach (var availableStock in Model.AvailableStocks)
                     {
@@ -44,19 +44,19 @@
                             <td>@Convert.ToDecimal(availableStock.AveragePrice).ToString("F")</td>
                             <td>@availableStock.RemainingQuantity.ToString("F")</td>
                             <td>@availableStock.RemainingPrice.ToString("F")</td>
-                            <td>@String.Format("{0:d/M/yyyy}", availableStock.Date)</td>
+                            <td>@String.Format("{0:dd/MM/yyyy}", availableStock.Date)</td>
                         </tr>
                     }
                 </table>
-                <div align="left" class="col-md-12">Total Purchased Price Sum: @Model.AvailableStocks.Sum(x => x.TotalPurchasedPrice)</div>
-                <div align="left" class="col-md-12">Total Sold Price Sum: @Model.AvailableStocks.Sum(x => x.TotalSoldPrice)</div>
-                <div align="left" class="col-md-12">Total Book Value Sum: @Model.AvailableStocks.Sum(x => x.BookValue)</div>
-                <div align="left" class="col-md-12">Total Available Money Sum: @Model.AvailableStocks.Sum(x => x.RemainingPrice).ToString("F2")</div>
+                <div align="left" class="col-md-12"><strong>Тотал на закупените цени: @Model.AvailableStocks.Sum(x => x.TotalPurchasedPrice)</strong></div>
+                <div align="left" class="col-md-12"><strong>Тотал на продажните цени: @Model.AvailableStocks.Sum(x => x.TotalSoldPrice)</strong></div>
+                <div align="left" class="col-md-12"><strong>Тотал на отчетните стойности: @Model.AvailableStocks.Sum(x => x.BookValue)</strong></div>
+                <div align="left" class="col-md-12"><strong>Тотал на наличните пари: @Model.AvailableStocks.Sum(x => x.RemainingPrice).ToString("F2")</strong></div>
             </center>
             @if (Model.AvailableStocks.Count() != 0)
             {
                 <input type="hidden" id="@ids">
-                <button type="submit" class="btn btn-danger" id="DelButon" disabled value="Delete" onclick="return confirm('Are you sure you want to delete Available Stocks?')">
+                <button type="submit" class="btn btn-danger" id="DelButon" disabled value="Delete" onclick="return confirm('Сигурни ли сте че искате да изтриете наличноста?')">
                     <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
                 </button>
             }
