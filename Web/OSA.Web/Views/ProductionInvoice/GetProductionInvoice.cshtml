@@ -4,16 +4,17 @@
 }
 @{ int index = 0;}
 <div class="text-center">
-    <h3>List of Production Invoices for @Model.Name</h3>
+    <h3>Списък от касови ордери за @Model.Name</h3>
     <div class="col-md-12">
         <center>
             <table border="0">
                 <tr>
                     <th>ID</th>
-                    <th>Invoice Number</th>
-                    <th>Salary</th>
-                    <th>External Cost</th>
-                    <th>Issue Date</th>
+                    <th>Номер на касов ордер</th>
+                    <th>Тотал заплати</th>
+                    <th>Тотал външни разходи</th>
+                    <th>Дата</th>
+                    <th>Редактирай</th>
                 </tr>
                 @foreach (var productionInvoice in Model.ProductionInvoices)
                 {
@@ -22,11 +23,11 @@
                         <td>@productionInvoice.InvoiceNumber</td>
                         <td>@productionInvoice.Salary.ToString("F")</td>
                         <td>@productionInvoice.ExternalCost.ToString("F")</td>
-                        <td>@String.Format("{0:d/M/yyyy}", productionInvoice.Date)</td>
+                        <td>@String.Format("{0:dd/MM/yyyy}", productionInvoice.Date)</td>
                         <td>
                             <form asp-controller="ProductionInvoice" asp-action="Delete" asp-route-id="@productionInvoice.Id" method="post" class="form-inline" role="form">
                                 <input type="hidden" id="@productionInvoice.Id">
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete Production Invoice?')">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Сигурни ли сте че искате да изтриете касовия ордер?')">
                                     <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
                                 </button>
                             </form>

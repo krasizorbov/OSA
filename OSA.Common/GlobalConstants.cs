@@ -60,7 +60,7 @@
 
         public const string FieldIsRequired = "Полето е задължително!";
 
-        public const string DisplayCompany = "Фирма!";
+        public const string DisplayCompany = "Фирма";
 
         public const string DisplayStartDate = "Първи ден от месеца - (дд/ММ/гггг)";
 

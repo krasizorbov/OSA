@@ -11,31 +11,36 @@
     public class CreateProductionInvoiceInputModel
     {
         private const string InvoiceNumberFormat = "0*[0-9]*";
+        private const string DisplayInvoiceNumber = "Номер на касов ордер";
+        private const string DisplayInvoiceIssueDate = "Дата на издафане - (дд/ММ/гггг)";
+        private const string DisplaySalary = "Заплата";
+        private const string DisplayExternalCost = "Външни разходи";
 
         [BindRequired]
-        [Display(Name = "Company")]
+        [Display(Name = GlobalConstants.DisplayCompany)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         public int CompanyId { get; set; }
 
         public IEnumerable<SelectListItem> CompanyNames { get; set; }
 
-        [Required]
-        [Display(Name = "Invoice Number")]
+        [Display(Name = DisplayInvoiceNumber)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [MaxLength(GlobalConstants.InvoiceNumberMaxLength)]
         [RegularExpression(InvoiceNumberFormat, ErrorMessage = GlobalConstants.ValidInvoiceNumber)]
         public string InvoiceNumber { get; set; }
 
-        [Required]
-        [Display(Name = "Invoice Issue Date - (dd/mm/yyyy)")]
+        [Display(Name = DisplayInvoiceIssueDate)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string Date { get; set; }
 
-        [Required]
-        [Display(Name = "Salary")]
+        [Display(Name = DisplaySalary)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal Salary { get; set; }
 
-        [Required]
-        [Display(Name = "External Cost")]
+        [Display(Name = DisplayExternalCost)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal ExternalCost { get; set; }
     }

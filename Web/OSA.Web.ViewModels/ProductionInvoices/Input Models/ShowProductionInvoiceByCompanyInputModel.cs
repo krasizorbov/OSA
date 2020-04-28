@@ -10,18 +10,19 @@
     public class ShowProductionInvoiceByCompanyInputModel
     {
         [BindRequired]
-        [Display(Name = "Company")]
+        [Display(Name = GlobalConstants.DisplayCompany)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         public int CompanyId { get; set; }
 
         public IEnumerable<SelectListItem> CompanyNames { get; set; }
 
-        [Required]
-        [Display(Name = "Start Date - (dd/mm/yyyy)")]
+        [Display(Name = GlobalConstants.DisplayStartDate)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string StartDate { get; set; }
 
-        [Required]
-        [Display(Name = "End Date - (dd/mm/yyyy)")]
+        [Display(Name = GlobalConstants.DisplayEndDate)]
+        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string EndDate { get; set; }
     }
