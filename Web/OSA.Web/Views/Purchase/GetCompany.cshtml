@@ -6,11 +6,11 @@
 <div class="row">
     <div class="col-md-4">
             <form method="post">
-                <h3>Choose A Company</h3>
+                <h3>Избери Фирма</h3>
                 <partial name="_FlashMessageTypePartial" />
                 <div class="form-group">
                     <select id="dropdowntipo" asp-for="CompanyId" class="form-control">
-                        <option value="0" hidden disabled selected>Select Company</option>
+                        <option value="0" hidden disabled selected>Избери фирма</option>
                         @foreach (var name in Model.CompanyNames)
                         {
                             <option value="@name.Value">@name.Text</option>
@@ -28,7 +28,7 @@
                     <input asp-for="EndDate" id="picker" class="form-control" />
                     <span asp-validation-for="EndDate" class="text-danger"></span>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">OK</button>
             </form>
     </div>
 </div>

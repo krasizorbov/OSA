@@ -6,14 +6,14 @@
 <div class="row">
     <div class="col-md-4">
         <form method="post">
-            <h1>Monthly Purchases</h1>
-            <p style="font-size:10px">Monthly purchases have to be done once monthly, 
-                <span style="color: red">after registering all stocks for the month!</span></p>
+            <h3>Месечни Покупки</h3>
+            <p style="font-size:10px">Месечните покупки се правят един път месечно, 
+                <span style="color: red">след като се регистрират всички стоки за месеца!</span></p>
             <partial name="_FlashMessageTypePartial" />
             <div class="form-group">
                 <label asp-for="CompanyId"></label>
                 <select id="dropdowntipo" asp-for="CompanyId" class="form-control">
-                    <option value="0" hidden disabled selected>Select Company</option>
+                    <option value="0" hidden disabled selected>Избери фирма</option>
                     @foreach (var name in Model.CompanyNames)
                     {
                         <option value="@name.Value">@name.Text</option>

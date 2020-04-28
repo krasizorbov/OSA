@@ -5,7 +5,7 @@
 @{ int index = 0;}
 @{ List<int> ids = new List<int>();}
 <div id="checkboxes" class="text-center">
-    <h3 style="text-align:left">List of Purchases for @Model.Name</h3>
+    <h3 style="text-align:left">Списък на покупките за @Model.Name</h3>
     <div class="col-md-12">
         <center>
             <form asp-controller="Purchase" asp-action="Delete" method="post" class="form-inline" role="form">
@@ -16,11 +16,11 @@
                             <th><input type="checkbox" id="checkall" /></th>
                         }
                         <th>ID</th>
-                        <th>Stock Name</th>
-                        <th>Total Quantity</th>
-                        <th>Total Price</th>
-                        <th>Average Price</th>
-                        <th>Date</th>
+                        <th>Име на стока</th>
+                        <th>Тотално количество</th>
+                        <th>Тотална цена</th>
+                        <th>Средна цена</th>
+                        <th>Дата</th>
                     </tr>
                     @foreach (var purchase in Model.Purchases)
                     {
@@ -34,15 +34,15 @@
                             <td>@purchase.TotalQuantity</td>
                             <td>@purchase.TotalPrice</td>
                             <td>@purchase.AveragePrice.ToString("F")</td>
-                            <td>@String.Format("{0:d/M/yyyy}", purchase.Date)</td>
+                            <td>@String.Format("{0:dd/MM/yyyy}", purchase.Date)</td>
                         </tr>
                     }
                 </table>
-                <div align="left" class="col-md-12">Total Price Sum: @Model.Purchases.Sum(x => x.TotalPrice)</div>
+                <div align="left" class="col-md-12"><strong>Тотал на цените:</strong> @Model.Purchases.Sum(x => x.TotalPrice)</div>
                 @if (Model.Purchases.Count() != 0)
                 {
                     <input type="hidden" id="@ids">
-                    <button type="submit" class="btn btn-danger" id="DelButon" disabled value="Delete" onclick="return confirm('Are you sure you want to delete Purchases?')">
+                    <button type="submit" class="btn btn-danger" id="DelButon" disabled value="Delete" onclick="return confirm('Сигурни ли сте че искате да изтриете покупката?')">
                         <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
                     </button>
                 }
