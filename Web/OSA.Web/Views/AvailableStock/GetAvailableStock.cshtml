@@ -40,7 +40,7 @@
                             <td>@availableStock.TotalPurchasedPrice.ToString("F")</td>
                             <td>@availableStock.TotalSoldQuantity.ToString("F")</td>
                             <td>@availableStock.TotalSoldPrice.ToString("F")</td>
-                            <td>@availableStock.BookValue.ToString("F")</td>
+                            <td>@Convert.ToDecimal(availableStock.BookValue).ToString("F")</td>
                             <td>@Convert.ToDecimal(availableStock.AveragePrice).ToString("F")</td>
                             <td>@availableStock.RemainingQuantity.ToString("F")</td>
                             <td>@availableStock.RemainingPrice.ToString("F")</td>
@@ -50,7 +50,7 @@
                 </table>
                 <div align="left" class="col-md-12"><strong>Тотал на закупените цени: @Model.AvailableStocks.Sum(x => x.TotalPurchasedPrice)</strong></div>
                 <div align="left" class="col-md-12"><strong>Тотал на продажните цени: @Model.AvailableStocks.Sum(x => x.TotalSoldPrice)</strong></div>
-                <div align="left" class="col-md-12"><strong>Тотал на отчетните стойности: @Model.AvailableStocks.Sum(x => x.BookValue)</strong></div>
+                <div align="left" class="col-md-12"><strong>Тотал на отчетните стойности: @Model.AvailableStocks.Sum(x => Convert.ToDecimal(x.BookValue)).ToString("F")</strong></div>
                 <div align="left" class="col-md-12"><strong>Тотал на наличните пари: @Model.AvailableStocks.Sum(x => x.RemainingPrice).ToString("F2")</strong></div>
             </center>
             @if (Model.AvailableStocks.Count() != 0)

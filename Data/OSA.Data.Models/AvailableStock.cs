@@ -22,7 +22,7 @@
         public decimal TotalSoldPrice { get; set; }
 
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
-        public decimal BookValue { get; set; }
+        public string BookValue { get; set; }
 
         [Required]
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
@@ -35,7 +35,7 @@
 
         public Company Company { get; set; }
 
-        public decimal TotalSoldQuantity => this.BookValue / Convert.ToDecimal(this.AveragePrice);
+        public decimal TotalSoldQuantity => Convert.ToDecimal(this.BookValue) / Convert.ToDecimal(this.AveragePrice);
 
         public decimal RemainingQuantity => this.TotalPurchasedAmount - this.TotalSoldQuantity;
 
