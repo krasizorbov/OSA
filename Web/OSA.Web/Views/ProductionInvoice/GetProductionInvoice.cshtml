@@ -15,6 +15,7 @@
                     <th>Тотал външни разходи</th>
                     <th>Дата</th>
                     <th>Редактирай</th>
+                    <th>Изтрий</th>
                 </tr>
                 @foreach (var productionInvoice in Model.ProductionInvoices)
                 {
@@ -24,6 +25,9 @@
                         <td>@productionInvoice.Salary.ToString("F")</td>
                         <td>@productionInvoice.ExternalCost.ToString("F")</td>
                         <td>@String.Format("{0:dd/MM/yyyy}", productionInvoice.Date)</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="ProductionInvoice" asp-route-Id="@productionInvoice.Id" class="btn btn-primary m-1">Edit</a>
+                        </td>
                         <td>
                             <form asp-controller="ProductionInvoice" asp-action="Delete" asp-route-id="@productionInvoice.Id" method="post" class="form-inline" role="form">
                                 <input type="hidden" id="@productionInvoice.Id">

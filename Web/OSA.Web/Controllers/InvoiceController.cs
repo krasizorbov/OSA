@@ -16,6 +16,7 @@
     public class InvoiceController : BaseController
     {
         private const string InvoiceAlreadyExist = " already exists! Please enter a new invoice number.";
+        private const string DateTimeToStringFormaat = "{0:dd/MM/yyyy}";
 
         private readonly IInvoicesService invoicesService;
         private readonly ICompaniesService companiesService;
@@ -231,7 +232,7 @@
                 Id = invoice.Id,
                 InvoiceNumber = invoice.InvoiceNumber,
                 TotalAmount = invoice.TotalAmount,
-                Date = string.Format("{0:dd/MM/yyyy}", invoice.Date),
+                Date = string.Format(DateTimeToStringFormaat, invoice.Date),
             };
             return this.View(model);
         }

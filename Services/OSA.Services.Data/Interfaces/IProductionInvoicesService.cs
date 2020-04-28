@@ -17,5 +17,7 @@
         Task<ProductionInvoice> DeleteAsync(int id);
 
         Task<ProductionInvoice> GetProductionInvoiceByIdAsync(int id);
+
+        Task UpdateProductionInvoiceAsync(int id, string invoiceNumber, decimal salary, decimal externalCost, DateTime date);
     }
 }

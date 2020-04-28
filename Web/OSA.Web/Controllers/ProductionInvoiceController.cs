@@ -16,6 +16,7 @@
     public class ProductionInvoiceController : BaseController
     {
         private const string InvoiceAlreadyExist = " already exists! Please enter a new invoice number.";
+        private const string DateTimeToStringFormaat = "{0:dd/MM/yyyy}";
         private readonly IProductionInvoicesService productionInvoicesService;
         private readonly ICompaniesService companiesService;
         private readonly IDateTimeValidationService dateTimeValidationService;
@@ -182,6 +183,44 @@
             }
 
             this.TempData["message"] = GlobalConstants.SuccessfullyDeleted;
+            return this.Redirect("/");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var productionInvoice = await this.productionInvoicesService.GetProductionInvoiceByIdAsync(id);
+
+            var model = new EditProductionInvoiceViewModel
+            {
+                Id = productionInvoice.Id,
+                InvoiceNumber = productionInvoice.InvoiceNumber,
+                Salary = productionInvoice.Salary,
+                ExternalCost = productionInvoice.ExternalCost,
+                Date = string.Format(DateTimeToStringFormaat, productionInvoice.Date),
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditProductionInvoiceViewModel editModel)
+        {
+            var isValidDateTime = this.dateTimeValidationService.IsValidDateTime(editModel.Date);
+
+            if (!this.ModelState.IsValid || !isValidDateTime)
+            {
+                if (!isValidDateTime)
+                {
+                    this.ModelState.AddModelError(nameof(editModel.Date), editModel.Date + GlobalConstants.InvalidDateTime);
+                }
+
+                return this.View();
+            }
+
+            var date = DateTime.ParseExact(editModel.Date, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            await this.productionInvoicesService.UpdateProductionInvoiceAsync(editModel.Id, editModel.InvoiceNumber, editModel.Salary, editModel.ExternalCost, date);
+            this.TempData["message"] = GlobalConstants.SuccessfullyUpdated;
             return this.Redirect("/");
         }
     }

@@ -16,6 +16,7 @@
 
     public class StockController : BaseController
     {
+        private const string DateTimeToStringFormaat = "{0:dd/MM/yyyy}";
         private readonly IStocksService stocksService;
         private readonly ICompaniesService companiesService;
         private readonly IInvoicesService invoicesService;
@@ -214,7 +215,7 @@
                 Name = stock.Name,
                 Price = stock.Price,
                 Quantity = stock.Quantity,
-                Date = string.Format("{0:dd/MM/yyyy}", stock.Date),
+                Date = string.Format(DateTimeToStringFormaat, stock.Date),
             };
             return this.View(model);
         }

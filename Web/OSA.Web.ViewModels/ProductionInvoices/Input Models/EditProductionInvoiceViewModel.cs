@@ -1,14 +1,11 @@
 ﻿namespace OSA.Web.ViewModels.ProductionInvoices.Input_Models
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
-    using Microsoft.AspNetCore.Mvc.Rendering;
     using OSA.Common;
 
-    public class CreateProductionInvoiceInputModel
+    public class EditProductionInvoiceViewModel
     {
         private const string InvoiceNumberFormat = "0*[0-9]*";
         private const string DisplayInvoiceNumber = "Номер на касов ордер";
@@ -16,12 +13,7 @@
         private const string DisplaySalary = "Заплата";
         private const string DisplayExternalCost = "Външни разходи";
 
-        [BindRequired]
-        [Display(Name = GlobalConstants.DisplayCompany)]
-        [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]
-        public int CompanyId { get; set; }
-
-        public IEnumerable<SelectListItem> CompanyNames { get; set; }
+        public int Id { get; set; }
 
         [Display(Name = DisplayInvoiceNumber)]
         [Required(ErrorMessage = GlobalConstants.FieldIsRequired)]

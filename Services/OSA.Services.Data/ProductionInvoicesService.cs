@@ -71,5 +71,15 @@
 
             return number;
         }
+
+        public async Task UpdateProductionInvoiceAsync(int id, string invoiceNumber, decimal salary, decimal externalCost, DateTime date)
+        {
+            var productionInvoice = await this.GetProductionInvoiceByIdAsync(id);
+            productionInvoice.InvoiceNumber = invoiceNumber;
+            productionInvoice.Salary = salary;
+            productionInvoice.ExternalCost = externalCost;
+            productionInvoice.Date = date;
+            await this.context.SaveChangesAsync();
+        }
     }
 }
