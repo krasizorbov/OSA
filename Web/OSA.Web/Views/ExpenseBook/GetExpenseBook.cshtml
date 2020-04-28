@@ -4,20 +4,20 @@
 }
 @{ int index = 0;}
 <div class="text-center">
-    <h3>List of Expense Books for @Model.Name</h3>
+    <h3>Списък на разходната книга за @Model.Name</h3>
     <div class="col-md-12">
         <center>
             <table border="0">
                 <tr>
                     <th>ID</th>
-                    <th>Total External Cost</th>
-                    <th>Total Salary Cost</th>
-                    <th>Total Book Value</th>
-                    <th>Total Cost</th>
-                    <th>Profit</th>
-                    <th>Total Profit</th>
-                    <th>Date</th>
-                    <th>Delete</th>
+                    <th>Тотал външен разход</th>
+                    <th>Тотал разход заплати</th>
+                    <th>Тотал отчетна стойност</th>
+                    <th>Тотал Разходи</th>
+                    <th>Тотал Печалба</th>
+                    <th>Печалба</th>
+                    <th>Дата</th>
+                    <th>Изтрий</th>
                 </tr>
                 @foreach (var expenseBook in Model.ExpenseBooks)
                 {
@@ -27,13 +27,13 @@
                         <td>@expenseBook.TotalSalaryCost.ToString("F")</td>
                         <td>@expenseBook.TotalBookValue.ToString("F")</td>
                         <td>@expenseBook.TotalCost.ToString("F")</td>
-                        <td>@expenseBook.Profit.ToString("F")</td>
                         <td>@expenseBook.TotalProfit.ToString("F")</td>
-                        <td>@String.Format("{0:d/M/yyyy}", expenseBook.Date)</td>
+                        <td>@expenseBook.Profit.ToString("F")</td>
+                        <td>@String.Format("{0:dd/MM/yyyy}", expenseBook.Date)</td>
                         <td>
                             <form asp-controller="ExpenseBook" asp-action="Delete" asp-route-id="@expenseBook.Id" method="post" class="form-inline" role="form">
                                 <input type="hidden" id="@expenseBook.Id">
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete expense book?')">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Сигурни ли сте че искате да изтриете разходната книга?')">
                                     <span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete
                                 </button>
                             </form>
