@@ -1,21 +1,19 @@
 ﻿namespace OSA.Web.ViewModels.Sales.Input_Models
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
     using OSA.Common;
 
-    public class CreateSaleInputModelTwo
+    public class EditSaleViewModel
     {
-        [BindRequired]
-        [Display(Name = "Stock")]
-        [Required(ErrorMessage = "Please select a Stock")]
-        [MaxLength(GlobalConstants.StockNameMaxLength)]
-        public string StockName { get; set; }
+        private const string DisplayName = "Име на стока";
+        private const string RequiredName = "Стоката е задължителна!";
+        private const string DisplayStartDate = "Начална Дата на месеца - (дд/ММ/гггг)";
+        private const string RequiredStartDate = "Датата е задължителна!";
 
-        public List<string> StockNames { get; set; }
+        [Required]
+        public int Id { get; set; }
 
         [Range(GlobalConstants.DecimalMinValue, GlobalConstants.DecimalMaxValue)]
         public decimal TotalPrice { get; set; }
@@ -23,8 +21,8 @@
         [Range(GlobalConstants.ProfitMinValue, GlobalConstants.ProfitMaxValue)]
         public int ProfitPercent { get; set; }
 
-        [Required]
-        [Display(Name = "Start date of the month - (dd/mm/yyyy)")]
+        [Display(Name = DisplayStartDate)]
+        [Required(ErrorMessage = RequiredStartDate)]
         [RegularExpression(GlobalConstants.DateTimeRegexFormat, ErrorMessage = GlobalConstants.InvalidDateTimeFormat)]
         public string StartDate { get; set; }
     }

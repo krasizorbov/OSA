@@ -1,0 +1,45 @@
+﻿@model OSA.Web.ViewModels.Sales.Input_Models.EditSaleViewModel
+@inject OSA.Services.Data.ISalesService salesService
+@{
+    this.ViewData["Title"] = "Edit Sale";
+}
+@{string stockName = await this.salesService.GetStockNameBySaleIdAsync(Model.Id);}
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <h3>Редактирай продажба</h3>
+            <partial name="_FlashMessageTypePartial" />
+            <p>Име на стока</p>
+            <p><strong>@stockName</strong></p>
+            <div class="form-group">
+                <label asp-for="TotalPrice"></label>
+                <input asp-for="TotalPrice" class="form-control">
+                <span asp-validation-for="TotalPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProfitPercent"></label>
+                <input asp-for="ProfitPercent" class="form-control">
+                <span asp-validation-for="ProfitPercent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" id="picker" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <input type="button" value="BACK" class="btn btn-primary" onclick="location.href='javascript:history.go(-1)'" />
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(".picker").datetimepicker({
+            format: "dd/MM/yyyy",
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left"
+        });
+    </script>
+}

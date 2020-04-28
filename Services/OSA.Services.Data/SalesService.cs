@@ -76,6 +76,12 @@
             return averagePrice;
         }
 
+        public async Task<Sale> GetSaleByIdAsync(int id)
+        {
+            var sale = await this.context.Sales.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return sale;
+        }
+
         public async Task<ICollection<Sale>> GetSalesByCompanyIdAsync(DateTime startDate, DateTime endDate, int companyId)
         {
             var sales = await this.context.Sales
@@ -83,6 +89,12 @@
                 .ToListAsync();
 
             return sales;
+        }
+
+        public async Task<string> GetStockNameBySaleIdAsync(int id)
+        {
+            var stockName = await this.context.Sales.Where(x => x.Id == id).Select(n => n.StockName).FirstOrDefaultAsync();
+            return stockName;
         }
 
         public async Task<decimal> GetTotalPurchasedQuantity(DateTime startDate, string stockName, int companyId)
@@ -122,6 +134,15 @@
                 .FirstOrDefaultAsync();
 
             return name;
+        }
+
+        public async Task UpdateSaleAsync(int id, decimal price, int profitPercent, DateTime date)
+        {
+            var sale = await this.GetSaleByIdAsync(id);
+            sale.TotalPrice = price;
+            sale.ProfitPercent = profitPercent;
+            sale.Date = date;
+            await this.context.SaveChangesAsync();
         }
     }
 }

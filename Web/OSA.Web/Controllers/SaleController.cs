@@ -18,6 +18,7 @@
     {
         private const string SaleErrorMessage = "Monthly sale for the current stock is already done!";
         private const string SaleQuantityErrorMessage = "Registration failed! The quantity of the sale is bigger than the quantity of the purchase!";
+        private const string DateTimeToStringFormaat = "{0:dd/MM/yyyy}";
         private readonly ISalesService salesService;
         private readonly ICompaniesService companiesService;
         private readonly IStocksService stocksService;
@@ -232,6 +233,43 @@
             }
 
             this.TempData["message"] = GlobalConstants.SuccessfullyDeleted;
+            return this.Redirect("/");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var sale = await this.salesService.GetSaleByIdAsync(id);
+
+            var model = new EditSaleViewModel
+            {
+                Id = sale.Id,
+                TotalPrice = sale.TotalPrice,
+                ProfitPercent = sale.ProfitPercent,
+                StartDate = string.Format(DateTimeToStringFormaat, sale.Date),
+            };
+            return this.View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditSaleViewModel editModel)
+        {
+            var isValidDateTime = this.dateTimeValidationService.IsValidDateTime(editModel.StartDate);
+
+            if (!this.ModelState.IsValid || !isValidDateTime)
+            {
+                if (!isValidDateTime)
+                {
+                    this.ModelState.AddModelError(nameof(editModel.StartDate), editModel.StartDate + GlobalConstants.InvalidDateTime);
+                }
+
+                return this.View();
+            }
+
+            var date = DateTime.ParseExact(editModel.StartDate, GlobalConstants.DateFormat, CultureInfo.InvariantCulture);
+            await this.salesService.UpdateSaleAsync(editModel.Id, editModel.TotalPrice, editModel.ProfitPercent, date);
+            this.TempData["message"] = GlobalConstants.SuccessfullyUpdated;
             return this.Redirect("/");
         }
     }

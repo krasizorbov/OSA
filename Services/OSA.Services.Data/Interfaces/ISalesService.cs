@@ -23,5 +23,11 @@
         Task<List<Sale>> DeleteAsync(List<int> ids);
 
         bool CompanyIdExists(int id);
+
+        Task<Sale> GetSaleByIdAsync(int id);
+
+        Task UpdateSaleAsync(int id, decimal price, int profitPercent, DateTime date);
+
+        Task<string> GetStockNameBySaleIdAsync(int id);
     }
 }
